@@ -1,13 +1,9 @@
 # search for young TTV systems
 - [x] find TOIs near MMR (see below)
 - [x] look for signs of youth e.g. strong Prot signal in TESS
-- [ ]
+- [x] make a short list 
+- [ ] measure TTVs
  
-## Environment
-```
-$ conda env create -f environment.yml
-```
-
 ## TOIs with period commensurability
 TOI 2104 | TIC 367630162 (nplanets=5):<br>
 First Order: 9:5 | P=(3.27,5.90) n=(2,1) (delta=0.24%)
@@ -50,7 +46,7 @@ TOI 696 | TIC 77156829 (nplanets=3):<br>
 First Order: 4:3 | P=(3.69,4.97) n=(3,2) (delta=0.80%)
 
 TOI 663 | TIC 54962195 (nplanets=3):<br>
-First Order: 9:5 | P=(2.60,4.70) n=(2,1) (delta=0.37%)', '3:2 | P=(4.70,7.10) n=(3,2) (delta=0.84%)
+First Order: 9:5 | P=(2.60,4.70) n=(2,1) (delta=0.37%), 3:2 | P=(4.70,7.10) n=(3,2) (delta=0.84%)
 
 TOI 175 | TIC 307210830 (nplanets=3):<br>
 First Order: 2:1 | P=(3.69,7.45) n=(2,1) (delta=0.93%)
@@ -105,5 +101,11 @@ First Order: 8:5 | P=(17.66,28.17) n=(2,1) (delta=0.32%)
   -  period ratios near 3:2, 2:1, 3:2, 7:5, and 3:2 <-- first known resonant chain involving a second-order MMR (7:5)
   - RM observation confirmed that planet d's orbit is aligned with stellar rotation
 
-## tools
+## Tools
 - [transit-timing](https://github.com/transit-timing/tt), see ttv [database](https://github.com/transit-timing/tt/blob/master/3_database/table4.csv)
+
+## Environment
+```shell
+$ conda env create -f environment.yml
+```
+
