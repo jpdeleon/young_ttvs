@@ -1,0 +1,29 @@
+Parameter & Value & Source \\ 
+\hline 
+\multicolumn{3}{c}{\textit{Derived parameters}} \\ 
+\hline 
+Host radius over semi-major axis b; $R_\star/a_\mathrm{b}$ & $0.056_{-0.014}^{+0.012}$ & derived \\ 
+Semi-major axis b over host radius; $a_\mathrm{b}/R_\star$ & $18.0_{-3.1}^{+5.9}$ & derived \\ 
+Companion radius b over semi-major axis b; $R_\mathrm{b}/a_\mathrm{b}$ & $0.00190_{-0.00057}^{+0.00050}$ & derived \\ 
+Inclination b; $i_\mathrm{b}$ (deg) & $87.27_{-0.76}^{+0.99}$ & derived \\ 
+Impact parameter b; $b_\mathrm{tra;b}$ & $0.858_{-0.13}^{+0.048}$ & derived \\ 
+Total transit duration b; $T_\mathrm{tot;b}$ (h) & $3.13\pm0.19$ & derived \\ 
+Full-transit duration b; $T_\mathrm{full;b}$ (h) & $2.40_{-0.25}^{+0.21}$ & derived \\ 
+Host density from orbit b; $\rho_\mathrm{\star;b}$ (cgs) & $0.68_{-0.30}^{+0.90}$ & derived \\ 
+Transit depth (undil.) b; $\delta_\mathrm{tr; undil; b; tess}$ (ppt) & $1.041_{-0.060}^{+0.057}$ & derived \\ 
+Transit depth (dil.) b; $\delta_\mathrm{tr; dil; b; tess}$ (ppt) & $1.041_{-0.060}^{+0.057}$ & derived \\ 
+Period ratio; $P_\mathrm{b} / P_\mathrm{c}$ & $0.5759772\pm0.0000051$ & derived \\ 
+Host radius over semi-major axis c; $R_\star/a_\mathrm{c}$ & $0.0228_{-0.0032}^{+0.0056}$ & derived \\ 
+Semi-major axis c over host radius; $a_\mathrm{c}/R_\star$ & $43.8_{-8.6}^{+7.3}$ & derived \\ 
+Companion radius c over semi-major axis c; $R_\mathrm{c}/a_\mathrm{c}$ & $0.00070_{-0.00012}^{+0.00023}$ & derived \\ 
+Inclination c; $i_\mathrm{c}$ (deg) & $89.21_{-0.46}^{+0.37}$ & derived \\ 
+Impact parameter c; $b_\mathrm{tra;c}$ & $0.60_{-0.23}^{+0.17}$ & derived \\ 
+Total transit duration c; $T_\mathrm{tot;c}$ (h) & $3.219_{-0.090}^{+0.13}$ & derived \\ 
+Full-transit duration c; $T_\mathrm{full;c}$ (h) & $2.900_{-0.11}^{+0.095}$ & derived \\ 
+Host density from orbit c; $\rho_\mathrm{\star;c}$ (cgs) & $3.3_{-1.6}^{+1.9}$ & derived \\ 
+Transit depth (undil.) c; $\delta_\mathrm{tr; undil; c; tess}$ (ppt) & $1.014_{-0.057}^{+0.070}$ & derived \\ 
+Transit depth (dil.) c; $\delta_\mathrm{tr; dil; c; tess}$ (ppt) & $1.014_{-0.057}^{+0.070}$ & derived \\ 
+Period ratio; $P_\mathrm{c} / P_\mathrm{b}$ & $1.736180\pm0.000016$ & derived \\ 
+Limb darkening; $u_\mathrm{1; tess}$ & $0.43_{-0.29}^{+0.43}$ & derived \\ 
+Limb darkening; $u_\mathrm{2; tess}$ & $0.20_{-0.44}^{+0.40}$ & derived \\ 
+Combined host density from all orbits; $rho_\mathrm{\star; combined}$ (cgs) & $1.6_{-1.1}^{+2.6}$ & derived \\ 
