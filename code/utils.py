@@ -30,8 +30,50 @@ def get_tois(
     else:
         d = pd.read_csv(fp)
         if verbose: print("Loaded: ", fp)
-    
     return d.sort_values("TOI")
+
+
+def get_ctois(clobber=True, outdir="../data", verbose=False, remove_FP=True):
+    """Download Community TOI list from exofop/TESS.
+
+    Parameters
+    ----------
+    clobber : bool
+        re-download table and save as csv file
+    outdir : str
+        download directory location
+    verbose : bool
+        print texts
+
+    Returns
+    -------
+    d : pandas.DataFrame
+        CTOI table as dataframe
+
+    See interface: https://exofop.ipac.caltech.edu/tess/view_ctoi.php
+    See also: https://exofop.ipac.caltech.edu/tess/ctoi_help.php
+    """
+    dl_link = "https://exofop.ipac.caltech.edu/tess/download_ctoi.php?sort=ctoi&output=csv"
+    outdir = Path(outdir)
+    outdir.mkdir(parents=True, exist_ok=True)
+    fp = outdir.joinpath("CTOIs.csv")
+
+    if not fp.exists() or clobber:
+        d = pd.read_csv(dl_link)  # , dtype={'RA': float, 'Dec': float})
+        msg = "Downloading {}\n".format(dl_link)
+    else:
+        d = pd.read_csv(fp).drop_duplicates()
+        msg = "Loaded: {}\n".format(fp)
+    d.to_csv(fp, index=False)
+
+    # remove False Positives
+    if remove_FP:
+        d = d[d["User Disposition"] != "FP"]
+        msg += "CTOIs with user disposition==FP are removed.\n"
+    msg += "Saved: {}\n".format(fp)
+    if verbose:
+        print(msg)
+    return d.sort_values("CTOI")
 
 def get_nexsci_data(table_name="ps", clobber=False):
     """
