@@ -93,27 +93,24 @@ def get_nexsci_data(table_name="ps", clobber=False):
         print("Loaded: ", fp)
     return df_nexsci
 
-def get_planet_pairs(Nplanets, order=1):
-    cs = list(combinations(range(Nplanets), 2))
+def get_orbit_pairs(N=10, order=1):
+    cs = list(combinations(np.arange(1, N), 2))
     cs = [(i,j) for i,j in cs if abs(i-j)==order]
     return cs
 
-def get_orbit_pairs(N=10):
-    cs = list(combinations(np.arange(1, N), 2))
-    return cs
-
-def get_resonant_pairs(d, order=1, tol=0.01):
+def get_resonant_pairs(periods, order=1, tol=0.01):
     """based on period commensurability"""
-    Nplanets = len(d)
-    ordered_pairs = get_planet_pairs(Nplanets, order=order)
-    deltas = []
-    for i_out,i_in in ordered_pairs:
-        Pout = d.iloc[i_out].squeeze()
-        Pin = d.iloc[i_in].squeeze()
-        for i,j in get_orbit_pairs(10):            
-            delta = abs((Pout/Pin)*(j/i) - 1)
+    periods = sorted(periods)
+    Nplanets = len(periods) 
+    
+    resonant = []
+    for n in range(Nplanets-1):
+        Pout = periods[n+1]
+        Pin = periods[n]
+        for i,j in get_orbit_pairs(10, order=order):            
+            delta = abs((Pout/Pin)*(i/j) - 1)
             if delta<=tol:
-                text = f"{j}:{i} | P=({Pout:.2f},{Pin:.2f}) n=({i_in+1},{i_out+1}) (delta={delta*100:.2f}%)"
-                deltas.append(text)
+                text = f"{j}:{i} | P=({Pout:.2f},{Pin:.2f}) n=({n+1},{n+2}) (delta={delta*100:.2f}%)"
+                resonant.append(text)
                 break
-    return deltas
+    return resonant
