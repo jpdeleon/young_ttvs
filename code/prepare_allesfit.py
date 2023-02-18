@@ -1,5 +1,13 @@
 #!/usr/bin/env python
-"""TODO: add priors as args"""
+"""
+Create a directory with the files needed to run allesfitter.
+1. params.csv
+2. settings.csv
+3. run.py
+4. params_star.csv
+5. tess.csv
+TODO: add priors as args
+"""
 import sys
 from argparse import ArgumentParser
 from pathlib import Path
@@ -63,9 +71,7 @@ if __name__=='__main__':
         print(e)
 
     ###=====Create params.csv=====###
-    text = """
-    #name,value,fit,bounds,label,unit,truth
-    """
+    text = """#name,value,fit,bounds,label,unit,truth\n"""
     for i,row in d.iterrows():
         tic = row['TIC ID']
         Porb = row['Period (days)']
@@ -118,17 +124,16 @@ if __name__=='__main__':
             print(f"inc={np.rad2deg(inc):.2f}")
             print(f"b={b:.2f}")
     text += """b_f_c,0,0,uniform 0.0 0.0,$\sqrt{e_b} \cos{\omega_b}$,,
-    b_f_s,0,0,uniform 0.0 0.0,$\sqrt{e_b} \sin{\omega_b}$,,
-    #limb darkening coefficients per instrument,,,,,,
-    host_ldc_q1_tess,0.5,1,uniform 0.0 1.0,$q_{1; \mathrm{tess}}$,,
-    host_ldc_q2_tess,0.5,1,uniform 0.0 1.0,$q_{2; \mathrm{tess}}$,,
-    #errors per instrument,,,,,,
-    ln_err_flux_tess,-6,1,uniform -10 -1,$\log{\sigma_\mathrm{tess}}$,rel. flux,
-    #baseline per instrument,,,,,,
-    baseline_gp_offset_flux_tess,0,1,uniform -0.1 0.1,$\mathrm{gp ln sigma (tess)}$,,
-    baseline_gp_matern32_lnsigma_flux_tess,-5,1,uniform -15 0,$\mathrm{gp ln sigma (tess)}$,,
-    baseline_gp_matern32_lnrho_flux_tess,0,1,uniform -1 15,$\mathrm{gp ln rho (tess)}$,,
-    """
+b_f_s,0,0,uniform 0.0 0.0,$\sqrt{e_b} \sin{\omega_b}$,,
+#limb darkening coefficients per instrument,,,,,,
+host_ldc_q1_tess,0.5,1,uniform 0.0 1.0,$q_{1; \mathrm{tess}}$,,
+host_ldc_q2_tess,0.5,1,uniform 0.0 1.0,$q_{2; \mathrm{tess}}$,,
+#errors per instrument,,,,,,
+ln_err_flux_tess,-6,1,uniform -10 -1,$\log{\sigma_\mathrm{tess}}$,rel. flux,
+#baseline per instrument,,,,,,
+baseline_gp_offset_flux_tess,0,1,uniform -0.1 0.1,$\mathrm{gp ln sigma (tess)}$,,
+baseline_gp_matern32_lnsigma_flux_tess,-5,1,uniform -15 0,$\mathrm{gp ln sigma (tess)}$,,
+baseline_gp_matern32_lnrho_flux_tess,0,1,uniform -1 15,$\mathrm{gp ln rho (tess)}$,,"""
     if debug:
         print(text)
     fp = outdir.joinpath("params.csv")
@@ -137,75 +142,75 @@ if __name__=='__main__':
 
     ###=====Create settings.csv=====###
     text2="""#name,value
-    ###############################################################################,
-    # General settings,
-    ###############################################################################,\n"""
+###############################################################################,
+# General settings,
+###############################################################################,\n"""
 
     text2+=f"companions_phot,{' '.join(planets[:len(d)])}"
 
     text2+="""
-    companions_rv,
-    inst_phot,tess
-    inst_rv,
-    ###############################################################################,
-    # Fit performance settings,
-    ###############################################################################,
-    multiprocess,True
-    multiprocess_cores,40
-    fast_fit,True
-    fast_fit_width,0.3333333333333333
-    secondary_eclipse,False
-    phase_curve,False
-    shift_epoch,True
-    inst_for_b_epoch,all
-    ###############################################################################,
-    # MCMC settings,
-    ###############################################################################,
-    mcmc_nwalkers,100
-    #mcmc_nwalkers,200
-    mcmc_total_steps,2000
-    #mcmc_total_steps,6000
-    mcmc_burn_steps,1000
-    #mcmc_burn_steps,1000
-    #mcmc_thin_by,20
-    mcmc_thin_by,2
-    ###############################################################################,
-    # Nested Sampling settings,
-    ###############################################################################,
-    ns_modus,dynamic
-    ns_nlive,1000
-    ns_bound,single
-    ns_sample,rwalk
-    ns_tol,0.01
-    ###############################################################################,
-    # Limb darkening law per object and instrument,
-    ###############################################################################,
-    host_ld_law_tess,quad
-    ###############################################################################,
-    # Baseline settings per instrument,
-    ###############################################################################,
-    #baseline_flux_tess,sample_offset
-    #baseline_flux_tess,hybrid_spline
-    #baseline_flux_tess,hybrid_poly_2
-    baseline_flux_tess,sample_GP_Matern32
-    ###############################################################################,
-    # Error settings per instrument,
-    ###############################################################################,
-    error_flux_tess,sample
-    ###############################################################################,
-    # Stellar grid per object and instrument,
-    ###############################################################################,
-    host_grid_tess,very_sparse
-    ###############################################################################,
-    # Flares,
-    ###############################################################################,
-    #N_flares,1
-    use_host_density_prior,True
-    ###################################################,
-    # fit_ttvs
-    ###################################################,
-    fit_ttvs,False
-    t_exp,"""
+companions_rv,
+inst_phot,tess
+inst_rv,
+###############################################################################,
+# Fit performance settings,
+###############################################################################,
+multiprocess,True
+multiprocess_cores,40
+fast_fit,True
+fast_fit_width,0.3333333333333333
+secondary_eclipse,False
+phase_curve,False
+shift_epoch,True
+inst_for_b_epoch,all
+###############################################################################,
+# MCMC settings,
+###############################################################################,
+mcmc_nwalkers,100
+#mcmc_nwalkers,200
+mcmc_total_steps,2000
+#mcmc_total_steps,6000
+mcmc_burn_steps,1000
+#mcmc_burn_steps,1000
+#mcmc_thin_by,20
+mcmc_thin_by,2
+###############################################################################,
+# Nested Sampling settings,
+###############################################################################,
+ns_modus,dynamic
+ns_nlive,1000
+ns_bound,single
+ns_sample,rwalk
+ns_tol,0.01
+###############################################################################,
+# Limb darkening law per object and instrument,
+###############################################################################,
+host_ld_law_tess,quad
+###############################################################################,
+# Baseline settings per instrument,
+###############################################################################,
+#baseline_flux_tess,sample_offset
+#baseline_flux_tess,hybrid_spline
+#baseline_flux_tess,hybrid_poly_2
+baseline_flux_tess,sample_GP_Matern32
+###############################################################################,
+# Error settings per instrument,
+###############################################################################,
+error_flux_tess,sample
+###############################################################################,
+# Stellar grid per object and instrument,
+###############################################################################,
+host_grid_tess,very_sparse
+###############################################################################,
+# Flares,
+###############################################################################,
+#N_flares,1
+use_host_density_prior,True
+###################################################,
+# fit_ttvs
+###################################################,
+fit_ttvs,False
+t_exp,"""
 
     if debug:
         print(text2)
@@ -215,11 +220,9 @@ if __name__=='__main__':
     print("Saved: ", fp)
 
     ###=====Create params_star.csv=====###
-    text3=f"""
-    #R_star,R_star_lerr,R_star_uerr,M_star,M_star_lerr,M_star_uerr,Teff_star,Teff_star_lerr,Teff_star_uerr
-    #R_sun,R_sun,R_sun,M_sun,M_sun,M_sun,K,K,K
-    {radius:.2f},{radius_err:.2f},{radius_err:.2f},{mass:.2f},{mass_err:.2f},{mass_err:.2f},{Teff:.0f},{Teff_err:.0f},{Teff_err:.0f}
-    """
+    text3=f"""#R_star,R_star_lerr,R_star_uerr,M_star,M_star_lerr,M_star_uerr,Teff_star,Teff_star_lerr,Teff_star_uerr
+#R_sun,R_sun,R_sun,M_sun,M_sun,M_sun,K,K,K
+{radius:.2f},{radius_err:.2f},{radius_err:.2f},{mass:.2f},{mass_err:.2f},{mass_err:.2f},{Teff:.0f},{Teff_err:.0f},{Teff_err:.0f}"""
     if debug:
         print(text3)
 
@@ -229,13 +232,13 @@ if __name__=='__main__':
 
     ###=====Create run.py=====###
     text4="""#!/usr/bin/env python
-    import allesfitter
+import allesfitter
 
-    fig = allesfitter.show_initial_guess('.')
-    #allesfitter.prepare_ttv_fit('.')
+fig = allesfitter.show_initial_guess('.')
+#allesfitter.prepare_ttv_fit('.')
 
-    allesfitter.ns_fit('.')
-    allesfitter.ns_output('.')"""
+allesfitter.ns_fit('.')
+allesfitter.ns_output('.')"""
 
     if debug:
         print(text4)
