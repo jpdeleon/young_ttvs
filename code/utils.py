@@ -4,6 +4,125 @@ from itertools import combinations
 
 import pandas as pd
 from astroquery.ipac.nexsci.nasa_exoplanet_archive import NasaExoplanetArchive
+import astropy.units as u
+
+G = 6.67e-11
+D_H = 24.
+D_M = 60 * D_H
+D_S = 60 * D_M
+au             = 1.496e11
+msun           = 1.9891e30
+rsun           = 0.5*1.392684e9
+
+def as_from_rhop(rho, P):
+    """Scaled semi-major axis from the stellar density and planet's orbital period.
+    Parameters
+    ----------
+      rho    : stellar density [g/cm^3]
+      period : orbital period  [d]
+    Returns
+    -------
+      as : scaled semi-major axis [R_star]
+    """
+    return (G/(3*np.pi))**(1/3) * ((P * D_S)**2 * 1e3 * rho)**(1 / 3)
+
+def a_from_rhoprs(rho, P, rstar):
+    """Semi-major axis from the stellar density, stellar radius, and planet's orbital period.
+    Parameters
+    ----------
+      rho    : stellar density [g/cm^3]
+      period : orbital period  [d]
+      rstar  : stellar radius  [R_Sun]
+    Returns
+    -------
+      a : semi-major axis [AU]
+    """
+    return as_from_rhop(rho, P)*rstar*rsun/au
+
+def rho_from_mr(Mstar, Rstar, 
+            R_unit=u.Rsun,
+            M_unit=u.Msun,
+            return_unit='cgs'):
+    """
+    Assumes a spherical body.
+    
+    Parameters
+    ----------
+    R : array or float
+        Body's radius.
+    M : array or float
+        Body's mass.
+    R_unit : astropy unit, optional
+        Radius unit. The default is u.Rsun.
+    M_unit : array or float, optional
+        Mass unit. The default is u.Msun.
+    return_unit : str, optional
+        Return unit. The default is 'cgs'.
+    Returns
+    -------
+    None.
+    """
+    #apply units
+    Rstar *= R_unit
+    Mstar *= M_unit
+    
+    #calculate
+    V = 4./3. * np.pi * Rstar**3
+    rho = Mstar / V
+    
+    #return
+    if return_unit == 'cgs':
+        return rho.cgs.value
+    else:
+        return None #TODO
+    
+def estimate_ttv_super_period_of_first_order_mmr(P1, P2, MMR='2:1'):
+    '''
+    Estimates the TTV super-period.
+    Only works for first order MMRs, e.g., 2:1, 3:2, 4:3, etc.
+    Following Eq. 7 of Lithwick+ 2017, https://iopscience.iop.org/article/10.1088/0004-637X/761/2/122/pdf
+    
+    Parameters
+    ----------
+    P1 : float
+        Orbital period of the inner planet.
+    P2 : float
+        Orbital period of the outer planet.
+    MMR : str, optional
+        Mean motion resonance. 
+        The larger number must come first.
+        The default is '2:1'.
+    Returns
+    -------
+    TTV super-period : float
+        The TTV super-period.
+    '''
+    
+    j = int(MMR.split(':')[0])
+    return 1. / np.abs( (1.*j/P2) - (1.*(j-1.)/P1) )
+
+def catalog_info_TIC(TIC_ID):
+    """Takes TIC_ID, returns stellar information from online catalog using Vizier
+    
+    Taken from 
+    https://github.com/hippke/tls/blob/master/transitleastsquares/catalog.py#L64
+    """
+    if type(TIC_ID) is not int:
+        raise TypeError('TIC_ID ID must be of type "int"')
+    try:
+        from astroquery.mast import Catalogs
+    except:
+        raise ImportError("Package astroquery required but failed to import")
+
+    result = Catalogs.query_criteria(catalog="Tic", ID=TIC_ID).as_array()
+    Teff = result[0][64]
+    Teff_err = result[0][65]
+#     logg = result[0][66]
+    radius = result[0][70]
+    radius_err = result[0][71]
+    mass = result[0][72]
+    mass_err = result[0][73]
+    return Teff, Teff_err, radius, radius_err, mass, mass_err
 
 def get_tois(
     clobber=False,

@@ -2,6 +2,10 @@
 __pycache__/
 *.py[cod]
 *$py.class
+*.log
+*.pickle
+*.gz
+*.h5
 
 # C extensions
 *.so

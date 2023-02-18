@@ -95,10 +95,14 @@ Second Order: 6:4 | P=(13.90,9.19) n=(1,2) (delta=0.87%)
 * [Wood+2023](https://ui.adsabs.harvard.edu/abs/2023AJ....165...85W/abstract)
 * No mention of resonance in paper; But actually in 3:2 (9.188525, 13.900142)
 ![img](./tql/TIC360630575_s38_pdcsap_sc.png)
+* low SNR <br>
+![img](./data/tois/toi1097_multi.png)
 
 ### TOI 4323
 * large contamination
 ![img](./tql/TIC143022742_s04_pdcsap_sc.png)
+* de-trending (using wotan like in tql above) is needed to detect signal  <br>
+![img](./data/tois/toi4323_multi.png)
 
 ## CTOI
 TIC 204497617 (nplanets=2): <br>
@@ -120,11 +124,9 @@ Second Order: 6:4 | P=(13.67,9.11) n=(1,2) (delta=0.02%)
 TIC 253922296 (nplanets=2): <br>
 Second Order: 3:1 | P=(9.43,3.14) n=(1,2) (delta=0.03%)
 
-### TIC 207080350
-![img](./tql/TIC207080350_s01_pdcsap_sc.png)
-
 ### TIC 347332255
 ![img](./tql/TIC347332255_s23_pdcsap_sc.png)
+![img](./data/ctois/tic347332255_multi.png)
 
 ## Known young TTVs
 * V1298 Tau bcde

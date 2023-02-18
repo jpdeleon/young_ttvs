@@ -59,9 +59,9 @@ host_grid_tess,very_sparse
 # Flares,
 ###############################################################################,
 #N_flares,1
-use_host_density_prior,False
+use_host_density_prior,True
 ###################################################,
 # fit_ttvs
 ###################################################,
-fit_ttvs,True
+fit_ttvs,False
 t_exp,
