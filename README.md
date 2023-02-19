@@ -1,6 +1,7 @@
 # search for young TTV systems
-- [x] find TOI/CTOIs near MMR (see below)
-- [x] look for signs of youth e.g. strong Prot signal in TESS
+- [x] find TOI/CTOIs/NExSci near period commensurability (see below)
+- [] look for signs of youth  
+  - [x] measure Prot in TESS lc
 - [x] make a short list 
 - [ ] measure TTVs
  
@@ -95,8 +96,6 @@ Second Order: 6:4 | P=(13.90,9.19) n=(1,2) (delta=0.87%)
 * [Wood+2023](https://ui.adsabs.harvard.edu/abs/2023AJ....165...85W/abstract)
 * No mention of resonance in paper; But actually in 3:2 (9.188525, 13.900142)
 ![img](./tql/TIC360630575_s38_pdcsap_sc.png)
-* low SNR <br>
-![img](./data/tois/toi1097_fold.png)
 
 ### TOI 4323
 * large contamination
@@ -124,6 +123,361 @@ Second Order: 3:1 | P=(9.43,3.14) n=(1,2) (delta=0.03%)
 
 ### TIC 347332255
 ![img](./tql/TIC347332255_s23_pdcsap_sc.png)
+
+## Known systems from NExSci
+KOI-351 (nplanets=8):<br>
+First Order: 5:4 | P=(8.72,7.01) n=(1,2) (delta=0.47%)<br>
+Second Order: 5:3 | P=(14.45,8.72) n=(2,3) (delta=0.57%)
+
+TRAPPIST-1 (nplanets=7):<br>
+First Order: 3:2 | P=(6.10,4.05) n=(3,4) (delta=0.45%) 3:2 | P=(9.21,6.10) n=(4,5) (delta=0.61%) 4:3 | P=(12.35,9.21) n=(5,6) (delta=0.62%)<br>
+Second Order: 5:3 | P=(4.05,2.42) n=(2,3) (delta=0.31%) 6:4 | P=(6.10,4.05) n=(3,4) (delta=0.45%) 6:4 | P=(9.21,6.10) n=(4,5) (delta=0.61%) 8:6 | P=(12.35,9.21) n=(5,6) (delta=0.62%)
+
+Kepler-80 (nplanets=6):<br>
+First Order: 3:2 | P=(4.64,3.07) n=(2,3) (delta=0.79%)<br>
+Second Order: 6:4 | P=(4.64,3.07) n=(2,3) (delta=0.79%)
+
+Kepler-11 (nplanets=6):<br>
+Second Order: 7:5 | P=(32.00,22.68) n=(3,4) (delta=0.76%)
+
+K2-138 (nplanets=6):<br>
+First Order: 3:2 | P=(3.56,2.35) n=(1,2) (delta=0.86%)<br>
+Second Order: 6:4 | P=(3.56,2.35) n=(1,2) (delta=0.86%)
+
+TOI-1136 (nplanets=6):<br>
+First Order: 3:2 | P=(6.26,4.17) n=(1,2) (delta=0.03%) 2:1 | P=(12.52,6.26) n=(2,3) (delta=0.04%) 3:2 | P=(18.80,12.52) n=(3,4) (delta=0.11%) 3:2 | P=(39.54,26.32) n=(5,6) (delta=0.16%)<br>
+Second Order: 6:4 | P=(6.26,4.17) n=(1,2) (delta=0.03%) 4:2 | P=(12.52,6.26) n=(2,3) (delta=0.04%) 6:4 | P=(18.80,12.52) n=(3,4) (delta=0.11%) 7:5 | P=(26.32,18.80) n=(4,5) (delta=0.01%) 6:4 | P=(39.54,26.32) n=(5,6) (delta=0.16%)
+
+Kepler-186 (nplanets=5):<br>
+Second Order: 5:3 | P=(22.41,13.34) n=(3,4) (delta=0.76%)
+
+Kepler-55 (nplanets=5):<br>
+First Order: 3:2 | P=(42.15,27.95) n=(4,5) (delta=0.55%)<br>
+Second Order: 6:4 | P=(42.15,27.95) n=(4,5) (delta=0.55%)
+
+TOI-561 (nplanets=5):<br>
+First Order: 3:2 | P=(16.29,10.78) n=(2,3) (delta=0.73%)<br>
+Second Order: 6:4 | P=(16.29,10.78) n=(2,3) (delta=0.73%) 3:1 | P=(77.23,25.62) n=(4,5) (delta=0.48%)
+
+HD 108236 (nplanets=5):<br>
+First Order: 3:2 | P=(29.54,19.59) n=(4,5) (delta=0.53%)<br>
+Second Order: 6:4 | P=(29.54,19.59) n=(4,5) (delta=0.53%)
+
+HD 23472 (nplanets=5):<br>
+First Order: 2:1 | P=(7.91,3.98) n=(1,2) (delta=0.58%)<br>
+Second Order: 4:2 | P=(7.91,3.98) n=(1,2) (delta=0.58%)
+
+Kepler-102 (nplanets=5):<br>
+First Order: 4:3 | P=(7.07,5.29) n=(1,2) (delta=0.31%)<br>
+Second Order: 8:6 | P=(7.07,5.29) n=(1,2) (delta=0.31%)
+
+K2-384 (nplanets=5):<br>
+Second Order: 7:5 | P=(13.63,9.72) n=(4,5) (delta=0.19%)
+
+Kepler-33 (nplanets=5):<br>
+Second Order: 5:3 | P=(21.78,13.18) n=(2,3) (delta=0.84%) 9:7 | P=(41.03,31.78) n=(4,5) (delta=0.40%)
+
+Kepler-444 (nplanets=5):<br>
+First Order: 5:4 | P=(7.74,6.19) n=(3,4) (delta=0.09%) 5:4 | P=(9.74,7.74) n=(4,5) (delta=0.63%)<br>
+
+Kepler-223 (nplanets=4):<br>
+First Order: 4:3 | P=(9.85,7.38) n=(1,2) (delta=0.00%) 3:2 | P=(14.79,9.85) n=(2,3) (delta=0.14%) 4:3 | P=(19.73,14.79) n=(3,4) (delta=0.04%)<br>
+Second Order: 8:6 | P=(9.85,7.38) n=(1,2) (delta=0.00%) 6:4 | P=(14.79,9.85) n=(2,3) (delta=0.14%) 8:6 | P=(19.73,14.79) n=(3,4) (delta=0.04%)
+
+Kepler-85 (nplanets=4):<br>
+First Order: 3:2 | P=(12.51,8.31) n=(1,2) (delta=0.43%)<br>
+Second Order: 6:4 | P=(12.51,8.31) n=(1,2) (delta=0.43%) 7:5 | P=(25.22,17.91) n=(3,4) (delta=0.55%)
+
+K2-72 (nplanets=4):<br>
+Second Order: 7:5 | P=(7.76,5.58) n=(1,2) (delta=0.61%)
+
+Kepler-208 (nplanets=4):<br>
+First Order: 3:2 | P=(11.13,7.47) n=(2,3) (delta=0.61%)<br>
+Second Order: 6:4 | P=(11.13,7.47) n=(2,3) (delta=0.61%)
+
+K2-266 (nplanets=4):<br>
+First Order: 4:3 | P=(19.48,14.70) n=(3,4) (delta=0.58%)<br>
+Second Order: 8:6 | P=(19.48,14.70) n=(3,4) (delta=0.58%)
+
+V1298 Tau (nplanets=4):<br>
+First Order: 3:2 | P=(12.40,8.25) n=(1,2) (delta=0.23%)<br>
+Second Order: 6:4 | P=(12.40,8.25) n=(1,2) (delta=0.23%)
+
+Kepler-49 (nplanets=4):<br>
+First Order: 3:2 | P=(10.91,7.20) n=(2,3) (delta=0.99%)<br>
+Second Order: 6:4 | P=(10.91,7.20) n=(2,3) (delta=0.99%)
+
+Kepler-24 (nplanets=4):<br>
+First Order: 3:2 | P=(12.33,8.15) n=(2,3) (delta=0.95%)<br>
+Second Order: 6:4 | P=(12.33,8.15) n=(2,3) (delta=0.95%)
+
+TOI-700 (nplanets=4):<br>
+First Order: 4:3 | P=(37.42,27.81) n=(3,4) (delta=0.93%)<br>
+Second Order: 8:6 | P=(37.42,27.81) n=(3,4) (delta=0.93%)
+
+Kepler-342 (nplanets=4):<br>
+First Order: 3:2 | P=(39.46,26.23) n=(3,4) (delta=0.27%)<br>
+Second Order: 6:4 | P=(39.46,26.23) n=(3,4) (delta=0.27%)
+
+Kepler-26 (nplanets=4):<br>
+Second Order: 7:5 | P=(17.26,12.28) n=(2,3) (delta=0.37%)
+
+Kepler-305 (nplanets=4):<br>
+First Order: 3:2 | P=(8.29,5.49) n=(2,3) (delta=0.74%) 2:1 | P=(16.74,8.29) n=(3,4) (delta=0.94%)<br>
+Second Order: 6:4 | P=(8.29,5.49) n=(2,3) (delta=0.74%) 4:2 | P=(16.74,8.29) n=(3,4) (delta=0.94%)
+
+HD 191939 (nplanets=4):<br>
+First Order: 4:3 | P=(38.35,28.58) n=(2,3) (delta=0.65%)<br>
+Second Order: 8:6 | P=(38.35,28.58) n=(2,3) (delta=0.65%)
+
+K2-285 (nplanets=4):<br>
+Second Order: 7:5 | P=(14.76,10.46) n=(3,4) (delta=0.85%)
+
+Kepler-197 (nplanets=4):<br>
+First Order: 3:2 | P=(15.68,10.35) n=(2,3) (delta=0.99%)<br>
+Second Order: 6:4 | P=(15.68,10.35) n=(2,3) (delta=0.99%)
+
+Kepler-402 (nplanets=4):<br>
+First Order: 5:4 | P=(11.24,8.92) n=(3,4) (delta=0.82%)<br>
+
+Kepler-176 (nplanets=4):<br>
+First Order: 2:1 | P=(25.75,12.76) n=(2,3) (delta=0.91%) 2:1 | P=(51.17,25.75) n=(3,4) (delta=0.66%)<br>
+Second Order: 4:2 | P=(25.75,12.76) n=(2,3) (delta=0.91%) 4:2 | P=(51.17,25.75) n=(3,4) (delta=0.66%)
+
+Kepler-1542 (nplanets=4):<br>
+First Order: 7:6 | P=(5.99,5.10) n=(3,4) (delta=0.70%)<br>
+Second Order: 9:7 | P=(5.10,3.95) n=(2,3) (delta=0.42%)
+
+Kepler-372 (nplanets=3):<br>
+First Order: 3:2 | P=(30.09,20.05) n=(2,3) (delta=0.04%)<br>
+Second Order: 6:4 | P=(30.09,20.05) n=(2,3) (delta=0.04%)
+
+Kepler-127 (nplanets=3):<br>
+Second Order: 5:3 | P=(48.63,29.39) n=(2,3) (delta=0.73%)
+
+HD 28109 (nplanets=3):<br>
+First Order: 3:2 | P=(84.26,56.01) n=(2,3) (delta=0.29%)<br>
+Second Order: 6:4 | P=(84.26,56.01) n=(2,3) (delta=0.29%)
+
+KOI-7892 (nplanets=3):<br>
+Second Order: 3:1 | P=(31.81,10.69) n=(1,2) (delta=0.82%)
+
+TOI-270 (nplanets=3):<br>
+First Order: 2:1 | P=(11.38,5.66) n=(2,3) (delta=0.52%)<br>
+Second Order: 4:2 | P=(11.38,5.66) n=(2,3) (delta=0.52%)
+
+TOI-2076 (nplanets=3):<br>
+Second Order: 5:3 | P=(35.13,21.02) n=(2,3) (delta=0.28%)
+
+GJ 9827 (nplanets=3):<br>
+Second Order: 3:1 | P=(3.65,1.21) n=(1,2) (delta=0.58%)
+
+L 98-59 (nplanets=3):<br>
+First Order: 2:1 | P=(7.45,3.69) n=(2,3) (delta=0.94%)<br>
+Second Order: 4:2 | P=(7.45,3.69) n=(2,3) (delta=0.94%)
+
+Kepler-271 (nplanets=3):<br>
+Second Order: 7:5 | P=(7.41,5.25) n=(1,2) (delta=0.83%) 7:5 | P=(10.44,7.41) n=(2,3) (delta=0.58%)
+
+Kepler-385 (nplanets=3):<br>
+First Order: 3:2 | P=(15.16,10.04) n=(1,2) (delta=0.65%)<br>
+Second Order: 6:4 | P=(15.16,10.04) n=(1,2) (delta=0.65%)
+
+Kepler-138 (nplanets=3):<br>
+First Order: 4:3 | P=(13.78,10.31) n=(1,2) (delta=0.22%)<br>
+Second Order: 8:6 | P=(13.78,10.31) n=(1,2) (delta=0.22%) 5:3 | P=(23.09,13.78) n=(2,3) (delta=0.54%)
+
+Kepler-431 (nplanets=3):<br>
+Second Order: 9:7 | P=(8.70,6.80) n=(1,2) (delta=0.50%)
+
+K2-219 (nplanets=3):<br>
+Second Order: 5:3 | P=(11.14,6.67) n=(2,3) (delta=0.22%)
+
+K2-80 (nplanets=3):<br>
+First Order: 3:2 | P=(28.87,19.09) n=(2,3) (delta=0.80%)<br>
+Second Order: 6:4 | P=(28.87,19.09) n=(2,3) (delta=0.80%)
+
+K2-19 (nplanets=3):<br>
+First Order: 3:2 | P=(11.90,7.92) n=(2,3) (delta=0.13%)<br>
+Second Order: 6:4 | P=(11.90,7.92) n=(2,3) (delta=0.13%)
+
+HR 858 (nplanets=3):<br>
+Second Order: 5:3 | P=(5.97,3.59) n=(1,2) (delta=0.06%)
+
+Kepler-445 (nplanets=3):<br>
+Second Order: 5:3 | P=(8.15,4.87) n=(2,3) (delta=0.42%)
+
+Kepler-54 (nplanets=3):<br>
+First Order: 3:2 | P=(12.07,8.01) n=(1,2) (delta=0.46%)<br>
+Second Order: 6:4 | P=(12.07,8.01) n=(1,2) (delta=0.46%)
+
+Kepler-60 (nplanets=3):<br>
+First Order: 5:4 | P=(8.92,7.13) n=(1,2) (delta=0.02%) 4:3 | P=(11.90,8.92) n=(2,3) (delta=0.05%)<br>
+Second Order: 8:6 | P=(11.90,8.92) n=(2,3) (delta=0.05%)
+
+Kepler-1130 (nplanets=3):<br>
+Second Order: 9:7 | P=(5.45,4.27) n=(2,3) (delta=0.73%)
+
+TOI-1749 (nplanets=3):<br>
+First Order: 2:1 | P=(9.05,4.49) n=(2,3) (delta=0.71%)<br>
+Second Order: 4:2 | P=(9.05,4.49) n=(2,3) (delta=0.71%)
+
+Kepler-23 (nplanets=3):<br>
+First Order: 3:2 | P=(10.74,7.11) n=(1,2) (delta=0.76%)<br>
+Second Order: 6:4 | P=(10.74,7.11) n=(1,2) (delta=0.76%)
+
+K2-381 (nplanets=3):<br>
+First Order: 2:1 | P=(16.03,7.94) n=(1,2) (delta=0.99%)<br>
+Second Order: 4:2 | P=(16.03,7.94) n=(1,2) (delta=0.99%) 5:3 | P=(26.80,16.03) n=(2,3) (delta=0.29%)
+
+Kepler-968 (nplanets=3):<br>
+First Order: 4:3 | P=(7.68,5.71) n=(2,3) (delta=0.95%)<br>
+Second Order: 8:6 | P=(7.68,5.71) n=(2,3) (delta=0.95%)
+
+Kepler-398 (nplanets=3):<br>
+Second Order: 5:3 | P=(6.83,4.08) n=(1,2) (delta=0.47%) 5:3 | P=(11.42,6.83) n=(2,3) (delta=0.25%)
+
+Kepler-359 (nplanets=3):<br>
+First Order: 4:3 | P=(77.10,57.69) n=(2,3) (delta=0.23%)<br>
+Second Order: 8:6 | P=(77.10,57.69) n=(2,3) (delta=0.23%)
+
+Kepler-65 (nplanets=3):<br>
+Second Order: 7:5 | P=(8.13,5.86) n=(2,3) (delta=0.89%)
+
+Kepler-191 (nplanets=3):<br>
+Second Order: 5:3 | P=(9.94,5.95) n=(1,2) (delta=0.32%)
+
+K2-148 (nplanets=3):<br>
+Second Order: 7:5 | P=(9.76,6.92) n=(2,3) (delta=0.68%)
+
+Kepler-254 (nplanets=3):<br>
+First Order: 3:2 | P=(18.75,12.41) n=(2,3) (delta=0.69%)<br>
+Second Order: 6:4 | P=(18.75,12.41) n=(2,3) (delta=0.69%)
+
+Kepler-339 (nplanets=3):<br>
+First Order: 3:2 | P=(10.56,6.99) n=(2,3) (delta=0.73%)<br>
+Second Order: 7:5 | P=(6.99,4.98) n=(1,2) (delta=0.28%) 6:4 | P=(10.56,6.99) n=(2,3) (delta=0.73%)
+
+Kepler-59 (nplanets=2):<br>
+First Order: 3:2 | P=(17.98,11.87) n=(1,2) (delta=1.00%)<br>
+Second Order: 6:4 | P=(17.98,11.87) n=(1,2) (delta=1.00%)
+
+KOI-1599 (nplanets=2):<br>
+First Order: 3:2 | P=(20.44,13.61) n=(1,2) (delta=0.14%)<br>
+Second Order: 6:4 | P=(20.44,13.61) n=(1,2) (delta=0.14%)
+
+K2-63 (nplanets=2):<br>
+First Order: 5:4 | P=(25.46,20.26) n=(1,2) (delta=0.53%)<br>
+
+KIC 5437945 (nplanets=2):<br>
+First Order: 2:1 | P=(440.78,220.13) n=(1,2) (delta=0.12%)<br>
+Second Order: 4:2 | P=(440.78,220.13) n=(1,2) (delta=0.12%)
+
+Kepler-168 (nplanets=2):<br>
+Second Order: 3:1 | P=(13.19,4.43) n=(1,2) (delta=0.62%)
+
+Kepler-177 (nplanets=2):<br>
+First Order: 4:3 | P=(49.41,36.86) n=(1,2) (delta=0.53%)<br>
+Second Order: 8:6 | P=(49.41,36.86) n=(1,2) (delta=0.53%)
+
+Kepler-1705 (nplanets=2):<br>
+First Order: 5:4 | P=(11.28,9.04) n=(1,2) (delta=0.12%)<br>
+
+Kepler-365 (nplanets=2):<br>
+Second Order: 5:3 | P=(17.78,10.66) n=(1,2) (delta=0.05%)
+
+Kepler-29 (nplanets=2):<br>
+Second Order: 9:7 | P=(13.29,10.34) n=(1,2) (delta=0.06%)
+
+Kepler-50 (nplanets=2):<br>
+First Order: 6:5 | P=(9.38,7.81) n=(1,2) (delta=0.02%)<br>
+
+Kepler-804 (nplanets=2):<br>
+First Order: 3:2 | P=(14.37,9.65) n=(1,2) (delta=0.71%)<br>
+Second Order: 6:4 | P=(14.37,9.65) n=(1,2) (delta=0.71%)
+
+Kepler-262 (nplanets=2):<br>
+Second Order: 5:3 | P=(21.85,13.06) n=(1,2) (delta=0.39%)
+
+HD 109833 (nplanets=2):<br>
+First Order: 3:2 | P=(13.90,9.19) n=(1,2) (delta=0.85%)<br>
+Second Order: 6:4 | P=(13.90,9.19) n=(1,2) (delta=0.85%)
+
+Kepler-384 (nplanets=2):<br>
+First Order: 2:1 | P=(45.35,22.60) n=(1,2) (delta=0.34%)<br>
+Second Order: 4:2 | P=(45.35,22.60) n=(1,2) (delta=0.34%)
+
+Kepler-1641 (nplanets=2):<br>
+Second Order: 5:3 | P=(32.66,19.67) n=(1,2) (delta=0.40%)
+
+K2-21 (nplanets=2):<br>
+Second Order: 5:3 | P=(15.50,9.33) n=(1,2) (delta=0.26%)
+
+Kepler-36 (nplanets=2):<br>
+First Order: 7:6 | P=(16.22,13.87) n=(1,2) (delta=0.24%)<br>
+
+Kepler-373 (nplanets=2):<br>
+Second Order: 3:1 | P=(16.73,5.54) n=(1,2) (delta=0.72%)
+
+Kepler-404 (nplanets=2):<br>
+First Order: 5:4 | P=(14.75,11.83) n=(1,2) (delta=0.24%)<br>
+
+Kepler-307 (nplanets=2):<br>
+First Order: 5:4 | P=(13.07,10.42) n=(1,2) (delta=0.36%)<br>
+
+Kepler-87 (nplanets=2):<br>
+Second Order: 5:3 | P=(191.23,114.74) n=(1,2) (delta=0.00%)
+
+Kepler-128 (nplanets=2):<br>
+First Order: 3:2 | P=(22.80,15.09) n=(1,2) (delta=0.75%)<br>
+Second Order: 6:4 | P=(22.80,15.09) n=(1,2) (delta=0.75%)
+
+Kepler-1972 (nplanets=2):<br>
+First Order: 3:2 | P=(11.33,7.54) n=(1,2) (delta=0.12%)<br>
+Second Order: 6:4 | P=(11.33,7.54) n=(1,2) (delta=0.12%)
+
+Kepler-125 (nplanets=2):<br>
+Second Order: 7:5 | P=(5.77,4.16) n=(1,2) (delta=0.96%)
+
+KOI-3503 (nplanets=2):<br>
+First Order: 3:2 | P=(31.83,21.18) n=(1,2) (delta=0.16%)<br>
+Second Order: 6:4 | P=(31.83,21.18) n=(1,2) (delta=0.16%)
+
+K2-146 (nplanets=2):<br>
+First Order: 3:2 | P=(4.00,2.64) n=(1,2) (delta=0.96%)<br>
+Second Order: 6:4 | P=(4.00,2.64) n=(1,2) (delta=0.96%)
+
+Kepler-200 (nplanets=2):<br>
+First Order: 6:5 | P=(10.22,8.59) n=(1,2) (delta=0.89%)<br>
+
+TOI-216 (nplanets=2):<br>
+First Order: 2:1 | P=(34.53,17.16) n=(1,2) (delta=0.59%)<br>
+Second Order: 4:2 | P=(34.53,17.16) n=(1,2) (delta=0.59%)
+
+
+### with Prot
+['HD 23472']: Prot=[40.1] d <br>
+      pl_name  pl_orbper <br>
+0  HD 23472 b  17.667087
+1  HD 23472 c  29.797490
+2  HD 23472 e   7.907540
+3  HD 23472 f  12.162184
+4  HD 23472 d   3.976640 <br>
+['V1298 Tau']: Prot=[2.87] d <br>
+       pl_name  pl_orbper <br>
+0  V1298 Tau c    8.24958
+1  V1298 Tau b   24.13960
+2  V1298 Tau e   60.00000
+3  V1298 Tau d   12.40320 <br>
+['L 98-59']: Prot=[80.9] d <br>
+     pl_name  pl_orbper <br>
+0  L 98-59 b   2.253114
+1  L 98-59 c   3.690678
+2  L 98-59 d   7.450724 <br>
+['HD 109833']: Prot=[5.11] d <br>
+       pl_name  pl_orbper <br>
+0  HD 109833 b   9.188526
+1  HD 109833 c  13.900148
 
 ## Known young TTVs
 * V1298 Tau bcde

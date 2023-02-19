@@ -205,8 +205,9 @@ def get_nexsci_data(table_name="ps", clobber=False):
     """
     url = "https://exoplanetarchive.ipac.caltech.edu/docs/API_PS_columns.html"
     print("Column definitions: ", url)
-    fp = f"../data/nexsci_{table_name}.csv"
-    if clobber:
+    fp = Path("../data/",f"nexsci_{table_name}.csv")
+    if not fp.exists() or clobber:
+        print(f"Downloading NExSci {table_name} table...")
         nexsci_tab = NasaExoplanetArchive.query_criteria(table=table_name, where="discoverymethod like 'Transit'")
         df_nexsci = nexsci_tab.to_pandas()
         df_nexsci.to_csv(fp, index=False)
@@ -237,3 +238,30 @@ def get_resonant_pairs(periods, order=1, tol=0.01):
                 resonant.append(text)
                 break
     return resonant
+
+def impact_parameter_ec(a, i, e, w, tr_sign):
+    return a * np.cos(i) * ((1.-e**2) / (1.+tr_sign*e*np.sin(w)))
+
+def d_from_pkaiews(p, k, a, i, e, w, tr_sign=1, kind=14):
+    """Transit duration (T14 or T23) from p, k, a, i, e, w, and the transit sign.
+    Calculates the transit duration (T14) from the orbital period, planet-star radius ratio, scaled semi-major axis,
+    orbital inclination, eccentricity, argument of periastron, and the sign of the transit (transit:1, eclipse: -1).
+     Parameters
+     ----------
+       p  : orbital period         [d]
+       k  : radius ratio           [R_Star]
+       a  : scaled semi-major axis [R_star]
+       i  : orbital inclination    [rad]
+       e  : eccentricity           [-]
+       w  : argument of periastron [rad]
+       tr_sign : transit sign, 1 for a transit, -1 for an eclipse
+       kind: either 14 for full transit duration or 23 for total transit duration
+     Returns
+     -------
+       d  : transit duration T14  [d]
+     """
+    b  = impact_parameter_ec(a, i, e, w, tr_sign)
+    ae = np.sqrt(1.-e**2)/(1.+tr_sign*e*np.sin(w))
+    ds = 1. if kind == 14 else -1.
+    return p/np.pi  * np.arcsin(np.sqrt((1.+ds*k)**2-b**2)/(a*np.sin(i))) * ae
+
