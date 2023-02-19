@@ -133,7 +133,7 @@ if __name__=='__main__':
         text += f"{pl}_rr,{rprs:.4f},1,uniform {0} {rprs_max:.4f},$R_{pl} / R_\star$,,\n"
         text += f"{pl}_rsuma,{rsuma:.4f},1,uniform {rsuma_min:.4f} 0.1,$(R_\star + R_{pl}) / a_{pl}$,,\n"
         text += f"{pl}_cosi,0,1,uniform 0 1,$\cos"+"{i_"+pl+"}$,,\n"
-        text += f"{pl}_epoch,{epoch:.2f},1,normal {epoch:.4f} {epocherr:.4f},$T_"+"{0;"+pl+"}$,BJD,\n"
+        text += f"{pl}_epoch,{epoch:.4f},1,normal {epoch:.4f} {epocherr:.4f},$T_"+"{0;"+pl+"}$,BJD,\n"
         text += f"{pl}_period,{Porb:.4f},1,normal {Porb:.4f} {Porberr:.4f},$P_b$,d,\n"
         if debug:
             print(pl)
