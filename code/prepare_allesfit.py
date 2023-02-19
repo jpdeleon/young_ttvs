@@ -1,6 +1,7 @@
 #!/usr/bin/env python
 """
-Create a directory with the files needed to run allesfitter.
+Uses parameter from TOI/CTIO databse and
+creates a directory with the files needed to run allesfitter:
 1. params.csv
 2. settings.csv
 3. run.py
@@ -28,9 +29,16 @@ quartiles = [2.70, 50, 97.3] #3-sigma
 
 if __name__=='__main__':
     ap = ArgumentParser()
-    ap.add_argument(
-        "toi",
-        help="TOIID"
+    group = ap.add_mutually_exclusive_group(required=True)
+    group.add_argument(
+        "-toi",
+        help="TOI ID",
+        type=int
+    )
+    group.add_argument(
+        "-ctoi",
+        help="CTOI ID",
+        type=int
     )
     ap.add_argument("-dir", help="base directory", type=str, default=f"{home}/github/research/project/young_ttvs/allesfitter/")
     ap.add_argument("-pipeline", help="TESS data pipeline", default="SPOC")
@@ -41,6 +49,7 @@ if __name__=='__main__':
     args = ap.parse_args(None if sys.argv[1:] else ["-h"])
 
     toiid = args.toi
+    ctoiid = args.ctoi
     basedir = args.dir
     pipeline = args.pipeline
     debug = args.debug
@@ -50,15 +59,27 @@ if __name__=='__main__':
     if args.sector=='all':
         multi_sector = True
     else:
-        sector = int(sector)
         multi_sector = False
 
-    tois = get_tois()
-    idx = tois['TOI'].apply(lambda x: str(x).split('.')[0]==str(toiid))
-    d = tois[idx].reset_index(drop=True)
+    p_key = 'Period (days)'
+    if args.toi:
+        df = get_tois()
+        key = 'TOI'
+        id = str(toiid)
+        idx = df[key].apply(lambda x: str(x).split('.')==id)
+        name = f'toi{id.zfill(4)}'
+    if args.ctoi:
+        df = get_ctois()
+        key = 'CTOI'
+        id = ctoiid
+        idx = df['TIC ID']==int(ctoiid)
+        name = f'ctoi{ctoiid}'
+    errmsg = f"Coulnd't find {key} {id} in {key} database."
+    assert sum(idx)>0, errmsg
+    d = df[idx].reset_index(drop=True)
+    del df
     ticid = d['TIC ID'].unique()[0]
 
-    name = f'toi{str(toiid).zfill(4)}'
     outdir = Path(basedir, name)
     try:
         outdir.mkdir(parents=True, exist_ok=clobber)
@@ -285,7 +306,7 @@ allesfitter.ns_output('.')"""
             lc = result[idx].download().normalize()
             assert lc.sector==sector
         ax = lc.scatter()
-        fp = outdir.joinpath(f"toi{toiid}_tess.png")
+        fp = outdir.joinpath(f"{name}_tess.png")
         ax.figure.savefig(fp)
         fp = outdir.joinpath("tess.csv")
         df = lc.to_pandas()
