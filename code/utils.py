@@ -226,7 +226,7 @@ def get_resonant_pairs(periods, order=1, tol=0.01):
     """based on period commensurability"""
     periods = sorted(periods)
     Nplanets = len(periods) 
-    
+    deltas = []
     resonant = []
     for n in range(Nplanets-1):
         Pout = periods[n+1]
@@ -236,8 +236,9 @@ def get_resonant_pairs(periods, order=1, tol=0.01):
             if delta<=tol:
                 text = f"{j}:{i} | P=({Pout:.2f},{Pin:.2f}) n=({n+1},{n+2}) (delta={delta*100:.2f}%)"
                 resonant.append(text)
+                deltas.append(delta)
                 break
-    return resonant
+    return resonant, deltas
 
 def impact_parameter_ec(a, i, e, w, tr_sign):
     return a * np.cos(i) * ((1.-e**2) / (1.+tr_sign*e*np.sin(w)))
