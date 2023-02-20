@@ -12,7 +12,7 @@ inst_rv,
 multiprocess,True
 multiprocess_cores,40
 fast_fit,True
-fast_fit_width,0.3333333333333333
+fast_fit_width,0.5
 secondary_eclipse,False
 phase_curve,False
 shift_epoch,True
