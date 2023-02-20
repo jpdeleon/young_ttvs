@@ -432,6 +432,7 @@ Second Order: 8:6 | P=(9.85,7.38) n=(1,2) (delta=0.00%) 6:4 | P=(14.79,9.85) n=(
 ### TOI 2076 b,c
 * [Hedges+2021](https://ui.adsabs.harvard.edu/abs/2021AJ....162...54H/abstract)
 * noted that planets are close to 5:3 orbital resonance, but further data are needed for a firm detection and to constrain the period of TOI-2076c
+* only sectors 16 and 23 was used in publication; sector 50 now available
 
 ### with Prot
 ['HD 23472']: Prot=[40.1] d <br>

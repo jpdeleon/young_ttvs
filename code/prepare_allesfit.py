@@ -1,6 +1,6 @@
 #!/usr/bin/env python
 """
-Uses parameter from TOI/CTIO databse and
+Uses parameter from TOI/CTIO/NExSci databse and
 creates a directory with the files needed to run allesfitter:
 1. params.csv
 2. settings.csv
@@ -27,6 +27,12 @@ planets = "b c d e f g h i j k".split()
 # quartiles = [16,50,84] #1-sigma
 quartiles = [2.70, 50, 97.3] #3-sigma
 
+def catalog_info_name(df):
+    Teff, Teff_err = df['st_teff'].astype(float), np.sqrt(df['st_tefferr1']**2+df['st_tefferr2']**2)
+    radius, radius_err = df['st_rad'].astype(float), np.sqrt(df['st_raderr1']**2+df['st_raderr2']**2)
+    mass, mass_err = df['st_mass'].astype(float), np.sqrt(df['st_masserr1']**2+df['st_masserr2']**2)
+    return Teff, Teff_err, radius, radius_err, mass, mass_err
+
 if __name__=='__main__':
     ap = ArgumentParser()
     group = ap.add_mutually_exclusive_group(required=True)
@@ -40,8 +46,13 @@ if __name__=='__main__':
         help="CTOI ID",
         type=int
     )
+    group.add_argument(
+        "-name",
+        help="Name",
+        type=str
+    )
     ap.add_argument("-dir", help="base directory", type=str, default=f"{home}/github/research/project/young_ttvs/allesfitter/")
-    ap.add_argument("-pipeline", help="TESS data pipeline", default="SPOC")
+    ap.add_argument("-pipeline", help="TESS/Kepler data pipeline", default=None)
     ap.add_argument("-sector", help="--sector=all uses all sectors", default=None)
     ap.add_argument("-debug", action="store_true", default=False)
     ap.add_argument("-clobber", help="overwrite files", action="store_true", default=False)
@@ -50,8 +61,9 @@ if __name__=='__main__':
 
     toiid = args.toi
     ctoiid = args.ctoi
+    name = args.name
     basedir = args.dir
-    pipeline = args.pipeline
+    pipeline = "SPOC" if args.pipeline is None else args.pipeline
     debug = args.debug
     sector = args.sector
     clobber = args.clobber
@@ -61,33 +73,54 @@ if __name__=='__main__':
     else:
         multi_sector = False
 
-    p_key = 'Period (days)'
+    
     if args.toi:
         df = get_tois()
         key = 'TOI'
         id = str(toiid)
-        idx = df[key].apply(lambda x: str(x).split('.')==id)
-        name = f'toi{id.zfill(4)}'
+        idx = df[key].apply(lambda x: str(x).split('.')[0]==id)
+        dirname = f'toi{id.zfill(4)}'
     if args.ctoi:
         df = get_ctois()
         key = 'CTOI'
         id = ctoiid
         idx = df['TIC ID']==int(ctoiid)
-        name = f'ctoi{ctoiid}'
+        dirname = f'ctoi{ctoiid}'
+    if args.name:
+        df = get_nexsci_data()
+        df['Period (days)'] = df['pl_orbper'].astype(float)
+        df['Period (days) err'] = np.sqrt(df['pl_orbpererr1']**2+df['pl_orbpererr2']**2)
+        df['Epoch (BJD)'] = df['pl_tranmid'].astype(float)
+        df['Epoch (BJD) err'] = 0.1
+        df['Depth (ppm)'] = df['pl_trandep'].astype(float)
+        df['Depth (ppm) err'] = 1_000
+        # df['Duration (hours)'] = df['pl_trandur'].astype(float)
+        # df['Duration (hours) err'] = 1
+        key = 'hostname'
+        id = name
+        dirname = name.strip().replace(' ','')
+        idx = df[key]==id
+
     errmsg = f"Coulnd't find {key} {id} in {key} database."
     assert sum(idx)>0, errmsg
     d = df[idx].reset_index(drop=True)
+    if debug:
+        print(df.query())
+        print(d)
     del df
     ticid = d['TIC ID'].unique()[0]
 
-    outdir = Path(basedir, name)
+    outdir = Path(basedir, dirname)
     try:
         outdir.mkdir(parents=True, exist_ok=clobber)
     except:
         raise FileExistsError("Use -clobber to overwrite files.")
 
     try:
-        Teff, Teff_err, radius, radius_err, mass, mass_err = catalog_info_TIC(int(ticid))
+        if toiid or ctoiid:
+            Teff, Teff_err, radius, radius_err, mass, mass_err = catalog_info_TIC(int(ticid))
+        elif name:
+            Teff, Teff_err, radius, radius_err, mass, mass_err = catalog_info_name(d)
     except Exception as e:
         print(e)
 
@@ -268,8 +301,13 @@ allesfitter.ns_output('.')"""
     np.savetxt(fp, [text4], fmt="%s")
     print("Saved: ", fp)
 
+    if toiid or ctoiid:
+        query_name = f'TIC {ticid}'
+    else:
+        query_name = name
 
-    all = lk.search_lightcurve(f'TIC {ticid}')
+    all = lk.search_lightcurve(query_name)
+
     if debug:
         print(all)
     pipelines = [i.lower() for i in all.author]
@@ -279,7 +317,7 @@ allesfitter.ns_output('.')"""
         print(all)
         raise ValueError(errmsg)
     print(f"Using {pipeline} pipeline.")
-    result = lk.search_lightcurve(f'TIC {ticid}', author=pipeline)
+    result = lk.search_lightcurve(query_name, author=pipeline)
     if result:
         s = map(int, [s.split()[-1] for s in result.mission])
         sectors = sorted(set(s))
@@ -301,12 +339,12 @@ allesfitter.ns_output('.')"""
                         raise ValueError(errmsg)
             msg = f"Using sector={sector}"
             if not multi_sector:
-                msg += "; otherwise use -sector=all"
+                msg += f"; otherwise use -sector=all ({sectors}))"
             print(msg)
             lc = result[idx].download().normalize()
             assert lc.sector==sector
         ax = lc.scatter()
-        fp = outdir.joinpath(f"{name}_tess.png")
+        fp = outdir.joinpath(f"{dirname}_tess.png")
         ax.figure.savefig(fp)
         fp = outdir.joinpath("tess.csv")
         df = lc.to_pandas()
