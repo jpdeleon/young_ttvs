@@ -7,7 +7,12 @@ creates a directory with the files needed to run allesfitter:
 3. run.py
 4. params_star.csv
 5. tess.csv
-TODO: add priors as args
+TODO: 
+1. add priors as args
+2. use tess-point to check if target was observed by TESS
+(useful to know even if `lightkurve.search_lightcurve` returned None)
+3. check for name aliases in case lightkurve doesn't use such service:
+https://exoplanetarchive.ipac.caltech.edu/docs/sysaliases.html
 """
 import sys
 from argparse import ArgumentParser
@@ -52,8 +57,9 @@ if __name__=='__main__':
         type=str
     )
     ap.add_argument("-dir", help="base directory", type=str, default=f"{home}/github/research/project/young_ttvs/allesfitter/")
-    ap.add_argument("-pipeline", help="TESS/Kepler data pipeline", default=None)
-    ap.add_argument("-sector", help="--sector=all uses all sectors", default=None)
+    ap.add_argument("-pipeline", help="TESS/Kepler data pipeline", default='spoc')
+    ap.add_argument("-mission", choices=['tess','k2','kepler'], default='tess')
+    ap.add_argument("-sector", help="-sector=-1 uses most recent TESS sector (default); try -sector=all to use all", default=-1)
     ap.add_argument("-debug", action="store_true", default=False)
     ap.add_argument("-clobber", help="overwrite files", action="store_true", default=False)
 
@@ -63,7 +69,10 @@ if __name__=='__main__':
     ctoiid = args.ctoi
     name = args.name
     basedir = args.dir
-    pipeline = "SPOC" if args.pipeline is None else args.pipeline
+    mission = args.mission
+    if (mission.lower()=='k2') or (mission.lower()=='kepler'):
+        raise NotImplementedError("The idea is to use new TESS data")
+    pipeline = args.pipeline
     debug = args.debug
     sector = args.sector
     clobber = args.clobber
@@ -72,7 +81,6 @@ if __name__=='__main__':
         multi_sector = True
     else:
         multi_sector = False
-
     
     if toiid:
         df = get_tois()
@@ -305,35 +313,47 @@ allesfitter.ns_output('.')"""
     np.savetxt(fp, [text4], fmt="%s")
     print("Saved: ", fp)
 
+    query_name = name
     if toiid or ctoiid:
         query_name = f'TIC {ticid}'
+    elif name.lower()[:2]=='k2':
+        # search epic name or coordinates
+        try:
+            print("Searching for EPIC name")
+            query_name = get_name_aliases(name, key='epic')
+        except Exception as e:
+            print(e)
+    
+    all = lk.search_lightcurve(query_name, mission=mission)
+    if len(all)>0:
+        pipelines = [i.lower() for i in all.author]
     else:
-        query_name = name
-
-    all = lk.search_lightcurve(query_name)
+        raise ValueError("No light curves found.")
 
     if debug:
         print(all)
-    pipelines = [i.lower() for i in all.author]
+        print(pipelines)
+    
     idx = [i==pipeline.lower() for i in pipelines]
     if sum(idx)==0:
         errmsg = f"pipeline={pipeline} not in {pipelines}"
         print(all)
         raise ValueError(errmsg)
     print(f"Using {pipeline} pipeline.")
-    result = lk.search_lightcurve(query_name, author=pipeline)
+    result = lk.search_lightcurve(query_name, author=pipeline, mission=mission)
     if result:
         s = map(int, [s.split()[-1] for s in result.mission])
         sectors = sorted(set(s))
         if multi_sector:
-            lc = result.download_all().stitch()
             print(f"Using {len(sectors)} sectors: {sectors}")
+            lc = result.download_all().stitch()
+            print("The lightcurves were not flattened/de-trended to avoid removing transits.")
         else:
             if sector is None:
                 idx = 0
                 sector = sectors[idx]
             else:
-                if sector==-1:
+                if int(sector)==-1:
                     idx = -1
                     sector = sectors[idx]
                 else:
@@ -343,7 +363,7 @@ allesfitter.ns_output('.')"""
                         raise ValueError(errmsg)
             msg = f"Using sector={sector}"
             if not multi_sector:
-                msg += f"; otherwise use -sector=all ({sectors}))"
+                msg += f"; otherwise use -sector=({sectors}, all))"
             print(msg)
             lc = result[idx].download().normalize()
             assert lc.sector==sector

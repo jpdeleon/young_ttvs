@@ -1,7 +1,8 @@
 from pathlib import Path
-import numpy as np
 from itertools import combinations
-
+import json
+import urllib.request
+import numpy as np
 import pandas as pd
 from astroquery.ipac.nexsci.nasa_exoplanet_archive import NasaExoplanetArchive
 import astropy.units as u
@@ -14,6 +15,29 @@ au             = 1.496e11
 msun           = 1.9891e30
 rsun           = 0.5*1.392684e9
 
+def get_name_aliases(name, key=None):
+    """
+    https://exoplanetarchive.ipac.caltech.edu/docs/sysaliases.html
+    """
+    base = "https://exoplanetarchive.ipac.caltech.edu/cgi-bin/Lookup/nph-aliaslookup.py?objname="
+    url = base + name
+    html = urllib.request.urlopen(url).read()
+    data = json.loads(html)
+    aliases = np.array(data['system']['system_info']['alias_set']['aliases'])
+    if len(data)>0:
+        if key is None:
+            return aliases
+        else:
+            idx = [i.lower()[:len(key)]==key.lower() for i in aliases]
+            if sum(idx)>0:
+                return aliases[idx][0]
+            else:
+                errmsg = f"No aliases found for {name} with key {key}"
+                raise ValueError(errmsg)
+    else:
+        errmsg = f"No aliases found for {name}"
+        raise ValueError(errmsg)
+    
 def as_from_rhop(rho, P):
     """Scaled semi-major axis from the stellar density and planet's orbital period.
     Parameters
