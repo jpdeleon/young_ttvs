@@ -74,20 +74,21 @@ if __name__=='__main__':
         multi_sector = False
 
     
-    if args.toi:
+    if toiid:
         df = get_tois()
         key = 'TOI'
         id = str(toiid)
         idx = df[key].apply(lambda x: str(x).split('.')[0]==id)
         dirname = f'toi{id.zfill(4)}'
-    if args.ctoi:
+    if ctoiid:
         df = get_ctois()
         key = 'CTOI'
         id = ctoiid
         idx = df['TIC ID']==int(ctoiid)
         dirname = f'ctoi{ctoiid}'
-    if args.name:
+    if name:
         df = get_nexsci_data()
+        df = df[df['default_flag']==1]
         df['Period (days)'] = df['pl_orbper'].astype(float)
         df['Period (days) err'] = np.sqrt(df['pl_orbpererr1']**2+df['pl_orbpererr2']**2)
         df['Epoch (BJD)'] = df['pl_tranmid'].astype(float)
@@ -104,11 +105,12 @@ if __name__=='__main__':
     errmsg = f"Coulnd't find {key} {id} in {key} database."
     assert sum(idx)>0, errmsg
     d = df[idx].reset_index(drop=True)
+    if toiid or ctoiid:
+        ticid = d['TIC ID'].unique()[0]
+
     if debug:
-        print(df.query())
         print(d)
     del df
-    ticid = d['TIC ID'].unique()[0]
 
     outdir = Path(basedir, dirname)
     try:
@@ -120,14 +122,16 @@ if __name__=='__main__':
         if toiid or ctoiid:
             Teff, Teff_err, radius, radius_err, mass, mass_err = catalog_info_TIC(int(ticid))
         elif name:
-            Teff, Teff_err, radius, radius_err, mass, mass_err = catalog_info_name(d)
+            Teff, Teff_err, radius, radius_err, mass, mass_err = catalog_info_name(d.iloc[0])
+        if debug:
+            print(Teff, Teff_err, radius, radius_err, mass, mass_err)
     except Exception as e:
         print(e)
 
     ###=====Create params.csv=====###
     text = """#name,value,fit,bounds,label,unit,truth\n"""
     for i,row in d.iterrows():
-        tic = row['TIC ID']
+        # tic = row['TIC ID']
         Porb = row['Period (days)']
         Porberr = row['Period (days) err']
         Porb_s = np.random.normal(Porb, Porberr, size=Nsamples)
@@ -349,6 +353,7 @@ allesfitter.ns_output('.')"""
         fp = outdir.joinpath("tess.csv")
         df = lc.to_pandas()
         df['time'] = df.index + 2457000
+        df = df.reset_index(drop=True).sort_values(by='time')
         df = df[cols].dropna()
         df.to_csv(fp, sep=',', header=False, index=False)
         print("TESS Ndata: ", len(df))

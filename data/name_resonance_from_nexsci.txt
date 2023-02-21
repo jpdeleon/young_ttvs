@@ -1,6 +1,4 @@
-TOI-1136
 Kepler-50
-Kepler-60
 TOI-1136
 Kepler-372
 Kepler-365
@@ -24,11 +22,8 @@ Kepler-404
 Kepler-398
 K2-21
 Kepler-342
-Kepler-339
 TOI-2076
-K2-381
 HD 28109
-TRAPPIST-1
 Kepler-102
 Kepler-191
 Kepler-384
@@ -37,13 +32,10 @@ Kepler-26
 Kepler-262
 Kepler-1641
 Kepler-33
-Kepler-1542
 Kepler-445
 Kepler-85
 TRAPPIST-1
 Kepler-54
-KOI-351
-TOI-561
 Kepler-431
 TOI-270
 K2-63
