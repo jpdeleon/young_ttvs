@@ -7,19 +7,24 @@ creates a directory with the files needed to run allesfitter:
 3. run.py
 4. params_star.csv
 5. tess.csv
+======
+* uses tess-point to check if target was observed by TESS
+(useful to know even if `lightkurve.search_lightcurve` returned None)
+* uses aliases (K2 name --> EPIC)
+https://exoplanetarchive.ipac.caltech.edu/docs/sysaliases.html
+======
 TODO: 
 1. add priors as args
-2. use tess-point to check if target was observed by TESS
-(useful to know even if `lightkurve.search_lightcurve` returned None)
-3. check for name aliases in case lightkurve doesn't use such service:
-https://exoplanetarchive.ipac.caltech.edu/docs/sysaliases.html
 """
 import sys
 from argparse import ArgumentParser
 from pathlib import Path
+from math import ceil
 from utils import *
 import numpy as np
 import lightkurve as lk
+from tess_stars2px import tess_stars2px_function_entry
+
 assert lk.__version__[0]=='2'
 
 home = Path.home()
@@ -84,6 +89,8 @@ if __name__=='__main__':
     
     if toiid:
         df = get_tois()
+        print("Using parameters from TOI database.")
+        print(f"To use published parameters in NExSci, use -name=TOI-{toiid}")
         key = 'TOI'
         id = str(toiid)
         idx = df[key].apply(lambda x: str(x).split('.')[0]==id)
@@ -110,6 +117,15 @@ if __name__=='__main__':
         dirname = name.strip().replace(' ','')
         idx = df[key]==id
 
+    # target = 'K2-384'
+    # dd = df[df.hostname==target]
+    # ra, dec, tic = dd.iloc[0][['ra','dec','tic_id']].values
+    # ticid = int(tic.split()[-1])
+    # outID, outEclipLong, outEclipLat, outSec, outCam, outCcd, \
+    #             outColPix, outRowPix, scinfo = tess_stars2px_function_entry(
+    #                     ticid, ra, dec)
+    # outSec
+
     errmsg = f"Coulnd't find {key} {id} in {key} database."
     assert sum(idx)>0, errmsg
     d = df[idx].reset_index(drop=True)
@@ -135,6 +151,12 @@ if __name__=='__main__':
             print(Teff, Teff_err, radius, radius_err, mass, mass_err)
     except Exception as e:
         print(e)
+    if str(radius_err)=='nan':
+        radius_err = 0.1
+        print(f'radius_err is nan; setting to 0.1')
+    if str(mass_err)=='nan':
+        mass_err = 0.1
+        print(f'mass_err is nan; setting to 0.1')
 
     ###=====Create params.csv=====###
     text = """#name,value,fit,bounds,label,unit,truth\n"""
@@ -145,10 +167,16 @@ if __name__=='__main__':
         Porb_s = np.random.normal(Porb, Porberr, size=Nsamples)
         epoch = row['Epoch (BJD)']
         epocherr = row['Epoch (BJD) err']
+        assert np.all([Porb>0, epoch>0]) 
 
         pl = planets[i]
         rprs = np.sqrt(row['Depth (ppm)']/1e6)
         rprserr = np.sqrt(row['Depth (ppm) err']/1e6)
+        if str(rprs)=='nan':
+            rprs = row['pl_rade']*u.Rearth.to(u.Rsun)/row['st_rad']
+            Rperr = np.sqrt(row['pl_radeerr1']**2+row['pl_radeerr2']**2)
+            rprserr = Rperr*u.Rearth.to(u.Rsun)/radius_err
+        assert rprs>0
 
         rprs_s = np.random.normal(rprs, rprserr, size=Nsamples)
         rprs_min, rprs, rprs_max = np.percentile(rprs_s, q=quartiles)
@@ -175,11 +203,11 @@ if __name__=='__main__':
             b_min, b, b_max = np.percentile(b_s, q=quartiles)
 
         text += f"#companion {pl} astrophysical params,,,,,,\n"
-        text += f"{pl}_rr,{rprs:.4f},1,uniform {0} {rprs_max:.4f},$R_{pl} / R_\star$,,\n"
-        text += f"{pl}_rsuma,{rsuma:.4f},1,uniform {rsuma_min:.4f} 0.1,$(R_\star + R_{pl}) / a_{pl}$,,\n"
+        text += f"{pl}_rr,{rprs:.4f},1,uniform 0 {ceil(rprs_max*10)/10:.4f},$R_{pl} / R_\star$,,\n"
+        text += f"{pl}_rsuma,{rsuma:.4f},1,uniform {rsuma_min:.4f} {ceil(rsuma_max*10)/10:.4f},$(R_\star + R_{pl}) / a_{pl}$,,\n"
         text += f"{pl}_cosi,0,1,uniform 0 1,$\cos"+"{i_"+pl+"}$,,\n"
-        text += f"{pl}_epoch,{epoch:.4f},1,normal {epoch:.4f} {epocherr:.4f},$T_"+"{0;"+pl+"}$,BJD,\n"
-        text += f"{pl}_period,{Porb:.4f},1,normal {Porb:.4f} {Porberr:.4f},$P_b$,d,\n"
+        text += f"{pl}_epoch,{epoch:.6f},1,normal {epoch:.6f} {epocherr:.6f},$T_"+"{0;"+pl+"}$,BJD,\n"
+        text += f"{pl}_period,{Porb:.6f},1,normal {Porb:.6f} {Porberr:.6f},$P_b$,d,\n"
         if debug:
             print(pl)
             print(f"rprs={rprs:.4f}")
@@ -199,7 +227,11 @@ ln_err_flux_tess,-6,1,uniform -10 -1,$\log{\sigma_\mathrm{tess}}$,rel. flux,
 #baseline per instrument,,,,,,
 baseline_gp_offset_flux_tess,0,1,uniform -0.1 0.1,$\mathrm{gp ln sigma (tess)}$,,
 baseline_gp_matern32_lnsigma_flux_tess,-5,1,uniform -15 0,$\mathrm{gp ln sigma (tess)}$,,
-baseline_gp_matern32_lnrho_flux_tess,0,1,uniform -1 15,$\mathrm{gp ln rho (tess)}$,,"""
+baseline_gp_matern32_lnrho_flux_tess,0,1,uniform -1 15,$\mathrm{gp ln rho (tess)}$,,
+#TTV companion b,,,,,
+#b_ttv_transit_1,0,1,uniform -0.1 0.1,TTV$_\mathrm{b;1}$,d,
+#TTV companion c,,,,,
+#c_ttv_transit_1,0,1,uniform -0.1 0.1,TTV$_\mathrm{c;1}$,d,"""
     if debug:
         print(text)
     fp = outdir.joinpath("params.csv")
@@ -224,7 +256,8 @@ inst_rv,
 multiprocess,True
 multiprocess_cores,40
 fast_fit,True
-fast_fit_width,0.3333333333333333
+#fast_fit_width,0.3333333333333333
+fast_fit_width,0.5
 secondary_eclipse,False
 phase_curve,False
 shift_epoch,True
@@ -246,7 +279,7 @@ mcmc_thin_by,2
 ns_modus,dynamic
 ns_nlive,1000
 ns_bound,single
-ns_sample,rwalk
+ns_sample,auto
 ns_tol,0.01
 ###############################################################################,
 # Limb darkening law per object and instrument,
@@ -276,7 +309,8 @@ use_host_density_prior,True
 # fit_ttvs
 ###################################################,
 fit_ttvs,False
-t_exp,"""
+###################################################,
+"""
 
     if debug:
         print(text2)
@@ -301,10 +335,10 @@ t_exp,"""
 import allesfitter
 
 fig = allesfitter.show_initial_guess('.')
-#allesfitter.prepare_ttv_fit('.')
+allesfitter.prepare_ttv_fit('.', style='tessplot')
 
-allesfitter.ns_fit('.')
-allesfitter.ns_output('.')"""
+#allesfitter.ns_fit('.')
+#allesfitter.ns_output('.')"""
 
     if debug:
         print(text4)
@@ -346,7 +380,7 @@ allesfitter.ns_output('.')"""
         sectors = sorted(set(s))
         if multi_sector:
             print(f"Using {len(sectors)} sectors: {sectors}")
-            lc = result.download_all().stitch()
+            lc = result.download_all(quality_bitmask='default').stitch()
             print("The lightcurves were not flattened/de-trended to avoid removing transits.")
         else:
             if sector is None:
@@ -365,7 +399,7 @@ allesfitter.ns_output('.')"""
             if not multi_sector:
                 msg += f"; otherwise use -sector=({sectors}, all))"
             print(msg)
-            lc = result[idx].download().normalize()
+            lc = result[idx].download(quality_bitmask='default').normalize()
             assert lc.sector==sector
         ax = lc.scatter()
         fp = outdir.joinpath(f"{dirname}_tess.png")

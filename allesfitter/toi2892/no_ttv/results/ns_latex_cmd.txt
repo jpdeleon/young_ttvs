@@ -1,0 +1,13 @@
+\newcommand{\brr}{$0.135_{-0.030}^{+0.042}$} %$R_b / R_\star=0.135_{-0.030}^{+0.042}$ 
+\newcommand{\brsuma}{$0.0829_{-0.016}^{+0.0083}$} %$(R_\star + R_b) / a_b=0.0829_{-0.016}^{+0.0083}$ 
+\newcommand{\bcosi}{$0.0686_{-0.019}^{+0.0092}$} %$\cos{i_b}=0.0686_{-0.019}^{+0.0092}$ 
+\newcommand{\bepoch}{$2458879.0766_{-0.0023}^{+0.0022}$} %$T_{0;b}=2458879.0766_{-0.0023}^{+0.0022}$ BJD
+\newcommand{\bperiod}{$14.950224\pm0.000069$} %$P_b=14.950224\pm0.000069$ d
+\newcommand{\bfc}{$0.0$} %$\sqrt{e_b} \cos{\omega_b}=0.0$ 
+\newcommand{\bfs}{$0.0$} %$\sqrt{e_b} \sin{\omega_b}=0.0$ 
+\newcommand{\hostldcqonetess}{$0.55_{-0.36}^{+0.30}$} %$q_{1; \mathrm{tess}}=0.55_{-0.36}^{+0.30}$ 
+\newcommand{\hostldcqtwotess}{$0.54_{-0.37}^{+0.33}$} %$q_{2; \mathrm{tess}}=0.54_{-0.37}^{+0.33}$ 
+\newcommand{\lnerrfluxtess}{$-5.273\pm0.024$} %$\log{\sigma_\mathrm{tess}}=-5.273\pm0.024$ rel. flux
+\newcommand{\baselinegpoffsetfluxtess}{$0.0023\pm0.0020$} %$\mathrm{gp ln sigma (tess)}=0.0023\pm0.0020$ 
+\newcommand{\baselinegpmaternthreetwolnsigmafluxtess}{$-4.55_{-0.11}^{+0.12}$} %$\mathrm{gp ln sigma (tess)}=-4.55_{-0.11}^{+0.12}$ 
+\newcommand{\baselinegpmaternthreetwolnrhofluxtess}{$-0.78_{-0.14}^{+0.19}$} %$\mathrm{gp ln rho (tess)}=-0.78_{-0.14}^{+0.19}$ 

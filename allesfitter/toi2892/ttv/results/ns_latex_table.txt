@@ -1,0 +1,40 @@
+parameter & value & unit & fit/fixed \\ 
+\hline 
+\multicolumn{4}{c}{\textit{Fitted parameters}} \\ 
+\hline 
+$R_b / R_\star$ & $0.0911\pm0.0038$ & & fit \\ 
+$(R_\star + R_b) / a_b$ & $0.0378_{-0.0031}^{+0.0070}$ & & fit \\ 
+$\cos{i_b}$ & $0.0139_{-0.0086}^{+0.012}$ & & fit \\ 
+$T_{0;b}$ & $2458879.0765\pm0.0043$ & BJD& fit \\ 
+$P_b$ & $14.950271\pm0.000089$ & d& fit \\ 
+$\sqrt{e_b} \cos{\omega_b}$ & $0.0$ & & fixed \\ 
+$\sqrt{e_b} \sin{\omega_b}$ & $0.0$ & & fixed \\ 
+$q_{1; \mathrm{tess}}$ & $0.25_{-0.18}^{+0.37}$ & & fit \\ 
+$q_{2; \mathrm{tess}}$ & $0.34_{-0.24}^{+0.37}$ & & fit \\ 
+$\log{\sigma_\mathrm{tess}}$ & $-5.292\pm0.023$ & rel. flux& fit \\ 
+$\mathrm{gp ln sigma (tess)}$ & $0.0024\pm0.0019$ & & fit \\ 
+$\mathrm{gp ln sigma (tess)}$ & $-4.53_{-0.11}^{+0.12}$ & & fit \\ 
+$\mathrm{gp ln rho (tess)}$ & $-0.70_{-0.17}^{+0.21}$ & & fit \\ 
+TTV$_\mathrm{b;1}$ & $-0.014_{-0.011}^{+0.015}$ & d& fit \\ 
+TTV$_\mathrm{b;2}$ & $-0.029_{-0.013}^{+0.012}$ & d& fit \\ 
+TTV$_\mathrm{b;3}$ & $-0.010\pm0.011$ & d& fit \\ 
+TTV$_\mathrm{b;4}$ & $-0.022_{-0.013}^{+0.011}$ & d& fit \\ 
+TTV$_\mathrm{b;5}$ & $0.0003\pm0.0066$ & d& fit \\ 
+TTV$_\mathrm{b;6}$ & $0.021_{-0.013}^{+0.010}$ & d& fit \\ 
+TTV$_\mathrm{b;7}$ & $0.0034_{-0.0091}^{+0.011}$ & d& fit \\ 
+TTV$_\mathrm{b;8}$ & $-0.0004\pm0.0079$ & d& fit \\ 
+TTV$_\mathrm{b;9}$ & $0.0074\pm0.0073$ & d& fit \\ 
+TTV$_\mathrm{b;10}$ & $0.0175_{-0.0096}^{+0.010}$ & d& fit \\ 
+TTV$_\mathrm{b;11}$ & $0.0104\pm0.0072$ & d& fit \\ 
+TTV$_\mathrm{b;12}$ & $0.0183_{-0.0075}^{+0.0095}$ & d& fit \\ 
+TTV$_\mathrm{b;13}$ & $0.0201\pm0.0079$ & d& fit \\ 
+TTV$_\mathrm{b;14}$ & $0.0194_{-0.011}^{+0.0084}$ & d& fit \\ 
+TTV$_\mathrm{b;15}$ & $0.0178_{-0.0070}^{+0.0075}$ & d& fit \\ 
+TTV$_\mathrm{b;16}$ & $0.009_{-0.012}^{+0.010}$ & d& fit \\ 
+TTV$_\mathrm{b;17}$ & $-0.007_{-0.018}^{+0.010}$ & d& fit \\ 
+TTV$_\mathrm{b;18}$ & $-0.0108_{-0.014}^{+0.0093}$ & d& fit \\ 
+TTV$_\mathrm{b;19}$ & $-0.0107_{-0.0089}^{+0.012}$ & d& fit \\ 
+TTV$_\mathrm{b;20}$ & $-0.0182_{-0.0081}^{+0.0076}$ & d& fit \\ 
+TTV$_\mathrm{b;21}$ & $-0.0223_{-0.0074}^{+0.0083}$ & d& fit \\ 
+TTV$_\mathrm{b;22}$ & $-0.0131\pm0.0077$ & d& fit \\ 
+TTV$_\mathrm{b;23}$ & $-0.0245_{-0.011}^{+0.0091}$ & d& fit \\ 
