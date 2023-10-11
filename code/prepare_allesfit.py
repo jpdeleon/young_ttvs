@@ -23,6 +23,7 @@ from math import ceil
 from utils import *
 import numpy as np
 import lightkurve as lk
+import allesfitter
 from tess_stars2px import tess_stars2px_function_entry
 
 assert lk.__version__[0]=='2'
@@ -62,11 +63,13 @@ if __name__=='__main__':
         type=str
     )
     ap.add_argument("-dir", help="base directory", type=str, default=f"{home}/github/research/project/young_ttvs/allesfitter/")
-    ap.add_argument("-pipeline", help="TESS/Kepler data pipeline", default='spoc')
-    ap.add_argument("-mission", choices=['tess','k2','kepler'], default='tess')
+    ap.add_argument("-pipeline", help="TESS/Kepler data pipeline", type=str, default='spoc')
+    ap.add_argument("-sigma", help="sigma for removing outliers in (combined) TESS lc", type=float, default=None)
+    ap.add_argument("-mission", choices=['tess','k2','kepler'], type=str, default='tess')
     ap.add_argument("-sector", help="-sector=-1 uses most recent TESS sector (default); try -sector=all to use all", default=-1)
     ap.add_argument("-debug", action="store_true", default=False)
     ap.add_argument("-clobber", help="overwrite files", action="store_true", default=False)
+    ap.add_argument("-results_dirname", help="relative path to the results dir of a previous run", default=None)
 
     args = ap.parse_args(None if sys.argv[1:] else ["-h"])
 
@@ -75,6 +78,9 @@ if __name__=='__main__':
     name = args.name
     basedir = args.dir
     mission = args.mission
+    sigma = args.sigma
+    results_dirname = args.results_dirname
+
     if (mission.lower()=='k2') or (mission.lower()=='kepler'):
         raise NotImplementedError("The idea is to use new TESS data")
     pipeline = args.pipeline
@@ -142,82 +148,29 @@ if __name__=='__main__':
     except:
         raise FileExistsError("Use -clobber to overwrite files.")
 
-    try:
-        if toiid or ctoiid:
-            Teff, Teff_err, radius, radius_err, mass, mass_err = catalog_info_TIC(int(ticid))
-        elif name:
-            Teff, Teff_err, radius, radius_err, mass, mass_err = catalog_info_name(d.iloc[0])
-        if debug:
-            print(Teff, Teff_err, radius, radius_err, mass, mass_err)
-    except Exception as e:
-        print(e)
-    if str(radius_err)=='nan':
-        radius_err = 0.1
-        print(f'radius_err is nan; setting to 0.1')
-    if str(mass_err)=='nan':
-        mass_err = 0.1
-        print(f'mass_err is nan; setting to 0.1')
+    if results_dirname:
+        alles = allesfitter.allesclass(outdir.joinpath(results_dirname))
+        print("Updating params.csv")
 
-    ###=====Create params.csv=====###
-    text = """#name,value,fit,bounds,label,unit,truth\n"""
-    for i,row in d.iterrows():
-        # tic = row['TIC ID']
-        Porb = row['Period (days)']
-        Porberr = row['Period (days) err']
-        Porb_s = np.random.normal(Porb, Porberr, size=Nsamples)
-        epoch = row['Epoch (BJD)']
-        epocherr = row['Epoch (BJD) err']
-        assert np.all([Porb>0, epoch>0]) 
+        ###=====Update params.csv=====###
+        text = """#name,value,fit,bounds,label,unit,truth\n"""
+        for pl in alles.settings['companions_all']:
+            # rprs = alles.posterior_params_median[f'{pl}_rr']
+            # rsuma = alles.posterior_params_median[f'{pl}_rsuma']
 
-        pl = planets[i]
-        rprs = np.sqrt(row['Depth (ppm)']/1e6)
-        rprserr = np.sqrt(row['Depth (ppm) err']/1e6)
-        if str(rprs)=='nan':
-            rprs = row['pl_rade']*u.Rearth.to(u.Rsun)/row['st_rad']
-            Rperr = np.sqrt(row['pl_radeerr1']**2+row['pl_radeerr2']**2)
-            rprserr = Rperr*u.Rearth.to(u.Rsun)/radius_err
-        assert rprs>0
+            rprs_min, rprs, rprs_max = np.percentile(alles.posterior_params[f'{pl}_rr'], q=quartiles)
+            rsuma_min, rsuma, rsuma_max = np.percentile(alles.posterior_params[f'{pl}_rsuma'], q=quartiles)
+            cosi_min, cosi, cosi_max = np.percentile(alles.posterior_params[f'{pl}_cosi'], q=quartiles)
+            Porb_min, Porb, Porb_max = np.percentile(alles.posterior_params[f'{pl}_period'], q=quartiles)
+            epoch_min, epoch, epoch_max = np.percentile(alles.posterior_params[f'{pl}_epoch'], q=quartiles)
 
-        rprs_s = np.random.normal(rprs, rprserr, size=Nsamples)
-        rprs_min, rprs, rprs_max = np.percentile(rprs_s, q=quartiles)
-
-        mass_s = np.random.normal(mass, mass_err, size=Nsamples)
-        radius_s = np.random.normal(radius, radius_err, size=Nsamples)
-
-        rho_s = rho_from_mr(mass_s, radius_s)
-        as_s = as_from_rhop(rho_s, Porb_s)
-        if debug:
-            rhomin, rho, rhomax = np.percentile(rho_s, q=quartiles)
-            as_min, a, as_max = np.percentile(as_s, q=quartiles)
-            a_au_s = a_from_rhoprs(rho_s, Porb_s, radius_s)
-            a_au_min, a_au, a_au_max = np.percentile(a_au_s, q=quartiles)
-
-        rsuma_s = radius_s/as_s
-        rsuma_min, rsuma, rsuma_max = np.percentile(rsuma_s, q=quartiles)
-
-        theta = np.arcsin(radius_s/as_s)
-        inc_s = np.pi/2 - theta
-        inc_max, inc, inc_min = np.percentile(inc_s, q=quartiles)
-        if debug:
-            b_s = as_s * np.cos(inc_s)
-            b_min, b, b_max = np.percentile(b_s, q=quartiles)
-
-        text += f"#companion {pl} astrophysical params,,,,,,\n"
-        text += f"{pl}_rr,{rprs:.4f},1,uniform 0 {ceil(rprs_max*10)/10:.4f},$R_{pl} / R_\star$,,\n"
-        text += f"{pl}_rsuma,{rsuma:.4f},1,uniform {rsuma_min:.4f} {ceil(rsuma_max*10)/10:.4f},$(R_\star + R_{pl}) / a_{pl}$,,\n"
-        text += f"{pl}_cosi,0,1,uniform 0 1,$\cos"+"{i_"+pl+"}$,,\n"
-        text += f"{pl}_epoch,{epoch:.6f},1,normal {epoch:.6f} {epocherr:.6f},$T_"+"{0;"+pl+"}$,BJD,\n"
-        text += f"{pl}_period,{Porb:.6f},1,normal {Porb:.6f} {Porberr:.6f},$P_b$,d,\n"
-        if debug:
-            print(pl)
-            print(f"rprs={rprs:.4f}")
-            print(f"rho={rho:.4f}")
-            print(f"a_s={a:.4f}")
-            print(f"a_au={a_au:.4f}")
-            print(f"rsuma={rsuma:.4f}")
-            print(f"inc={np.rad2deg(inc):.2f}")
-            print(f"b={b:.2f}")
-    text += """b_f_c,0,0,uniform 0.0 0.0,$\sqrt{e_b} \cos{\omega_b}$,,
+            text += f"#companion {pl} astrophysical params,,,,,,\n"
+            text += f"{pl}_rr,{rprs:.4f},1,uniform {rprs_min:.4f} {rprs_max:.4f},$R_{pl} / R_\star$,,\n"
+            text += f"{pl}_rsuma,{rsuma:.4f},1,uniform {rsuma_min:.4f} {rsuma_max:.4f},$(R_\star + R_{pl}) / a_{pl}$,,\n"
+            text += f"{pl}_cosi,{cosi:.2f},1,uniform {cosi_min:.2f} {cosi_max:.2f},$\cos"+"{i_"+pl+"}$,,\n"
+            text += f"{pl}_epoch,{epoch:.6f},1,uniform {epoch_min:.6f} {epoch_max:.6f},$T_"+"{0;"+pl+"}$,BJD,\n"
+            text += f"{pl}_period,{Porb:.6f},1,uniform {Porb_min:.6f} {Porb_max:.6f},$P_b$,d,\n"
+        text += """b_f_c,0,0,uniform 0.0 0.0,$\sqrt{e_b} \cos{\omega_b}$,,
 b_f_s,0,0,uniform 0.0 0.0,$\sqrt{e_b} \sin{\omega_b}$,,
 #limb darkening coefficients per instrument,,,,,,
 host_ldc_q1_tess,0.5,1,uniform 0.0 1.0,$q_{1; \mathrm{tess}}$,,
@@ -232,21 +185,119 @@ baseline_gp_matern32_lnrho_flux_tess,0,1,uniform -1 15,$\mathrm{gp ln rho (tess)
 #b_ttv_transit_1,0,1,uniform -0.1 0.1,TTV$_\mathrm{b;1}$,d,
 #TTV companion c,,,,,
 #c_ttv_transit_1,0,1,uniform -0.1 0.1,TTV$_\mathrm{c;1}$,d,"""
-    if debug:
-        print(text)
-    fp = outdir.joinpath("params.csv")
-    np.savetxt(fp, [text], fmt="%s")
-    print("Saved: ", fp)
+        fp = outdir.joinpath("params2.csv")
+        np.savetxt(fp, [text], fmt="%s")
+        print("Saved: ", fp)
+    else:
+        try:
+            if toiid or ctoiid:
+                Teff, Teff_err, radius, radius_err, mass, mass_err = catalog_info_TIC(int(ticid))
+            elif name:
+                Teff, Teff_err, radius, radius_err, mass, mass_err = catalog_info_name(d.iloc[0])
+            if debug:
+                print(Teff, Teff_err, radius, radius_err, mass, mass_err)
+        except Exception as e:
+            print(e)
+        if str(radius_err)=='nan':
+            radius_err = 0.1
+            print(f'radius_err is nan; setting to 0.1')
+        if str(mass_err)=='nan':
+            mass_err = 0.1
+            print(f'mass_err is nan; setting to 0.1')
+        if debug:
+            print(f"Teff={Teff:.0f}+/-{Teff_err:.0f}, Rs={radius:.2f}+/-{radius_err:.2f}, Ms={mass:.2f}+/-{mass_err:.2f}")
+        ###=====Create params.csv=====###
+        text = """#name,value,fit,bounds,label,unit,truth\n"""
+        for i,row in d.iterrows():
+            # tic = row['TIC ID']
+            Porb = row['Period (days)']
+            Porberr = row['Period (days) err']
+            Porb_s = np.random.normal(Porb, Porberr, size=Nsamples)
+            epoch = row['Epoch (BJD)']
+            epocherr = row['Epoch (BJD) err']
+            assert np.all([Porb>0, epoch>0]) 
 
-    ###=====Create settings.csv=====###
-    text2="""#name,value
+            pl = planets[i]
+            if debug:
+                print(pl)
+                print(f"P={Porb:.4f}+/-{Porberr:.4f}, T0={epoch:.4f}+/-{epocherr:.4f}")
+
+            rprs = np.sqrt(row['Depth (ppm)']/1e6)
+            rprserr = np.sqrt(row['Depth (ppm) err']/1e6)
+            if str(rprs)=='nan':
+                rprs = row['pl_rade']*u.Rearth.to(u.Rsun)/row['st_rad']
+                Rperr = np.sqrt(row['pl_radeerr1']**2+row['pl_radeerr2']**2)
+                rprserr = Rperr*u.Rearth.to(u.Rsun)/radius_err
+            assert rprs>0
+
+            rprs_s = np.random.normal(rprs, rprserr, size=Nsamples)
+            rprs_min, rprs, rprs_max = np.percentile(rprs_s, q=quartiles)
+
+            mass_s = np.random.normal(mass, mass_err, size=Nsamples)
+            radius_s = np.random.normal(radius, radius_err, size=Nsamples)
+
+            rho_s = rho_from_mr(mass_s, radius_s)
+            as_s = as_from_rhop(rho_s, Porb_s)
+            if debug:
+                rhomin, rho, rhomax = np.percentile(rho_s, q=quartiles)
+                as_min, a, as_max = np.percentile(as_s, q=quartiles)
+                a_au_s = a_from_rhoprs(rho_s, Porb_s, radius_s)
+                a_au_min, a_au, a_au_max = np.percentile(a_au_s, q=quartiles)
+
+            #FIXME: as_s produces some NaNs e.g. for Kepler-51
+            idx = as_s>0
+            rsuma_s = radius_s[idx]/as_s[idx]
+            rsuma_min, rsuma, rsuma_max = np.percentile(rsuma_s, q=quartiles)
+
+            theta = np.arcsin(radius_s/as_s)
+            inc_s = np.pi/2 - theta
+            inc_max, inc, inc_min = np.percentile(inc_s, q=quartiles)
+            if debug:
+                b_s = as_s * np.cos(inc_s)
+                b_min, b, b_max = np.percentile(b_s, q=quartiles)
+                print(f"rprs={rprs:.4f}")
+                print(f"rho={rho:.4f}")
+                print(f"a_s={a:.4f}")
+                print(f"a_au={a_au:.4f}")
+                print(f"rsuma={rsuma:.4f}")
+                print(f"inc={np.rad2deg(inc):.2f}")
+                print(f"b={b:.2f}")
+            text += f"#companion {pl} astrophysical params,,,,,,\n"
+            text += f"{pl}_rr,{rprs:.4f},1,uniform 0 {ceil(rprs_max*10)/10:.4f},$R_{pl} / R_\star$,,\n"
+            text += f"{pl}_rsuma,{rsuma:.4f},1,uniform {rsuma_min:.4f} {ceil(rsuma_max*10)/10:.4f},$(R_\star + R_{pl}) / a_{pl}$,,\n"
+            text += f"{pl}_cosi,0,1,uniform 0 1,$\cos"+"{i_"+pl+"}$,,\n"
+            text += f"{pl}_epoch,{epoch:.6f},1,normal {epoch:.6f} {epocherr:.6f},$T_"+"{0;"+pl+"}$,BJD,\n"
+            text += f"{pl}_period,{Porb:.6f},1,normal {Porb:.6f} {Porberr:.6f},$P_b$,d,\n"
+        text += """b_f_c,0,0,uniform 0.0 0.0,$\sqrt{e_b} \cos{\omega_b}$,,
+b_f_s,0,0,uniform 0.0 0.0,$\sqrt{e_b} \sin{\omega_b}$,,
+#limb darkening coefficients per instrument,,,,,,
+host_ldc_q1_tess,0.5,1,uniform 0.0 1.0,$q_{1; \mathrm{tess}}$,,
+host_ldc_q2_tess,0.5,1,uniform 0.0 1.0,$q_{2; \mathrm{tess}}$,,
+#errors per instrument,,,,,,
+ln_err_flux_tess,-6,1,uniform -10 -1,$\log{\sigma_\mathrm{tess}}$,rel. flux,
+#baseline per instrument,,,,,,
+baseline_gp_offset_flux_tess,0,1,uniform -0.1 0.1,$\mathrm{gp ln sigma (tess)}$,,
+baseline_gp_matern32_lnsigma_flux_tess,-5,1,uniform -15 0,$\mathrm{gp ln sigma (tess)}$,,
+baseline_gp_matern32_lnrho_flux_tess,0,1,uniform -1 15,$\mathrm{gp ln rho (tess)}$,,
+#TTV companion b,,,,,
+#b_ttv_transit_1,0,1,uniform -0.1 0.1,TTV$_\mathrm{b;1}$,d,
+#TTV companion c,,,,,
+#c_ttv_transit_1,0,1,uniform -0.1 0.1,TTV$_\mathrm{c;1}$,d,"""
+        if debug:
+            print(text)
+        fp = outdir.joinpath("params.csv")
+        np.savetxt(fp, [text], fmt="%s")
+        print("Saved: ", fp)
+
+        ###=====Create settings.csv=====###
+        text2="""#name,value
 ###############################################################################,
 # General settings,
 ###############################################################################,\n"""
 
-    text2+=f"companions_phot,{' '.join(planets[:len(d)])}"
+        text2+=f"companions_phot,{' '.join(planets[:len(d)])}"
 
-    text2+="""
+        text2+="""
 companions_rv,
 inst_phot,tess
 inst_rv,
@@ -266,12 +317,8 @@ inst_for_b_epoch,all
 # MCMC settings,
 ###############################################################################,
 mcmc_nwalkers,100
-#mcmc_nwalkers,200
 mcmc_total_steps,2000
-#mcmc_total_steps,6000
 mcmc_burn_steps,1000
-#mcmc_burn_steps,1000
-#mcmc_thin_by,20
 mcmc_thin_by,2
 ###############################################################################,
 # Nested Sampling settings,
@@ -309,29 +356,28 @@ use_host_density_prior,True
 # fit_ttvs
 ###################################################,
 fit_ttvs,False
-###################################################,
-"""
+###################################################,"""
 
-    if debug:
-        print(text2)
+        if debug:
+            print(text2)
 
-    fp = outdir.joinpath("settings.csv")
-    np.savetxt(fp, [text2], fmt="%s")
-    print("Saved: ", fp)
+        fp = outdir.joinpath("settings.csv")
+        np.savetxt(fp, [text2], fmt="%s")
+        print("Saved: ", fp)
 
-    ###=====Create params_star.csv=====###
-    text3=f"""#R_star,R_star_lerr,R_star_uerr,M_star,M_star_lerr,M_star_uerr,Teff_star,Teff_star_lerr,Teff_star_uerr
-#R_sun,R_sun,R_sun,M_sun,M_sun,M_sun,K,K,K
-{radius:.2f},{radius_err:.2f},{radius_err:.2f},{mass:.2f},{mass_err:.2f},{mass_err:.2f},{Teff:.0f},{Teff_err:.0f},{Teff_err:.0f}"""
-    if debug:
-        print(text3)
+        ###=====Create params_star.csv=====###
+        text3=f"""#R_star,R_star_lerr,R_star_uerr,M_star,M_star_lerr,M_star_uerr,Teff_star,Teff_star_lerr,Teff_star_uerr
+    #R_sun,R_sun,R_sun,M_sun,M_sun,M_sun,K,K,K
+    {radius:.2f},{radius_err:.2f},{radius_err:.2f},{mass:.2f},{mass_err:.2f},{mass_err:.2f},{Teff:.0f},{Teff_err:.0f},{Teff_err:.0f}"""
+        if debug:
+            print(text3)
 
-    fp = outdir.joinpath("params_star.csv")
-    np.savetxt(fp, [text3], fmt="%s")
-    print("Saved: ", fp)
+        fp = outdir.joinpath("params_star.csv")
+        np.savetxt(fp, [text3], fmt="%s")
+        print("Saved: ", fp)
 
-    ###=====Create run.py=====###
-    text4="""#!/usr/bin/env python
+        ###=====Create run.py=====###
+        text4="""#!/usr/bin/env python
 import allesfitter
 
 fig = allesfitter.show_initial_guess('.')
@@ -340,77 +386,79 @@ allesfitter.prepare_ttv_fit('.', style='tessplot')
 #allesfitter.ns_fit('.')
 #allesfitter.ns_output('.')"""
 
-    if debug:
-        print(text4)
+        if debug:
+            print(text4)
 
-    fp = outdir.joinpath("run.py")
-    np.savetxt(fp, [text4], fmt="%s")
-    print("Saved: ", fp)
+        fp = outdir.joinpath("run.py")
+        np.savetxt(fp, [text4], fmt="%s")
+        print("Saved: ", fp)
 
-    query_name = name
-    if toiid or ctoiid:
-        query_name = f'TIC {ticid}'
-    elif name.lower()[:2]=='k2':
-        # search epic name or coordinates
-        try:
-            print("Searching for EPIC name")
-            query_name = get_name_aliases(name, key='epic')
-        except Exception as e:
-            print(e)
-    
-    all = lk.search_lightcurve(query_name, mission=mission)
-    if len(all)>0:
-        pipelines = [i.lower() for i in all.author]
-    else:
-        raise ValueError("No light curves found.")
-
-    if debug:
-        print(all)
-        print(pipelines)
-    
-    idx = [i==pipeline.lower() for i in pipelines]
-    if sum(idx)==0:
-        errmsg = f"pipeline={pipeline} not in {pipelines}"
-        print(all)
-        raise ValueError(errmsg)
-    print(f"Using {pipeline} pipeline.")
-    result = lk.search_lightcurve(query_name, author=pipeline, mission=mission)
-    if result:
-        s = map(int, [s.split()[-1] for s in result.mission])
-        sectors = sorted(set(s))
-        if multi_sector:
-            print(f"Using {len(sectors)} sectors: {sectors}")
-            lc = result.download_all(quality_bitmask='default').stitch()
-            print("The lightcurves were not flattened/de-trended to avoid removing transits.")
+        query_name = name
+        if toiid or ctoiid:
+            query_name = f'TIC {ticid}'
+        elif name.lower()[:2]=='k2':
+            # search epic name or coordinates
+            try:
+                print("Searching for EPIC name")
+                query_name = get_name_aliases(name, key='epic')
+            except Exception as e:
+                print(e)
+        
+        all = lk.search_lightcurve(query_name, mission=mission)
+        if len(all)>0:
+            pipelines = set([i.lower() for i in all.author])
         else:
-            if sector is None:
-                idx = 0
-                sector = sectors[idx]
+            raise ValueError("No light curves found.")
+
+        if debug:
+            print(all)
+            print(pipelines)
+        
+        idx = [i==pipeline.lower() for i in pipelines]
+        if sum(idx)==0:
+            errmsg = f"pipeline={pipeline} not in {pipelines}"
+            print(all)
+            raise ValueError(errmsg)
+        print(f"Using {pipeline} pipeline.")
+        result = lk.search_lightcurve(query_name, author=pipeline, mission=mission)
+        if result:
+            s = map(int, [s.split()[-1] for s in result.mission])
+            sectors = sorted(set(s))
+            if multi_sector:
+                print(f"Using {len(sectors)} sectors: {sectors}")
+                lc = result.download_all(quality_bitmask='default').stitch()
+                print("The lightcurves were not flattened/de-trended to avoid removing transits.")
             else:
-                if int(sector)==-1:
-                    idx = -1
+                if sector is None:
+                    idx = 0
                     sector = sectors[idx]
                 else:
-                    idx = [i==sector for i in sectors]
-                    if sum(idx)==0:
-                        errmsg = f"sector={sector} is not available in {sectors}"
-                        raise ValueError(errmsg)
-            msg = f"Using sector={sector}"
-            if not multi_sector:
-                msg += f"; otherwise use -sector=({sectors}, all))"
-            print(msg)
-            lc = result[idx].download(quality_bitmask='default').normalize()
-            assert lc.sector==sector
-        ax = lc.scatter()
-        fp = outdir.joinpath(f"{dirname}_tess.png")
-        ax.figure.savefig(fp)
-        fp = outdir.joinpath("tess.csv")
-        df = lc.to_pandas()
-        df['time'] = df.index + 2457000
-        df = df.reset_index(drop=True).sort_values(by='time')
-        df = df[cols].dropna()
-        df.to_csv(fp, sep=',', header=False, index=False)
-        print("TESS Ndata: ", len(df))
-        print("Saved: ", fp)
-        if debug:
-            print(df.head())
+                    if int(sector)==-1:
+                        idx = -1
+                        sector = sectors[idx]
+                    else:
+                        idx = [i==sector for i in sectors]
+                        if sum(idx)==0:
+                            errmsg = f"sector={sector} is not available in {sectors}"
+                            raise ValueError(errmsg)
+                msg = f"Using sector={sector}"
+                if not multi_sector:
+                    msg += f"; otherwise use -sector=({sectors}, all))"
+                print(msg)
+                lc = result[idx].download(quality_bitmask='default').normalize()
+                assert lc.sector==sector
+            if sigma:
+                lc = lc.remove_outliers(sigma=sigma)
+            ax = lc.scatter()
+            fp = outdir.joinpath(f"{dirname}_tess.png")
+            ax.figure.savefig(fp)
+            fp = outdir.joinpath("tess.csv")
+            df = lc.to_pandas()
+            df['time'] = df.index + 2457000
+            df = df.reset_index(drop=True).sort_values(by='time')
+            df = df[cols].dropna()
+            df.to_csv(fp, sep=',', header=False, index=False)
+            print("TESS Ndata: ", len(df))
+            print("Saved: ", fp)
+            if debug:
+                print(df.head())

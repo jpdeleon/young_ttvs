@@ -1,11 +1,14 @@
+import json
+import datetime
 from pathlib import Path
 from itertools import combinations
-import json
 import urllib.request
 import numpy as np
 import pandas as pd
-from astroquery.ipac.nexsci.nasa_exoplanet_archive import NasaExoplanetArchive
+from tqdm import tqdm
+from astropy.time import Time
 import astropy.units as u
+from astroquery.ipac.nexsci.nasa_exoplanet_archive import NasaExoplanetArchive
 
 G = 6.67e-11
 D_H = 24.
@@ -48,7 +51,7 @@ def as_from_rhop(rho, P):
     -------
       as : scaled semi-major axis [R_star]
     """
-    return (G/(3*np.pi))**(1/3) * ((P * D_S)**2 * 1e3 * rho)**(1 / 3)
+    return (G/(3*np.pi))**(1/3) * ((P * D_S)**2 * 1e3 * rho)**(1/3)
 
 def a_from_rhoprs(rho, P, rstar):
     """Semi-major axis from the stellar density, stellar radius, and planet's orbital period.
@@ -240,6 +243,46 @@ def get_nexsci_data(table_name="ps", clobber=False):
         df_nexsci = pd.read_csv(fp)
         print("Loaded: ", fp)
     return df_nexsci
+
+def get_tess_obs_per_year(year):
+    url = f"https://tess.mit.edu/tess-year-{year}-observations/"
+    tab = pd.read_html(url)[0]
+    return tab
+
+def convert_date(x, format1="%m/%d/%y", format2="%Y-%m-%d"):
+    return datetime.datetime.strptime(x, format1).date().strftime(format2)
+
+def get_tess_obs_dates(clobber=False):
+    "Returns all years of TESS observations"
+    fp = Path('/home/jp/github/research/project/young_ttvs/data/tess_obs.csv')
+    if not fp.exists() or clobber:
+        tabs = []
+        print("Downloading data...")
+        for n in tqdm([1,2,3,4,5,6], desc="TESS year"):
+            tab = get_tess_obs_per_year(n)
+            tabs.append(tab)
+
+        df=pd.concat(tabs).reset_index(drop=True)
+        df=df.drop('Unnamed: 7', axis=1)
+        start = df['Dates'].apply(lambda x: x.split('-')[0])
+        end = df['Dates'].apply(lambda x: x.split('-')[1])
+        df['start'] = start.apply(convert_date).apply(lambda x: Time(x).jd)
+        df['end'] = end.apply(convert_date).apply(lambda x: Time(x).jd)
+        df.to_csv(fp, index=False)
+        print("Saved: ", fp)
+    else:
+        df = pd.read_csv(fp, index_col=0)
+        #print("Loaded: ", fp)
+        #print(df.tail())
+    
+    return df
+
+def get_sector(bjd):
+    df = get_tess_obs_dates().reset_index()
+    idx = (bjd>df.start) & (bjd<df.end)
+    errmsg = "time not found in TESS sectors"
+    assert sum(idx)>0, errmsg
+    return df.loc[idx,'Sector'].values[0]
 
 def get_orbit_pairs(N=10, order=1):
     cs = list(combinations(np.arange(1, N), 2))
