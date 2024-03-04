@@ -110,6 +110,12 @@ TOI-6265 | [TIC-344927749](https://exofop.ipac.caltech.edu/tess/target.php?id=34
 Second Order: 7:5 | P=(4.18,5.79) (delta=0.98%)
 
 
+## TOI with hint of TTVs
+* [TOI-4495](https://github.com/jpdeleon/young_ttvs/tree/main/allesfitter/toi_in_resonance/toi4495/)
+ 
+![img](allesfitter/toi_in_resonance/toi4495/fit.png)
+
+
 ## TOIs with sign of youth
 ### TOI 1097 
 * THYME IX: HD 109833 b,c in LCC (24±3 Myr)
