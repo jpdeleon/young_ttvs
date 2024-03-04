@@ -301,7 +301,8 @@ def get_resonant_pairs(periods, order=1, tol=0.01):
         for i,j in get_orbit_pairs(10, order=order):            
             delta = abs((Pout/Pin)*(i/j) - 1)
             if delta<=tol:
-                text = f"{j}:{i} | P=({Pout:.2f},{Pin:.2f}) n=({n+1},{n+2}) (delta={delta*100:.2f}%)"
+                # text = f"{j}:{i} | P=({Pout:.2f},{Pin:.2f}) n=({n+1},{n+2}) (delta={delta*100:.2f}%)"
+                text = f"{j}:{i} | P=({Pin:.2f},{Pout:.2f}) (delta={delta*100:.2f}%)"
                 resonant.append(text)
                 deltas.append(delta)
                 break
