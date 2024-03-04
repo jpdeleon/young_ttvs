@@ -16,97 +16,97 @@ TODO:
 ## TOIs near period commensurability
 * See [notebook](https://github.com/jpdeleon/young_ttvs/tree/main/notebooks/tois.ipynb)
  
-TOI-2269 | [TIC-441798995](exofop.ipac.caltech.edu/tess/target.php?id=441798995) (nplanets=3):<br>
+TOI-2269 | [TIC-441798995](https://exofop.ipac.caltech.edu/tess/target.php?id=441798995) (nplanets=3):<br>
 First Order: 2:1 | P=(1.42,2.84) (delta=0.00%)<br>
 
-TOI-1136 | [TIC-142276270](exofop.ipac.caltech.edu/tess/target.php?id=142276270) (nplanets=4):<br>
+TOI-1136 | [TIC-142276270](https://exofop.ipac.caltech.edu/tess/target.php?id=142276270) (nplanets=4):<br>
 First Order: 2:1 | P=(6.26,12.52) (delta=0.01%) 3:2 | P=(12.52,18.80) (delta=0.14%)<br>
 
-TOI-2267 | [TIC-459837008](exofop.ipac.caltech.edu/tess/target.php?id=459837008) (nplanets=3):<br>
+TOI-2267 | [TIC-459837008](https://exofop.ipac.caltech.edu/tess/target.php?id=459837008) (nplanets=3):<br>
 First Order: 9:8 | P=(2.03,2.29) (delta=0.02%)<br>
 
-TOI-0396 | [TIC-178155732](exofop.ipac.caltech.edu/tess/target.php?id=178155732) (nplanets=3):<br>
+TOI-0396 | [TIC-178155732](https://exofop.ipac.caltech.edu/tess/target.php?id=178155732) (nplanets=3):<br>
 Second Order: 5:3 | P=(3.59,5.97) (delta=0.03%)
 
-TOI-6109 | [TIC-384984325](exofop.ipac.caltech.edu/tess/target.php?id=384984325) (nplanets=2):<br>
+TOI-6109 | [TIC-384984325](https://exofop.ipac.caltech.edu/tess/target.php?id=384984325) (nplanets=2):<br>
 First Order: 3:2 | P=(5.70,8.54) (delta=0.05%)<br>
 
-TOI-1446 | [TIC-294471966](exofop.ipac.caltech.edu/tess/target.php?id=294471966) (nplanets=2):<br>
+TOI-1446 | [TIC-294471966](https://exofop.ipac.caltech.edu/tess/target.php?id=294471966) (nplanets=2):<br>
 Second Order: 7:5 | P=(4.51,6.32) (delta=0.14%)
 
-TOI-6022 | [TIC-455947620](exofop.ipac.caltech.edu/tess/target.php?id=455947620) (nplanets=2):<br>
+TOI-6022 | [TIC-455947620](https://exofop.ipac.caltech.edu/tess/target.php?id=455947620) (nplanets=2):<br>
 First Order: 5:4 | P=(1.55,1.93) (delta=0.19%)<br>
 
-TOI-4323 | [TIC-143022742](exofop.ipac.caltech.edu/tess/target.php?id=143022742) (nplanets=2):<br>
+TOI-4323 | [TIC-143022742](https://exofop.ipac.caltech.edu/tess/target.php?id=143022742) (nplanets=2):<br>
 First Order: 3:2 | P=(14.68,21.97) (delta=0.21%)<br>
 
-TOI-4647 | [TIC-303204165](exofop.ipac.caltech.edu/tess/target.php?id=303204165) (nplanets=2):<br>
+TOI-4647 | [TIC-303204165](https://exofop.ipac.caltech.edu/tess/target.php?id=303204165) (nplanets=2):<br>
 First Order: 5:4 | P=(8.83,11.07) (delta=0.24%)<br>
 
-TOI-2076 | [TIC-27491137](exofop.ipac.caltech.edu/tess/target.php?id=27491137) (nplanets=3):<br>
+TOI-2076 | [TIC-27491137](https://exofop.ipac.caltech.edu/tess/target.php?id=27491137) (nplanets=3):<br>
 Second Order: 5:3 | P=(21.02,35.13) (delta=0.29%)
 
-TOI-0282 | [TIC-29781292](exofop.ipac.caltech.edu/tess/target.php?id=29781292) (nplanets=4):<br>
+TOI-0282 | [TIC-29781292](https://exofop.ipac.caltech.edu/tess/target.php?id=29781292) (nplanets=4):<br>
 First Order: 3:2 | P=(56.00,84.26) (delta=0.30%)<br>
 
-TOI-0406 | [TIC-153065527](exofop.ipac.caltech.edu/tess/target.php?id=153065527) (nplanets=2):<br>
+TOI-0406 | [TIC-153065527](https://exofop.ipac.caltech.edu/tess/target.php?id=153065527) (nplanets=2):<br>
 First Order: 2:1 | P=(6.61,13.18) (delta=0.41%)<br>
 
-TOI-0270 | [TIC-259377017](exofop.ipac.caltech.edu/tess/target.php?id=259377017) (nplanets=3):<br>
+TOI-0270 | [TIC-259377017](https://exofop.ipac.caltech.edu/tess/target.php?id=259377017) (nplanets=3):<br>
 First Order: 2:1 | P=(5.66,11.38) (delta=0.52%)<br>
 
-TOI-0174 | [TIC-425997655](exofop.ipac.caltech.edu/tess/target.php?id=425997655) (nplanets=5):<br>
+TOI-0174 | [TIC-425997655](https://exofop.ipac.caltech.edu/tess/target.php?id=425997655) (nplanets=5):<br>
 First Order: 2:1 | P=(3.98,7.91) (delta=0.58%)<br>
 
-TOI-5520 | [TIC-374180079](exofop.ipac.caltech.edu/tess/target.php?id=374180079) (nplanets=2):<br>
+TOI-5520 | [TIC-374180079](https://exofop.ipac.caltech.edu/tess/target.php?id=374180079) (nplanets=2):<br>
 First Order: 4:3 | P=(14.70,19.48) (delta=0.58%)<br>
 
-TOI-0216 | [TIC-55652896](exofop.ipac.caltech.edu/tess/target.php?id=55652896) (nplanets=2):<br>
+TOI-0216 | [TIC-55652896](https://exofop.ipac.caltech.edu/tess/target.php?id=55652896) (nplanets=2):<br>
 First Order: 2:1 | P=(17.39,34.55) (delta=0.64%)<br>
 
-TOI-1339 | [TIC-269701147](exofop.ipac.caltech.edu/tess/target.php?id=269701147) (nplanets=3):<br>
+TOI-1339 | [TIC-269701147](https://exofop.ipac.caltech.edu/tess/target.php?id=269701147) (nplanets=3):<br>
 First Order: 4:3 | P=(28.58,38.35) (delta=0.64%)<br>
 
-TOI-1670 | [TIC-441739020](exofop.ipac.caltech.edu/tess/target.php?id=441739020) (nplanets=3):<br>
+TOI-1670 | [TIC-441739020](https://exofop.ipac.caltech.edu/tess/target.php?id=441739020) (nplanets=3):<br>
 Second Order: 3:1 | P=(40.75,123.06) (delta=0.66%)
 
-TOI-5493 | [TIC-468979441](exofop.ipac.caltech.edu/tess/target.php?id=468979441) (nplanets=3):<br>
+TOI-5493 | [TIC-468979441](https://exofop.ipac.caltech.edu/tess/target.php?id=468979441) (nplanets=3):<br>
 Second Order: 5:3 | P=(14.56,24.44) (delta=0.67%)
 
-TOI-6276 | [TIC-397362481](exofop.ipac.caltech.edu/tess/target.php?id=397362481) (nplanets=3):<br>
+TOI-6276 | [TIC-397362481](https://exofop.ipac.caltech.edu/tess/target.php?id=397362481) (nplanets=3):<br>
 Second Order: 7:5 | P=(4.47,6.21) (delta=0.70%)
 
-TOI-6054 | [TIC-392681545](exofop.ipac.caltech.edu/tess/target.php?id=392681545) (nplanets=2):<br>
+TOI-6054 | [TIC-392681545](https://exofop.ipac.caltech.edu/tess/target.php?id=392681545) (nplanets=2):<br>
 Second Order: 5:3 | P=(7.49,12.58) (delta=0.74%)
 
-TOI-1749 | [TIC-233602827](exofop.ipac.caltech.edu/tess/target.php?id=233602827) (nplanets=3):<br>
+TOI-1749 | [TIC-233602827](https://exofop.ipac.caltech.edu/tess/target.php?id=233602827) (nplanets=3):<br>
 First Order: 2:1 | P=(4.49,9.04) (delta=0.74%)<br>
 
-TOI-0663 | [TIC-54962195](exofop.ipac.caltech.edu/tess/target.php?id=54962195) (nplanets=3):<br>
+TOI-0663 | [TIC-54962195](https://exofop.ipac.caltech.edu/tess/target.php?id=54962195) (nplanets=3):<br>
 First Order: 3:2 | P=(4.70,7.10) (delta=0.76%)<br>
 
-TOI-0696 | [TIC-77156829](exofop.ipac.caltech.edu/tess/target.php?id=77156829) (nplanets=3):<br>
+TOI-0696 | [TIC-77156829](https://exofop.ipac.caltech.edu/tess/target.php?id=77156829) (nplanets=3):<br>
 First Order: 4:3 | P=(3.69,4.97) (delta=0.80%)<br>
 
-TOI-2104 | [TIC-367630162](exofop.ipac.caltech.edu/tess/target.php?id=367630162) (nplanets=5):<br>
+TOI-2104 | [TIC-367630162](https://exofop.ipac.caltech.edu/tess/target.php?id=367630162) (nplanets=5):<br>
 Second Order: 5:3 | P=(1.98,3.27) (delta=0.85%)
 
-TOI-4495 | [TIC-120826158](exofop.ipac.caltech.edu/tess/target.php?id=120826158) (nplanets=2):<br>
+TOI-4495 | [TIC-120826158](https://exofop.ipac.caltech.edu/tess/target.php?id=120826158) (nplanets=2):<br>
 First Order: 2:1 | P=(2.57,5.18) (delta=0.86%)<br>
 
-TOI-1097 | [TIC-360630575](exofop.ipac.caltech.edu/tess/target.php?id=360630575) (nplanets=2):<br>
+TOI-1097 | [TIC-360630575](https://exofop.ipac.caltech.edu/tess/target.php?id=360630575) (nplanets=2):<br>
 First Order: 3:2 | P=(9.19,13.90) (delta=0.87%)<br>
 
-TOI-0700 | [TIC-150428135](exofop.ipac.caltech.edu/tess/target.php?id=150428135) (nplanets=4):<br>
+TOI-0700 | [TIC-150428135](https://exofop.ipac.caltech.edu/tess/target.php?id=150428135) (nplanets=4):<br>
 First Order: 4:3 | P=(27.81,37.42) (delta=0.93%)<br>
 
-TOI-0175 | [TIC-307210830](exofop.ipac.caltech.edu/tess/target.php?id=307210830) (nplanets=3):<br>
+TOI-0175 | [TIC-307210830](https://exofop.ipac.caltech.edu/tess/target.php?id=307210830) (nplanets=3):<br>
 First Order: 2:1 | P=(3.69,7.45) (delta=0.94%)<br>
 
-TOI-1730 | [TIC-318022259](exofop.ipac.caltech.edu/tess/target.php?id=318022259) (nplanets=3):<br>
+TOI-1730 | [TIC-318022259](https://exofop.ipac.caltech.edu/tess/target.php?id=318022259) (nplanets=3):<br>
 First Order: 2:1 | P=(6.23,12.57) (delta=0.98%)<br>
 
-TOI-6265 | [TIC-344927749](exofop.ipac.caltech.edu/tess/target.php?id=344927749) (nplanets=2):<br>
+TOI-6265 | [TIC-344927749](https://exofop.ipac.caltech.edu/tess/target.php?id=344927749) (nplanets=2):<br>
 Second Order: 7:5 | P=(4.18,5.79) (delta=0.98%)
 
 
