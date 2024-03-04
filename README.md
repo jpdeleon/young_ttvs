@@ -117,6 +117,9 @@ Second Order: 7:5 | P=(4.18,5.79) (delta=0.98%)
 
 
 ## TOIs with sign of youth
+### TOI6109
+![img](allesfitter/toi_in_resonance/toi6109/TOI6109_s58_pdcsap_sc.png)
+
 ### TOI 1097 
 * THYME IX: HD 109833 b,c in LCC (24±3 Myr)
 * [Wood+2023](https://ui.adsabs.harvard.edu/abs/2023AJ....165...85W/abstract)
