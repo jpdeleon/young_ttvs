@@ -140,7 +140,7 @@ if __name__=='__main__':
         dirname = name.strip().replace(' ','')
         idx = df[key]==id
 
-    outdir = Path(basedir, dirname)
+    outdir = Path(basedir)
 
     errmsg = f"Coulnd't find {key} {id} in {key} database."
     assert sum(idx)>0, errmsg
@@ -241,6 +241,7 @@ if __name__=='__main__':
         np.savetxt(fp, [text], fmt="%s")
         print("Saved: ", fp)
     else:
+        outdir = Path(basedir, dirname)
         try:
             outdir.mkdir(parents=True, exist_ok=clobber)
         except:
