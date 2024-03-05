@@ -8,6 +8,9 @@ creates a directory with the files needed to run allesfitter:
 4. params_star.csv
 5. tess.csv
 ======
+* for precise transit transit timing, some parameters can be fixed
+* limb darkening can be fixed to theoretical values derived using ldtk;
+  assumes feh=(0,0.1) dex if feh is not available 
 * uses tess-point to check if target was observed by TESS
 (useful to know even if `lightkurve.search_lightcurve` returned None)
 * uses aliases (K2 name --> EPIC)
@@ -20,13 +23,25 @@ import sys
 from argparse import ArgumentParser
 from pathlib import Path
 from math import ceil
-from utils import *
 import numpy as np
 import lightkurve as lk
-import allesfitter
-from tess_stars2px import tess_stars2px_function_entry
+import astropy.units as u
+from allesfitter import allesclass#, config, nested_sampling_output, general_output
+from ldtk import LDPSetCreator, BoxcarFilter
+# from tess_stars2px import tess_stars2px_function_entry
+from utils import catalog_info_TIC, get_tois, get_ctois, rho_from_mr, as_from_rhop, a_from_rhoprs, get_nexsci_data, get_name_aliases
 
 assert lk.__version__[0]=='2'
+
+filter_widths = {
+    "gp": (400, 550),
+    "V": (480, 600),
+    "rp": (560, 700),
+    "ip": (700, 820),
+    "zs": (825, 920),
+    "I+z": (720, 1030),
+    "tess": (585, 1050),
+}
 
 home = Path.home()
 sys.path.insert(0, f'{home}/github/research/project/young_ttvs/code')
@@ -40,9 +55,11 @@ quartiles = [2.70, 50, 97.3] #3-sigma
 
 def catalog_info_name(df):
     Teff, Teff_err = df['st_teff'].astype(float), np.sqrt(df['st_tefferr1']**2+df['st_tefferr2']**2)
+    logg, logg_err = df['st_logg'].astype(float), np.sqrt(df['st_loggerr1']**2+df['st_loggerr2']**2)
+    feh, feh_err = 0, 0.1
     radius, radius_err = df['st_rad'].astype(float), np.sqrt(df['st_raderr1']**2+df['st_raderr2']**2)
     mass, mass_err = df['st_mass'].astype(float), np.sqrt(df['st_masserr1']**2+df['st_masserr2']**2)
-    return Teff, Teff_err, radius, radius_err, mass, mass_err
+    return Teff, Teff_err, logg, logg_err, feh, feh_err, radius, radius_err, mass, mass_err
 
 if __name__=='__main__':
     ap = ArgumentParser()
@@ -69,7 +86,7 @@ if __name__=='__main__':
     ap.add_argument("-sector", help="-sector=-1 uses most recent TESS sector (default); try -sector=all to use all", default=-1)
     ap.add_argument("-debug", action="store_true", default=False)
     ap.add_argument("-clobber", help="overwrite files", action="store_true", default=False)
-    ap.add_argument("-results_dirname", help="relative path to the results dir of a previous run", default=None)
+    ap.add_argument("-results_dir", help="path to the results dir of a previous run to be used in params.csv", default=None)
 
     args = ap.parse_args(None if sys.argv[1:] else ["-h"])
 
@@ -79,7 +96,7 @@ if __name__=='__main__':
     basedir = args.dir
     mission = args.mission
     sigma = args.sigma
-    results_dirname = args.results_dirname
+    results_dir = args.results_dir
 
     if (mission.lower()=='k2') or (mission.lower()=='kepler'):
         raise NotImplementedError("The idea is to use new TESS data")
@@ -123,14 +140,7 @@ if __name__=='__main__':
         dirname = name.strip().replace(' ','')
         idx = df[key]==id
 
-    # target = 'K2-384'
-    # dd = df[df.hostname==target]
-    # ra, dec, tic = dd.iloc[0][['ra','dec','tic_id']].values
-    # ticid = int(tic.split()[-1])
-    # outID, outEclipLong, outEclipLat, outSec, outCam, outCcd, \
-    #             outColPix, outRowPix, scinfo = tess_stars2px_function_entry(
-    #                     ticid, ra, dec)
-    # outSec
+    outdir = Path(basedir, dirname)
 
     errmsg = f"Coulnd't find {key} {id} in {key} database."
     assert sum(idx)>0, errmsg
@@ -140,16 +150,58 @@ if __name__=='__main__':
 
     if debug:
         print(d)
-    del df
+    del df        
 
-    outdir = Path(basedir, dirname)
     try:
-        outdir.mkdir(parents=True, exist_ok=clobber)
-    except:
-        raise FileExistsError("Use -clobber to overwrite files.")
+        if toiid or ctoiid:
+            Teff, Teff_err, logg, logg_err, feh, feh_err, radius, radius_err, mass, mass_err = catalog_info_TIC(int(ticid))
+        elif name:
+            Teff, Teff_err, logg, logg_err, feh, feh_err, radius, radius_err, mass, mass_err = catalog_info_name(d.iloc[0])
+        if debug:
+            print(Teff, Teff_err, logg, logg_err, feh, feh_err, radius, radius_err, mass, mass_err)
+    except Exception as e:
+        print("Error", e)
+    if str(radius_err)=='nan':
+        radius_err = 0.1
+        print(f'radius_err is nan; setting to 0.1')
+    if str(mass_err)=='nan':
+        mass_err = 0.1
+        print(f'mass_err is nan; setting to 0.1')
+    if debug:
+        print(f"Teff={Teff:.0f}+/-{Teff_err:.0f}, logg={logg:.2f}+/-{logg_err:.2f}, feh={feh:.2f}+/-{feh_err:.2f}")
+        print(f"Rs={radius:.2f}+/-{radius_err:.2f}, Ms={mass:.2f}+/-{mass_err:.2f}")
 
-    if results_dirname:
-        alles = allesfitter.allesclass(outdir.joinpath(results_dirname))
+    # band = mission.lower()
+    band = 'tess'
+    ldtk_filter = [BoxcarFilter(band, *filter_widths[band])]
+    try:
+        sc = LDPSetCreator(
+            teff=(Teff,Teff_err),
+            logg=(logg,logg_err),
+            z=(feh,feh_err),
+            filters=ldtk_filter,
+        )
+        # Create the limb darkening profiles
+        ldtk_profiles = sc.create_profiles()
+        # Estimate quadratic law coefficients
+        qc, qe = ldtk_profiles.coeffs_qd(do_mc=True)
+    except Exception as e:
+        print("Error: ", e)
+        sc = LDPSetCreator(
+            teff=(Teff,Teff_err),
+            logg=(logg,logg_err),
+            z=(0,0.1),
+            filters=ldtk_filter,
+        )
+        # Create the limb darkening profiles
+        ldtk_profiles = sc.create_profiles()
+        # Estimate quadratic law coefficients
+        qc, qe = ldtk_profiles.coeffs_qd(do_mc=True)
+    q1, q2 = qc[0][0], qc[0][1]
+    q1_err, q2_err = qe[0][0]*3, qe[0][1]*3
+
+    if results_dir:
+        alles = allesclass(outdir.joinpath(results_dir))
         print("Updating params.csv")
 
         ###=====Update params.csv=====###
@@ -170,42 +222,30 @@ if __name__=='__main__':
             text += f"{pl}_cosi,{cosi:.2f},1,uniform {cosi_min:.2f} {cosi_max:.2f},$\cos"+"{i_"+pl+"}$,,\n"
             text += f"{pl}_epoch,{epoch:.6f},1,uniform {epoch_min:.6f} {epoch_max:.6f},$T_"+"{0;"+pl+"}$,BJD,\n"
             text += f"{pl}_period,{Porb:.6f},1,uniform {Porb_min:.6f} {Porb_max:.6f},$P_b$,d,\n"
-        text += """b_f_c,0,0,uniform 0.0 0.0,$\sqrt{e_b} \cos{\omega_b}$,,
-b_f_s,0,0,uniform 0.0 0.0,$\sqrt{e_b} \sin{\omega_b}$,,
-#limb darkening coefficients per instrument,,,,,,
-host_ldc_q1_tess,0.5,1,uniform 0.0 1.0,$q_{1; \mathrm{tess}}$,,
-host_ldc_q2_tess,0.5,1,uniform 0.0 1.0,$q_{2; \mathrm{tess}}$,,
-#errors per instrument,,,,,,
-ln_err_flux_tess,-6,1,uniform -10 -1,$\log{\sigma_\mathrm{tess}}$,rel. flux,
-#baseline per instrument,,,,,,
-baseline_gp_offset_flux_tess,0,1,uniform -0.1 0.1,$\mathrm{gp ln sigma (tess)}$,,
-baseline_gp_matern32_lnsigma_flux_tess,-5,1,uniform -15 0,$\mathrm{gp ln sigma (tess)}$,,
-baseline_gp_matern32_lnrho_flux_tess,0,1,uniform -1 15,$\mathrm{gp ln rho (tess)}$,,
-#TTV companion b,,,,,
-#b_ttv_transit_1,0,1,uniform -0.1 0.1,TTV$_\mathrm{b;1}$,d,
-#TTV companion c,,,,,
-#c_ttv_transit_1,0,1,uniform -0.1 0.1,TTV$_\mathrm{c;1}$,d,"""
+        text += "#b_f_c,0,0,uniform 0.0 0.0,$\sqrt{e_b} \cos{\omega_b}$,,\n"
+        text += "#b_f_s,0,0,uniform 0.0 0.0,$\sqrt{e_b} \sin{\omega_b}$,,\n"
+        text += "#limb darkening coefficients per instrument,,,,,,\n"
+        text += f"host_ldc_q1_tess,{q1:.2f},1,normal {q1:.2f} {q1_err:.2f},"+"$q_{1; \mathrm{tess}}$,,\n"
+        text += f"host_ldc_q2_tess,{q2:.2f},1,normal {q2:.2f} {q2_err:.2f},"+"$q_{2; \mathrm{tess}}$,,\n"
+        text += "#errors per instrument,,,,,,\n"
+        text += "ln_err_flux_tess,-6,1,uniform -10 -1,$\log{\sigma_\mathrm{tess}}$,rel. flux,\n"
+        text += "#baseline per instrument,,,,,,\n"
+        text += "baseline_gp_offset_flux_tess,0,1,uniform -0.1 0.1,$\mathrm{gp ln sigma (tess)}$,,\n"
+        text += "baseline_gp_matern32_lnsigma_flux_tess,-5,1,uniform -15 0,$\mathrm{gp ln sigma (tess)}$,,\n"
+        text += "baseline_gp_matern32_lnrho_flux_tess,0,1,uniform -1 15,$\mathrm{gp ln rho (tess)}$,,\n"
+        text += "#TTV companion b,,,,,\n"
+        text += "#b_ttv_transit_1,0,1,uniform -0.1 0.1,TTV$_\mathrm{b;1}$,d,\n"
+        text += "#TTV companion c,,,,,\n"
+        text += "#c_ttv_transit_1,0,1,uniform -0.1 0.1,TTV$_\mathrm{c;1}$,d,\n"
         fp = outdir.joinpath("params2.csv")
         np.savetxt(fp, [text], fmt="%s")
         print("Saved: ", fp)
     else:
         try:
-            if toiid or ctoiid:
-                Teff, Teff_err, radius, radius_err, mass, mass_err = catalog_info_TIC(int(ticid))
-            elif name:
-                Teff, Teff_err, radius, radius_err, mass, mass_err = catalog_info_name(d.iloc[0])
-            if debug:
-                print(Teff, Teff_err, radius, radius_err, mass, mass_err)
-        except Exception as e:
-            print(e)
-        if str(radius_err)=='nan':
-            radius_err = 0.1
-            print(f'radius_err is nan; setting to 0.1')
-        if str(mass_err)=='nan':
-            mass_err = 0.1
-            print(f'mass_err is nan; setting to 0.1')
-        if debug:
-            print(f"Teff={Teff:.0f}+/-{Teff_err:.0f}, Rs={radius:.2f}+/-{radius_err:.2f}, Ms={mass:.2f}+/-{mass_err:.2f}")
+            outdir.mkdir(parents=True, exist_ok=clobber)
+        except:
+            raise FileExistsError("Use -clobber to overwrite files.")
+        
         ###=====Create params.csv=====###
         text = """#name,value,fit,bounds,label,unit,truth\n"""
         for i,row in d.iterrows():
@@ -268,21 +308,21 @@ baseline_gp_matern32_lnrho_flux_tess,0,1,uniform -1 15,$\mathrm{gp ln rho (tess)
             text += f"{pl}_cosi,0,1,uniform 0 1,$\cos"+"{i_"+pl+"}$,,\n"
             text += f"{pl}_epoch,{epoch:.6f},1,normal {epoch:.6f} {epocherr:.6f},$T_"+"{0;"+pl+"}$,BJD,\n"
             text += f"{pl}_period,{Porb:.6f},1,normal {Porb:.6f} {Porberr:.6f},$P_b$,d,\n"
-        text += """b_f_c,0,0,uniform 0.0 0.0,$\sqrt{e_b} \cos{\omega_b}$,,
-b_f_s,0,0,uniform 0.0 0.0,$\sqrt{e_b} \sin{\omega_b}$,,
-#limb darkening coefficients per instrument,,,,,,
-host_ldc_q1_tess,0.5,1,uniform 0.0 1.0,$q_{1; \mathrm{tess}}$,,
-host_ldc_q2_tess,0.5,1,uniform 0.0 1.0,$q_{2; \mathrm{tess}}$,,
-#errors per instrument,,,,,,
-ln_err_flux_tess,-6,1,uniform -10 -1,$\log{\sigma_\mathrm{tess}}$,rel. flux,
-#baseline per instrument,,,,,,
-baseline_gp_offset_flux_tess,0,1,uniform -0.1 0.1,$\mathrm{gp ln sigma (tess)}$,,
-baseline_gp_matern32_lnsigma_flux_tess,-5,1,uniform -15 0,$\mathrm{gp ln sigma (tess)}$,,
-baseline_gp_matern32_lnrho_flux_tess,0,1,uniform -1 15,$\mathrm{gp ln rho (tess)}$,,
-#TTV companion b,,,,,
-#b_ttv_transit_1,0,1,uniform -0.1 0.1,TTV$_\mathrm{b;1}$,d,
-#TTV companion c,,,,,
-#c_ttv_transit_1,0,1,uniform -0.1 0.1,TTV$_\mathrm{c;1}$,d,"""
+        text += "#b_f_c,0,0,uniform 0.0 0.0,$\sqrt{e_b} \cos{\omega_b}$,,\n"
+        text += "#b_f_s,0,0,uniform 0.0 0.0,$\sqrt{e_b} \sin{\omega_b}$,,\n"
+        text += "#limb darkening coefficients per instrument,,,,,,\n"
+        text += f"host_ldc_q1_tess,{q1:.2f},1,normal {q1:.2f} {q1_err:.2f},"+"$q_{1; \mathrm{tess}}$,,\n"
+        text += f"host_ldc_q2_tess,{q2:.2f},1,normal {q2:.2f} {q2_err:.2f},"+"$q_{2; \mathrm{tess}}$,,\n"
+        text += "#errors per instrument,,,,,,\n"
+        text += "ln_err_flux_tess,-6,1,uniform -10 -1,$\log{\sigma_\mathrm{tess}}$,rel. flux,\n"
+        text += "#baseline per instrument,,,,,,\n"
+        text += "baseline_gp_offset_flux_tess,0,1,uniform -0.1 0.1,$\mathrm{gp ln sigma (tess)}$,,\n"
+        text += "baseline_gp_matern32_lnsigma_flux_tess,-5,1,uniform -15 0,$\mathrm{gp ln sigma (tess)}$,,\n"
+        text += "baseline_gp_matern32_lnrho_flux_tess,0,1,uniform -1 15,$\mathrm{gp ln rho (tess)}$,,\n"
+        text += "#TTV companion b,,,,,\n"
+        text += "#b_ttv_transit_1,0,1,uniform -0.1 0.1,TTV$_\mathrm{b;1}$,d,\n"
+        text += "#TTV companion c,,,,,\n"
+        text += "#c_ttv_transit_1,0,1,uniform -0.1 0.1,TTV$_\mathrm{c;1}$,d,\n"
         if debug:
             print(text)
         fp = outdir.joinpath("params.csv")

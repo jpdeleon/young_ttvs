@@ -18,96 +18,134 @@ TODO:
  
 TOI-2269 | [TIC-441798995](https://exofop.ipac.caltech.edu/tess/target.php?id=441798995) (nplanets=3):<br>
 First Order: 2:1 | P=(1.42,2.84) (delta=0.00%)<br>
+TESS sectors=[14 15 16 17 18 19 20 21 22 23 24 25 26 40 41 47 48 49 50 51 52 53 54 55
+ 56 57 58 59 60 73 74 75 76 77 78 79 80 81 82 83]<br>
 
 TOI-1136 | [TIC-142276270](https://exofop.ipac.caltech.edu/tess/target.php?id=142276270) (nplanets=4):<br>
 First Order: 2:1 | P=(6.26,12.52) (delta=0.01%) 3:2 | P=(12.52,18.80) (delta=0.14%)<br>
+TESS sectors=[14 15 21 22 41 48 75]<br>
 
 TOI-2267 | [TIC-459837008](https://exofop.ipac.caltech.edu/tess/target.php?id=459837008) (nplanets=3):<br>
 First Order: 9:8 | P=(2.03,2.29) (delta=0.02%)<br>
+TESS sectors=[19 20 25 26 40 52 53 59 60 73 79]<br>
 
 TOI-0396 | [TIC-178155732](https://exofop.ipac.caltech.edu/tess/target.php?id=178155732) (nplanets=3):<br>
 Second Order: 5:3 | P=(3.59,5.97) (delta=0.03%)
+TESS sectors=[ 3  4 30 31]<br>
 
 TOI-6109 | [TIC-384984325](https://exofop.ipac.caltech.edu/tess/target.php?id=384984325) (nplanets=2):<br>
 First Order: 3:2 | P=(5.70,8.54) (delta=0.05%)<br>
+TESS sectors=[18 58]<br>
 
 TOI-1446 | [TIC-294471966](https://exofop.ipac.caltech.edu/tess/target.php?id=294471966) (nplanets=2):<br>
 Second Order: 7:5 | P=(4.51,6.32) (delta=0.14%)
+TESS sectors=[14 15 16 41 54 55 56 75 76 81 82 83]<br>
 
 TOI-6022 | [TIC-455947620](https://exofop.ipac.caltech.edu/tess/target.php?id=455947620) (nplanets=2):<br>
 First Order: 5:4 | P=(1.55,1.93) (delta=0.19%)<br>
+TESS sectors=[16 17 24 57 78]<br>
 
 TOI-4323 | [TIC-143022742](https://exofop.ipac.caltech.edu/tess/target.php?id=143022742) (nplanets=2):<br>
 First Order: 3:2 | P=(14.68,21.97) (delta=0.21%)<br>
+TESS sectors=[ 4 31]<br>
 
 TOI-4647 | [TIC-303204165](https://exofop.ipac.caltech.edu/tess/target.php?id=303204165) (nplanets=2):<br>
 First Order: 5:4 | P=(8.83,11.07) (delta=0.24%)<br>
+TESS sectors=[42 43 57 70]<br>
 
 TOI-2076 | [TIC-27491137](https://exofop.ipac.caltech.edu/tess/target.php?id=27491137) (nplanets=3):<br>
 Second Order: 5:3 | P=(21.02,35.13) (delta=0.29%)
+TESS sectors=[16 23 50 77]<br>
 
 TOI-0282 | [TIC-29781292](https://exofop.ipac.caltech.edu/tess/target.php?id=29781292) (nplanets=4):<br>
 First Order: 3:2 | P=(56.00,84.26) (delta=0.30%)<br>
+TESS sectors=[ 1  2  3  4  5  6  7  8  9 10 11 12 13 27 28 29 30 31 33 34 35 36 37 38
+ 39 61 62 63 64 65 66 67 68 69]<br>
 
 TOI-0406 | [TIC-153065527](https://exofop.ipac.caltech.edu/tess/target.php?id=153065527) (nplanets=2):<br>
 First Order: 2:1 | P=(6.61,13.18) (delta=0.41%)<br>
+TESS sectors=[ 3  4 30 31]<br>
 
 TOI-0270 | [TIC-259377017](https://exofop.ipac.caltech.edu/tess/target.php?id=259377017) (nplanets=3):<br>
 First Order: 2:1 | P=(5.66,11.38) (delta=0.52%)<br>
+TESS sectors=[ 3  4  5 30 32]<br>
 
 TOI-0174 | [TIC-425997655](https://exofop.ipac.caltech.edu/tess/target.php?id=425997655) (nplanets=5):<br>
 First Order: 2:1 | P=(3.98,7.91) (delta=0.58%)<br>
+TESS sectors=[ 1  2  3  4 11 29 30 31 34 64 68 69]<br>
 
 TOI-5520 | [TIC-374180079](https://exofop.ipac.caltech.edu/tess/target.php?id=374180079) (nplanets=2):<br>
 First Order: 4:3 | P=(14.70,19.48) (delta=0.58%)<br>
+TESS sectors=[35 45 46 62 72]<br>
 
 TOI-0216 | [TIC-55652896](https://exofop.ipac.caltech.edu/tess/target.php?id=55652896) (nplanets=2):<br>
 First Order: 2:1 | P=(17.39,34.55) (delta=0.64%)<br>
+TESS sectors=[ 1  2  3  4  5  6  7  8  9 11 12 13 27 28 29 30 31 32 33 34 35 36 37 38
+ 39 61 62 63 64 65 66 67 68 69]<br>
 
 TOI-1339 | [TIC-269701147](https://exofop.ipac.caltech.edu/tess/target.php?id=269701147) (nplanets=3):<br>
 First Order: 4:3 | P=(28.58,38.35) (delta=0.64%)<br>
+TESS sectors=[14 15 16 17 18 19 21 22 24 25 41 48 49 51 52 55 56 58 59 60 73 75 76 77
+ 78 79 82 83]<br>
 
 TOI-1670 | [TIC-441739020](https://exofop.ipac.caltech.edu/tess/target.php?id=441739020) (nplanets=3):<br>
 Second Order: 3:1 | P=(40.75,123.06) (delta=0.66%)
+TESS sectors=[14 15 16 18 19 20 21 22 23 24 25 26 40 41 47 48 49 50 51 52 53 55 56 57
+ 58 59 60 73 74 75 76 77 78 79 80 81 82 83]<br>
 
 TOI-5493 | [TIC-468979441](https://exofop.ipac.caltech.edu/tess/target.php?id=468979441) (nplanets=3):<br>
 Second Order: 5:3 | P=(14.56,24.44) (delta=0.67%)
+TESS sectors=[ 7 34 44 45 46 61 72]<br>
 
 TOI-6276 | [TIC-397362481](https://exofop.ipac.caltech.edu/tess/target.php?id=397362481) (nplanets=3):<br>
 Second Order: 7:5 | P=(4.47,6.21) (delta=0.70%)
+TESS sectors=[63 64]<br>
 
 TOI-6054 | [TIC-392681545](https://exofop.ipac.caltech.edu/tess/target.php?id=392681545) (nplanets=2):<br>
 Second Order: 5:3 | P=(7.49,12.58) (delta=0.74%)
+TESS sectors=[19 59]<br>
 
 TOI-1749 | [TIC-233602827](https://exofop.ipac.caltech.edu/tess/target.php?id=233602827) (nplanets=3):<br>
 First Order: 2:1 | P=(4.49,9.04) (delta=0.74%)<br>
+TESS sectors=[14 15 16 17 18 19 20 21 23 24 25 26 40 41 47 48 49 50 51 52 53 54 55 57
+ 58 59 60 74 77 78 79 80 81 82]<br>
 
 TOI-0663 | [TIC-54962195](https://exofop.ipac.caltech.edu/tess/target.php?id=54962195) (nplanets=3):<br>
 First Order: 3:2 | P=(4.70,7.10) (delta=0.76%)<br>
+TESS sectors=[ 9 35 62]<br>
 
 TOI-0696 | [TIC-77156829](https://exofop.ipac.caltech.edu/tess/target.php?id=77156829) (nplanets=3):<br>
 First Order: 4:3 | P=(3.69,4.97) (delta=0.80%)<br>
+TESS sectors=[ 4  5 31 32]<br>
 
 TOI-2104 | [TIC-367630162](https://exofop.ipac.caltech.edu/tess/target.php?id=367630162) (nplanets=5):<br>
 Second Order: 5:3 | P=(1.98,3.27) (delta=0.85%)
+TESS sectors=[14 19 20 26 40 47 53 73 74]<br>
 
 TOI-4495 | [TIC-120826158](https://exofop.ipac.caltech.edu/tess/target.php?id=120826158) (nplanets=2):<br>
 First Order: 2:1 | P=(2.57,5.18) (delta=0.86%)<br>
+TESS sectors=[14 40 41 53 54 80 81]<br>
 
 TOI-1097 | [TIC-360630575](https://exofop.ipac.caltech.edu/tess/target.php?id=360630575) (nplanets=2):<br>
 First Order: 3:2 | P=(9.19,13.90) (delta=0.87%)<br>
+TESS sectors=[11 12 38 39 65]<br>
 
 TOI-0700 | [TIC-150428135](https://exofop.ipac.caltech.edu/tess/target.php?id=150428135) (nplanets=4):<br>
 First Order: 4:3 | P=(27.81,37.42) (delta=0.93%)<br>
+TESS sectors=[ 1  3  4  5  6  7  8  9 10 11 13 27 28 30 31 33 34 35 36 37 38 61 62 63
+ 64 65 66 68 69]<br>
 
 TOI-0175 | [TIC-307210830](https://exofop.ipac.caltech.edu/tess/target.php?id=307210830) (nplanets=3):<br>
 First Order: 2:1 | P=(3.69,7.45) (delta=0.94%)<br>
+TESS sectors=[ 2  5  8  9 10 11 12 28 29 32 35 36 37 38 39 61 62 63 64 65 69]<br>
 
 TOI-1730 | [TIC-318022259](https://exofop.ipac.caltech.edu/tess/target.php?id=318022259) (nplanets=3):<br>
 First Order: 2:1 | P=(6.23,12.57) (delta=0.98%)<br>
+TESS sectors=[20 47 60]<br>
 
 TOI-6265 | [TIC-344927749](https://exofop.ipac.caltech.edu/tess/target.php?id=344927749) (nplanets=2):<br>
 Second Order: 7:5 | P=(4.18,5.79) (delta=0.98%)
+TESS sectors=[ 8 35 45 46 62 72]<br>
 
 
 ## TOI with hint of TTVs
@@ -117,16 +155,16 @@ Second Order: 7:5 | P=(4.18,5.79) (delta=0.98%)
 
 
 ## TOIs with sign of youth
-### TOI6109
+### TOI-6109
 ![img](allesfitter/toi_in_resonance/toi6109/TOI6109_s58_pdcsap_sc.png)
 
-### TOI 1097 
+### TOI-1097 
 * THYME IX: HD 109833 b,c in LCC (24±3 Myr)
 * [Wood+2023](https://ui.adsabs.harvard.edu/abs/2023AJ....165...85W/abstract)
 * No mention of resonance in paper; But actually in 3:2 (9.188525, 13.900142)
 ![img](./tql/TIC360630575_s38_pdcsap_sc.png)
 
-### TOI 4323
+### TOI-4323
 * large contamination
 ![img](./tql/TIC143022742_s04_pdcsap_sc.png)
 
@@ -443,7 +481,7 @@ TESS sectors=[14 15 41 54 56 74 75 81 82]<br>
 * Au Mic bcd
   - [Wittrock+2023b](https://ui.adsabs.harvard.edu/abs/2023arXiv230204922W/abstract)
   - d is non-transiting and interior or b & c orbits 
-* TOI 1136
+* TOI-1136
   - [Dai+2023](https://ui.adsabs.harvard.edu/abs/2023AJ....165...33D/abstract)
   -  700 ± 150 Myr old G star hosting 
   -  at least 6 transiting planets: 2-5 Re

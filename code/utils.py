@@ -1,4 +1,5 @@
 import json
+from urllib.request import urlopen
 import datetime
 from pathlib import Path
 from itertools import combinations
@@ -18,6 +19,17 @@ au             = 1.496e11
 msun           = 1.9891e30
 rsun           = 0.5*1.392684e9
 
+def get_tfop_info(target_name: str) -> dict:
+    base_url = "https://exofop.ipac.caltech.edu/tess"
+    url = f"{base_url}/target.php?id={target_name.replace(' ','')}&json"
+    response = urlopen(url)
+    assert response.code == 200, "Failed to get data from ExoFOP-TESS"
+    try:
+        data_json = json.loads(response.read())
+        return data_json
+    except Exception:
+        raise ValueError(f"No TIC data found for {target_name}")
+        
 def get_name_aliases(name, key=None):
     """
     https://exoplanetarchive.ipac.caltech.edu/docs/sysaliases.html
@@ -144,12 +156,15 @@ def catalog_info_TIC(TIC_ID):
     result = Catalogs.query_criteria(catalog="Tic", ID=TIC_ID).as_array()
     Teff = result[0][64]
     Teff_err = result[0][65]
-#     logg = result[0][66]
+    logg = result[0][66]
+    logg_err = result[0][67]
+    feh = result[0][68]
+    feh_err = result[0][69]
     radius = result[0][70]
     radius_err = result[0][71]
     mass = result[0][72]
     mass_err = result[0][73]
-    return Teff, Teff_err, radius, radius_err, mass, mass_err
+    return Teff, Teff_err, logg, logg_err, feh, feh_err, radius, radius_err, mass, mass_err
 
 def get_tois(
     clobber=False,

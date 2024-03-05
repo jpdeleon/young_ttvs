@@ -1,0 +1,13 @@
+tqdm
+ipython
+lightkurve
+astroquery
+astropy
+ldtk
+emcee
+seaborn
+pandas
+celerite
+ellc
+dynesty
+corner
