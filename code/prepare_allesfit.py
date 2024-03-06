@@ -50,8 +50,8 @@ cols = ['time','flux','flux_err']
 
 Nsamples = 10_000
 planets = "b c d e f g h i j k".split()
-# quartiles = [16,50,84] #1-sigma
-quartiles = [2.70, 50, 97.3] #3-sigma
+quartiles_1sig = [16, 50, 84] #1-sigma
+quartiles_3sig = [2.70, 50, 97.3] #3-sigma
 
 def catalog_info_name(df):
     Teff, Teff_err = df['st_teff'].astype(float), np.sqrt(df['st_tefferr1']**2+df['st_tefferr2']**2)
@@ -63,27 +63,32 @@ def catalog_info_name(df):
 
 if __name__=='__main__':
     ap = ArgumentParser()
-    group = ap.add_mutually_exclusive_group(required=True)
-    group.add_argument(
+    group1 = ap.add_mutually_exclusive_group(required=True)
+    group1.add_argument(
         "-toi",
         help="TOI ID",
         type=int
     )
-    group.add_argument(
+    group1.add_argument(
         "-ctoi",
         help="CTOI ID",
         type=int
     )
-    group.add_argument(
+    group1.add_argument(
         "-name",
         help="Name",
         type=str
     )
+    # group2 = ap.add_mutually_exclusive_group(required=True)
+    # group2.add_argument("-sector", help="-sector=-1 uses most recent TESS sector (default); try -sector=all to use all", default=None)
+    # group2.add_argument("-campaign", help="-campaign=-1 uses most recent K2 campaign (default); try -campaign=all to use all", default=None)
+    # group2.add_argument("-quarter", help="-quarter=-1 uses most recent Kepler quarter (default); try -quarter=all to use all", default=None)
+    ap.add_argument("-sector", help="-sector=-1 uses most recent TESS sector (default); try -sector=all to use all", default=None)
+
     ap.add_argument("-dir", help="base directory", type=str, default=f"{home}/github/research/project/young_ttvs/allesfitter/")
     ap.add_argument("-pipeline", help="TESS/Kepler data pipeline", type=str, default='spoc')
     ap.add_argument("-sigma", help="sigma for removing outliers in (combined) TESS lc", type=float, default=None)
     ap.add_argument("-mission", choices=['tess','k2','kepler'], type=str, default='tess')
-    ap.add_argument("-sector", help="-sector=-1 uses most recent TESS sector (default); try -sector=all to use all", default=-1)
     ap.add_argument("-debug", action="store_true", default=False)
     ap.add_argument("-clobber", help="overwrite files", action="store_true", default=False)
     ap.add_argument("-results_dir", help="path to the results dir of a previous run to be used in params.csv", default=None)
@@ -103,6 +108,8 @@ if __name__=='__main__':
     pipeline = args.pipeline
     debug = args.debug
     sector = args.sector
+    # campaign = -1 if args.campaign is None else args.campaign
+    # quarter = a-1 if args.quarter is None else args.quarter
     clobber = args.clobber
 
     if args.sector=='all':
@@ -207,16 +214,28 @@ if __name__=='__main__':
         ###=====Update params.csv=====###
         text = """#name,value,fit,bounds,label,unit,truth\n"""
         for pl in alles.settings['companions_all']:
-            # rprs = alles.posterior_params_median[f'{pl}_rr']
-            # rsuma = alles.posterior_params_median[f'{pl}_rsuma']
-
-            rprs_min, rprs, rprs_max = np.percentile(alles.posterior_params[f'{pl}_rr'], q=quartiles)
-            rsuma_min, rsuma, rsuma_max = np.percentile(alles.posterior_params[f'{pl}_rsuma'], q=quartiles)
-            cosi_min, cosi, cosi_max = np.percentile(alles.posterior_params[f'{pl}_cosi'], q=quartiles)
-            Porb_min, Porb, Porb_max = np.percentile(alles.posterior_params[f'{pl}_period'], q=quartiles)
-            epoch_min, epoch, epoch_max = np.percentile(alles.posterior_params[f'{pl}_epoch'], q=quartiles)
-
+            rprs_min, rprs, rprs_max = np.percentile(alles.posterior_params[f'{pl}_rr'], q=quartiles_1sig)
+            rsuma_min, rsuma, rsuma_max = np.percentile(alles.posterior_params[f'{pl}_rsuma'], q=quartiles_1sig)
+            cosi_min, cosi, cosi_max = np.percentile(alles.posterior_params[f'{pl}_cosi'], q=quartiles_1sig)
+            Porb_min, Porb, Porb_max = np.percentile(alles.posterior_params[f'{pl}_period'], q=quartiles_1sig)
+            epoch_min, epoch, epoch_max = np.percentile(alles.posterior_params[f'{pl}_epoch'], q=quartiles_1sig)
+            rprs_err = (rprs_max-rprs_min)/2
+            rsuma_err = (rprs_max-rprs_min)/2
+            cosi_err = (cosi_max-cosi_min)/2
+            Porb_err = (Porb_max-Porb_min)/2
+            epoch_err = (epoch_max-epoch_min)/2
             text += f"#companion {pl} astrophysical params,,,,,,\n"
+            text += f"#{pl}_rr,{rprs:.4f},1,normal {rprs:.4f} {rprs_err:.4f},$R_{pl} / R_\star$,,\n"
+            text += f"#{pl}_rsuma,{rsuma:.4f},1,normal {rsuma:.4f} {rsuma_err:.4f},$(R_\star + R_{pl}) / a_{pl}$,,\n"
+            text += f"#{pl}_cosi,{cosi:.2f},1,normal {cosi:.2f} {cosi_err:.2f},$\cos"+"{i_"+pl+"}$,,\n"
+            text += f"#{pl}_epoch,{epoch:.6f},1,normal {epoch:.6f} {epoch_err:.6f},$T_"+"{0;"+pl+"}$,BJD,\n"
+            text += f"#{pl}_period,{Porb:.6f},1,normal {Porb:.6f} {Porb_err:.6f},$P_b$,d,\n"
+
+            rprs_min, rprs, rprs_max = np.percentile(alles.posterior_params[f'{pl}_rr'], q=quartiles_3sig)
+            rsuma_min, rsuma, rsuma_max = np.percentile(alles.posterior_params[f'{pl}_rsuma'], q=quartiles_3sig)
+            cosi_min, cosi, cosi_max = np.percentile(alles.posterior_params[f'{pl}_cosi'], q=quartiles_3sig)
+            Porb_min, Porb, Porb_max = np.percentile(alles.posterior_params[f'{pl}_period'], q=quartiles_3sig)
+            epoch_min, epoch, epoch_max = np.percentile(alles.posterior_params[f'{pl}_epoch'], q=quartiles_3sig)
             text += f"{pl}_rr,{rprs:.4f},1,uniform {rprs_min:.4f} {rprs_max:.4f},$R_{pl} / R_\star$,,\n"
             text += f"{pl}_rsuma,{rsuma:.4f},1,uniform {rsuma_min:.4f} {rsuma_max:.4f},$(R_\star + R_{pl}) / a_{pl}$,,\n"
             text += f"{pl}_cosi,{cosi:.2f},1,uniform {cosi_min:.2f} {cosi_max:.2f},$\cos"+"{i_"+pl+"}$,,\n"
@@ -272,7 +291,7 @@ if __name__=='__main__':
             assert rprs>0
 
             rprs_s = np.random.normal(rprs, rprserr, size=Nsamples)
-            rprs_min, rprs, rprs_max = np.percentile(rprs_s, q=quartiles)
+            rprs_min, rprs, rprs_max = np.percentile(rprs_s, q=quartiles_3sig)
 
             mass_s = np.random.normal(mass, mass_err, size=Nsamples)
             radius_s = np.random.normal(radius, radius_err, size=Nsamples)
@@ -280,22 +299,22 @@ if __name__=='__main__':
             rho_s = rho_from_mr(mass_s, radius_s)
             as_s = as_from_rhop(rho_s, Porb_s)
             if debug:
-                rhomin, rho, rhomax = np.percentile(rho_s, q=quartiles)
-                as_min, a, as_max = np.percentile(as_s, q=quartiles)
+                rhomin, rho, rhomax = np.percentile(rho_s, q=quartiles_3sig)
+                as_min, a, as_max = np.percentile(as_s, q=quartiles_3sig)
                 a_au_s = a_from_rhoprs(rho_s, Porb_s, radius_s)
-                a_au_min, a_au, a_au_max = np.percentile(a_au_s, q=quartiles)
+                a_au_min, a_au, a_au_max = np.percentile(a_au_s, q=quartiles_3sig)
 
             #FIXME: as_s produces some NaNs e.g. for Kepler-51
             idx = as_s>0
             rsuma_s = radius_s[idx]/as_s[idx]
-            rsuma_min, rsuma, rsuma_max = np.percentile(rsuma_s, q=quartiles)
+            rsuma_min, rsuma, rsuma_max = np.percentile(rsuma_s, q=quartiles_3sig)
 
             theta = np.arcsin(radius_s/as_s)
             inc_s = np.pi/2 - theta
-            inc_max, inc, inc_min = np.percentile(inc_s, q=quartiles)
+            inc_max, inc, inc_min = np.percentile(inc_s, q=quartiles_3sig)
             if debug:
                 b_s = as_s * np.cos(inc_s)
-                b_min, b, b_max = np.percentile(b_s, q=quartiles)
+                b_min, b, b_max = np.percentile(b_s, q=quartiles_3sig)
                 print(f"rprs={rprs:.4f}")
                 print(f"rho={rho:.4f}")
                 print(f"a_s={a:.4f}")
