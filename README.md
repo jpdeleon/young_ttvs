@@ -33,7 +33,8 @@ TOI-0396 | [TIC-178155732](https://exofop.ipac.caltech.edu/tess/target.php?id=17
 Second Order: 5:3 | P=(3.59,5.97) (delta=0.03%)
 TESS sectors=[ 3  4 30 31]<br>
 
-TOI-6109 | [TIC-384984325](https://exofop.ipac.caltech.edu/tess/target.php?id=384984325) (nplanets=2):<br>
+TOI-
+ | [TIC-384984325](https://exofop.ipac.caltech.edu/tess/target.php?id=384984325) (nplanets=2):<br>
 First Order: 3:2 | P=(5.70,8.54) (delta=0.05%)<br>
 TESS sectors=[18 58]<br>
 
@@ -152,6 +153,16 @@ TESS sectors=[ 8 35 45 46 62 72]<br>
 * [TOI-4495](https://github.com/jpdeleon/young_ttvs/tree/main/allesfitter/toi_in_resonance/toi4495/)
  
 ![img](allesfitter/toi_in_resonance/toi4495/fit.png)
+
+* [TOI-6109](https://github.com/jpdeleon/young_ttvs/tree/main/allesfitter/toi_in_resonance/toi6109/)
+
+![img](allesfitter/toi_in_resonance/toi6109/ttv/b_ttv.png)
+![img](allesfitter/toi_in_resonance/toi6109/ttv/c_ttv.png)
+
+* [TOI-6265](https://github.com/jpdeleon/young_ttvs/tree/main/allesfitter/toi_in_resonance/toi6265/)
+
+![img](allesfitter/toi_in_resonance/toi6265/ttv/b_ttv.png)
+![img](allesfitter/toi_in_resonance/toi6265/ttv/c_ttv.png)
 
 
 ## TOIs with sign of youth
