@@ -348,4 +348,3 @@ def d_from_pkaiews(p, k, a, i, e, w, tr_sign=1, kind=14):
     ae = np.sqrt(1.-e**2)/(1.+tr_sign*e*np.sin(w))
     ds = 1. if kind == 14 else -1.
     return p/np.pi  * np.arcsin(np.sqrt((1.+ds*k)**2-b**2)/(a*np.sin(i))) * ae
-

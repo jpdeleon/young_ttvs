@@ -22,6 +22,7 @@ TODO:
 3. make an arg to change tess.csv and variable name to user-defined
 """
 import sys
+# import logging
 from typing import Tuple
 from argparse import ArgumentParser
 from pathlib import Path
@@ -32,9 +33,16 @@ import astropy.units as u
 import pandas as pd
 from astropy.coordinates import SkyCoord
 from allesfitter import allesclass#, config, nested_sampling_output, general_output
-from ldtk import LDPSetCreator, BoxcarFilter
+# from ldtk import LDPSetCreator, BoxcarFilter
 from tess_stars2px import tess_stars2px_function_entry
 from utils import catalog_info_TIC, get_tfop_info, get_tois, get_ctois, rho_from_mr, as_from_rhop, a_from_rhoprs, get_nexsci_data, get_name_aliases
+try:
+    import limbdark as ld
+except Exception:
+    command = (
+        "pip install git+https://github.com/john-livingston/limbdark.git"
+    )
+    raise ModuleNotFoundError(command)
 
 assert lk.__version__[0]=='2'
 
@@ -225,33 +233,16 @@ if __name__=='__main__':
         print(f"Rs={radius:.2f}+/-{radius_err:.2f}, Ms={mass:.2f}+/-{mass_err:.2f}")
 
     # band = mission.lower()
-    band = 'tess'
-    ldtk_filter = [BoxcarFilter(band, *filter_widths[band])]
-    try:
-        sc = LDPSetCreator(
-            teff=(Teff,Teff_err),
-            logg=(logg,logg_err),
-            z=(feh,feh_err),
-            filters=ldtk_filter,
-        )
-        # Create the limb darkening profiles
-        ldtk_profiles = sc.create_profiles()
-        # Estimate quadratic law coefficients
-        qc, qe = ldtk_profiles.coeffs_qd(do_mc=True)
-    except Exception as e:
-        print("Error: ", e)
-        sc = LDPSetCreator(
-            teff=(Teff,Teff_err),
-            logg=(logg,logg_err),
-            z=(0,0.1),
-            filters=ldtk_filter,
-        )
-        # Create the limb darkening profiles
-        ldtk_profiles = sc.create_profiles()
-        # Estimate quadratic law coefficients
-        qc, qe = ldtk_profiles.coeffs_qd(do_mc=True)
-    q1, q2 = qc[0][0], qc[0][1]
-    q1_err, q2_err = qe[0][0]*3, qe[0][1]*3
+    if np.isnan(feh) or np.isnan(feh_err):
+        feh, feh_err = 0, 0.1
+        print("Assuming [Fe/H]=(0,0.1) dex")
+    q1, q1_err, q2, q2_err = ld.claret(
+                                    band='T',
+                                    teff=Teff, uteff=Teff_err,
+                                    logg=logg, ulogg=logg_err,
+                                    feh=feh, ufeh=feh_err,
+                                    law='quadratic'
+                                )
 
     if results_dir:
         alles = allesclass(outdir.joinpath(results_dir))
