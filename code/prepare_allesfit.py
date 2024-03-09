@@ -18,18 +18,23 @@ https://exoplanetarchive.ipac.caltech.edu/docs/sysaliases.html
 ======
 TODO: 
 1. add priors as args
+2. specify a list of sectors
+3. make an arg to change tess.csv and variable name to user-defined
 """
 import sys
+from typing import Tuple
 from argparse import ArgumentParser
 from pathlib import Path
 from math import ceil
 import numpy as np
 import lightkurve as lk
 import astropy.units as u
+import pandas as pd
+from astropy.coordinates import SkyCoord
 from allesfitter import allesclass#, config, nested_sampling_output, general_output
 from ldtk import LDPSetCreator, BoxcarFilter
-# from tess_stars2px import tess_stars2px_function_entry
-from utils import catalog_info_TIC, get_tois, get_ctois, rho_from_mr, as_from_rhop, a_from_rhoprs, get_nexsci_data, get_name_aliases
+from tess_stars2px import tess_stars2px_function_entry
+from utils import catalog_info_TIC, get_tfop_info, get_tois, get_ctois, rho_from_mr, as_from_rhop, a_from_rhoprs, get_nexsci_data, get_name_aliases
 
 assert lk.__version__[0]=='2'
 
@@ -53,13 +58,92 @@ planets = "b c d e f g h i j k".split()
 quartiles_1sig = [16, 50, 84] #1-sigma
 quartiles_3sig = [2.70, 50, 97.3] #3-sigma
 
-def catalog_info_name(df):
+def catalog_info_name(df) -> Tuple:
     Teff, Teff_err = df['st_teff'].astype(float), np.sqrt(df['st_tefferr1']**2+df['st_tefferr2']**2)
     logg, logg_err = df['st_logg'].astype(float), np.sqrt(df['st_loggerr1']**2+df['st_loggerr2']**2)
     feh, feh_err = 0, 0.1
     radius, radius_err = df['st_rad'].astype(float), np.sqrt(df['st_raderr1']**2+df['st_raderr2']**2)
     mass, mass_err = df['st_mass'].astype(float), np.sqrt(df['st_masserr1']**2+df['st_masserr2']**2)
     return Teff, Teff_err, logg, logg_err, feh, feh_err, radius, radius_err, mass, mass_err
+
+def parse_target_name(toiid=None, ctoiid=None, name=None) -> Tuple:
+    if toiid:
+        df = get_tois()
+        print("Using parameters from TOI database.")
+        print(f"To use published parameters in NExSci, use -name=TOI-{toiid}")
+        key = 'TOI'
+        id = str(toiid)
+        idx = df[key].apply(lambda x: str(x).split('.')[0]==id)
+        target_name = f'TOI-{id.zfill(4)}'
+    if ctoiid:
+        df = get_ctois()
+        key = 'CTOI'
+        id = ctoiid
+        idx = df['TIC ID']==int(ctoiid)
+        target_name = f'CTOI-{ctoiid}'
+    if name:
+        df = get_nexsci_data()
+        df = df[df['default_flag']==1]
+        df['Period (days)'] = df['pl_orbper'].astype(float)
+        df['Period (days) err'] = np.sqrt(df['pl_orbpererr1']**2+df['pl_orbpererr2']**2)
+        df['Epoch (BJD)'] = df['pl_tranmid'].astype(float)
+        df['Epoch (BJD) err'] = 0.1
+        df['Depth (ppm)'] = df['pl_trandep'].astype(float)
+        df['Depth (ppm) err'] = 1_000
+        # df['Duration (hours)'] = df['pl_trandur'].astype(float)
+        # df['Duration (hours) err'] = 1
+        key = 'hostname'
+        id = name
+        target_name = name.strip().replace(' ','')
+        idx = df[key]==id
+    errmsg = f"Coulnd't find {key} {id} in {key} database."
+    assert sum(idx)>0, errmsg
+    return target_name, df[idx].reset_index(drop=True)
+
+def get_tess_sectors(target_name: str, df: pd.DataFrame, toiid=None, ctoiid=None, name=None) -> Tuple:
+    if toiid or ctoiid:
+        #if target is available in TOI,CTOI,or NexSci
+        coord = SkyCoord(*df[['RA','Dec']].values[0], unit=('hourangle','deg'))
+        ra,dec = coord.ra.deg, coord.dec.deg
+        ticid = df['TIC ID'].unique()[0]
+    elif name:
+        #for other targets
+        data_json = get_tfop_info(target_name)
+        ra = float(data_json['coordinates']['ra'])
+        dec = float(data_json['coordinates']['dec'])
+        ticid = int(data_json['basic_info']['tic_id'])
+    else:
+        raise ValueError('Set toiid, ctoiid, or name.')
+    try:
+        outID, outEclipLong, outEclipLat, outSec, outCam, outCcd, \
+                outColPix, outRowPix, scinfo = tess_stars2px_function_entry(ticid, ra, dec)
+    except Exception as e:
+        print("Error: ", e)
+    return ticid, outSec
+
+def check_if_sector_is_available(target_name: str, given_sector, all_sectors: list) -> str:
+    """
+    All cases for given_sector=(None, 0, 1, 'all', [1,2], -1)
+    Check only if given_sector is non-negative int or list
+    """
+    if given_sector is None:
+        return 'default'
+    else:
+        assert isinstance(given_sector, list)
+        assert isinstance(all_sectors, np.ndarray)
+        if len(given_sector)==1:
+            if given_sector==['all']:
+                return 'all_sector'
+            elif given_sector==['-1']:
+                return 'last'
+            elif given_sector==['0']:
+                return 'first'
+        #check if given_sector exists if not 'all','0',or '-1'
+        idx = np.array([True if int(s) in all_sectors else False for s in given_sector])
+        errmsg = f"{target_name} was not observed in sector={np.array(given_sector)[~idx]}\n"
+        errmsg += f"Try sector={all_sectors}."
+        assert np.all(idx), errmsg
+        return 'multi_sector'
 
 if __name__=='__main__':
     ap = ArgumentParser()
@@ -83,9 +167,10 @@ if __name__=='__main__':
     # group2.add_argument("-sector", help="-sector=-1 uses most recent TESS sector (default); try -sector=all to use all", default=None)
     # group2.add_argument("-campaign", help="-campaign=-1 uses most recent K2 campaign (default); try -campaign=all to use all", default=None)
     # group2.add_argument("-quarter", help="-quarter=-1 uses most recent Kepler quarter (default); try -quarter=all to use all", default=None)
-    ap.add_argument("-sector", help="-sector=-1 uses most recent TESS sector (default); try -sector=all to use all", default=None)
+    ap.add_argument("-sector", nargs='+', help="-sector=-1 uses most recent TESS sector (default); try -sector=all to use all", default=None)
 
-    ap.add_argument("-dir", help="base directory", type=str, default=f"{home}/github/research/project/young_ttvs/allesfitter/")
+    # ap.add_argument("-dir", help="base directory", type=str, default=f"{home}/github/research/project/young_ttvs/allesfitter/")
+    ap.add_argument("-dir", help="base directory", type=str, default=".")
     ap.add_argument("-pipeline", help="TESS/Kepler data pipeline", type=str, default='spoc')
     ap.add_argument("-sigma", help="sigma for removing outliers in (combined) TESS lc", type=float, default=None)
     ap.add_argument("-mission", choices=['tess','k2','kepler'], type=str, default='tess')
@@ -111,59 +196,20 @@ if __name__=='__main__':
     # campaign = -1 if args.campaign is None else args.campaign
     # quarter = a-1 if args.quarter is None else args.quarter
     clobber = args.clobber
-
-    if args.sector=='all':
-        multi_sector = True
-    else:
-        multi_sector = False
-    
-    if toiid:
-        df = get_tois()
-        print("Using parameters from TOI database.")
-        print(f"To use published parameters in NExSci, use -name=TOI-{toiid}")
-        key = 'TOI'
-        id = str(toiid)
-        idx = df[key].apply(lambda x: str(x).split('.')[0]==id)
-        dirname = f'toi{id.zfill(4)}'
-    if ctoiid:
-        df = get_ctois()
-        key = 'CTOI'
-        id = ctoiid
-        idx = df['TIC ID']==int(ctoiid)
-        dirname = f'ctoi{ctoiid}'
-    if name:
-        df = get_nexsci_data()
-        df = df[df['default_flag']==1]
-        df['Period (days)'] = df['pl_orbper'].astype(float)
-        df['Period (days) err'] = np.sqrt(df['pl_orbpererr1']**2+df['pl_orbpererr2']**2)
-        df['Epoch (BJD)'] = df['pl_tranmid'].astype(float)
-        df['Epoch (BJD) err'] = 0.1
-        df['Depth (ppm)'] = df['pl_trandep'].astype(float)
-        df['Depth (ppm) err'] = 1_000
-        # df['Duration (hours)'] = df['pl_trandur'].astype(float)
-        # df['Duration (hours) err'] = 1
-        key = 'hostname'
-        id = name
-        dirname = name.strip().replace(' ','')
-        idx = df[key]==id
+           
+    target_name, target_df = parse_target_name(toiid, ctoiid, name)
+    ticid, outSec = get_tess_sectors(target_name, target_df, toiid, ctoiid, name)
+    sector_flag = check_if_sector_is_available(target_name, given_sector=sector, all_sectors=outSec)
 
     outdir = Path(basedir)
-
-    errmsg = f"Coulnd't find {key} {id} in {key} database."
-    assert sum(idx)>0, errmsg
-    d = df[idx].reset_index(drop=True)
-    if toiid or ctoiid:
-        ticid = d['TIC ID'].unique()[0]
-
     if debug:
-        print(d)
-    del df        
+        print(target_df)
 
     try:
         if toiid or ctoiid:
             Teff, Teff_err, logg, logg_err, feh, feh_err, radius, radius_err, mass, mass_err = catalog_info_TIC(int(ticid))
         elif name:
-            Teff, Teff_err, logg, logg_err, feh, feh_err, radius, radius_err, mass, mass_err = catalog_info_name(d.iloc[0])
+            Teff, Teff_err, logg, logg_err, feh, feh_err, radius, radius_err, mass, mass_err = catalog_info_name(target_df.iloc[0])
         if debug:
             print(Teff, Teff_err, logg, logg_err, feh, feh_err, radius, radius_err, mass, mass_err)
     except Exception as e:
@@ -260,7 +306,7 @@ if __name__=='__main__':
         np.savetxt(fp, [text], fmt="%s")
         print("Saved: ", fp)
     else:
-        outdir = Path(basedir, dirname)
+        outdir = Path(basedir, target_name)
         try:
             outdir.mkdir(parents=True, exist_ok=clobber)
         except:
@@ -268,7 +314,7 @@ if __name__=='__main__':
         
         ###=====Create params.csv=====###
         text = """#name,value,fit,bounds,label,unit,truth\n"""
-        for i,row in d.iterrows():
+        for i,row in target_df.iterrows():
             # tic = row['TIC ID']
             Porb = row['Period (days)']
             Porberr = row['Period (days) err']
@@ -355,7 +401,7 @@ if __name__=='__main__':
 # General settings,
 ###############################################################################,\n"""
 
-        text2+=f"companions_phot,{' '.join(planets[:len(d)])}"
+        text2+=f"companions_phot,{' '.join(planets[:len(target_df)])}"
 
         text2+="""
 companions_rv,
@@ -484,33 +530,34 @@ allesfitter.prepare_ttv_fit('.', style='tessplot')
         if result:
             s = map(int, [s.split()[-1] for s in result.mission])
             sectors = sorted(set(s))
-            if multi_sector:
+            if sector_flag=='all_sector':
+                #case: sector='all'
                 print(f"Using {len(sectors)} sectors: {sectors}")
                 lc = result.download_all(quality_bitmask='default').stitch()
                 print("The lightcurves were not flattened/de-trended to avoid removing transits.")
             else:
-                if sector is None:
+                if sector_flag=='first':
                     idx = 0
                     sector = sectors[idx]
-                else:
-                    if int(sector)==-1:
-                        idx = -1
-                        sector = sectors[idx]
-                    else:
-                        idx = [i==sector for i in sectors]
-                        if sum(idx)==0:
-                            errmsg = f"sector={sector} is not available in {sectors}"
-                            raise ValueError(errmsg)
-                msg = f"Using sector={sector}"
-                if not multi_sector:
-                    msg += f"; otherwise use -sector=({sectors}, all))"
-                print(msg)
+                elif sector_flag=='last' or sector_flag=='default':
+                    idx = -1
+                    sector = sectors[idx]
+                elif sector_flag=='multi_sector':
+                    #case: sector int or list
+                    idx = [int(i)==sector for i in sectors]
+                    if sum(idx)==0:
+                        errmsg = f"{pipeline.upper()} lightcurves for sector={sector} is not available. Try sector={sectors}."
+                        raise ValueError(errmsg)
+                    msg = f"Using sector={sector}"
+                    if sector_flag!='all_sector':
+                        msg += f"; otherwise use -sector=({sectors}, all))"
+                    print(msg)
                 lc = result[idx].download(quality_bitmask='default').normalize()
                 assert lc.sector==sector
             if sigma:
                 lc = lc.remove_outliers(sigma=sigma)
             ax = lc.scatter()
-            fp = outdir.joinpath(f"{dirname}_tess.png")
+            fp = outdir.joinpath(f"{target_name}_tess.png")
             ax.figure.savefig(fp)
             fp = outdir.joinpath("tess.csv")
             df = lc.to_pandas()
