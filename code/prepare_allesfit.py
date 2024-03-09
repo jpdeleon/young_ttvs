@@ -40,7 +40,7 @@ try:
     import limbdark as ld
 except Exception:
     command = (
-        "pip install git+https://github.com/john-livingston/limbdark.git"
+        "pip install git+https://github.com/john-livingston/limbdark.git#egg=limbdark"
     )
     raise ModuleNotFoundError(command)
 
@@ -176,7 +176,7 @@ if __name__=='__main__':
     # group2.add_argument("-campaign", help="-campaign=-1 uses most recent K2 campaign (default); try -campaign=all to use all", default=None)
     # group2.add_argument("-quarter", help="-quarter=-1 uses most recent Kepler quarter (default); try -quarter=all to use all", default=None)
     ap.add_argument("-sector", nargs='+', help="-sector=-1 uses most recent TESS sector (default); try -sector=all to use all", default=None)
-
+    ap.add_argument("-exp", help="exposure time (default=None)", type=float, default=None)
     # ap.add_argument("-dir", help="base directory", type=str, default=f"{home}/github/research/project/young_ttvs/allesfitter/")
     ap.add_argument("-dir", help="base directory", type=str, default=".")
     ap.add_argument("-pipeline", help="TESS/Kepler data pipeline", type=str, default='spoc')
@@ -191,6 +191,7 @@ if __name__=='__main__':
     toiid = args.toi
     ctoiid = args.ctoi
     name = args.name
+    exptime = args.exp
     basedir = args.dir
     mission = args.mission
     sigma = args.sigma
@@ -404,8 +405,8 @@ inst_rv,
 multiprocess,True
 multiprocess_cores,40
 fast_fit,True
-#fast_fit_width,0.3333333333333333
-fast_fit_width,0.5
+fast_fit_width,0.3333333333333333
+#fast_fit_width,0.5
 secondary_eclipse,False
 phase_curve,False
 shift_epoch,True
@@ -429,6 +430,12 @@ ns_tol,0.01
 # Limb darkening law per object and instrument,
 ###############################################################################,
 host_ld_law_tess,quad
+#####################################,
+# Exposure interpolation settings,
+#####################################,
+### crucial only for long exposure times,
+# t_exp_tess,0.0208333
+# t_exp_n_int_tess,10
 ###############################################################################,
 # Baseline settings per instrument,
 ###############################################################################,
@@ -450,10 +457,15 @@ host_grid_tess,very_sparse
 #N_flares,1
 use_host_density_prior,True
 ###################################################,
-# fit_ttvs
+# Fit TTV,
 ###################################################,
 fit_ttvs,False
-###################################################,"""
+###################################################,
+# Stellar grid per object and instrument	
+###############################################################################,
+host_grid_tess,very_sparse
+# b_grid_tess,very_sparse
+# c_grid_tess,very_sparse"""
 
         if debug:
             print(text2)
@@ -516,33 +528,58 @@ allesfitter.prepare_ttv_fit('.', style='tessplot')
             errmsg = f"pipeline={pipeline} not in {pipelines}"
             print(all)
             raise ValueError(errmsg)
-        print(f"Using {pipeline} pipeline.")
-        result = lk.search_lightcurve(query_name, author=pipeline, mission=mission)
+        print(f"Using {pipeline.upper()} pipeline.")
+        result = lk.search_lightcurve(query_name, author=pipeline, exptime=exptime, mission=mission)
         if result:
-            s = map(int, [s.split()[-1] for s in result.mission])
-            sectors = sorted(set(s))
+            sectors = list(map(int, [s.split()[-1] for s in result.mission]))
+            unique_sectors = sorted(set(sectors))
             if sector_flag=='all_sector':
                 #case: sector='all'
                 print(f"Using {len(sectors)} sectors: {sectors}")
+                unique_exptimes = result.table.to_pandas().exptime.unique()
+                if len(unique_exptimes)>1:
+                    errmsg = f"Multiple exposure times are available for `all` sectors:\n{result}.\n"
+                    errmsg += f"Try using -exp={unique_exptimes}"
+                    raise ValueError(errmsg)
+                exptime = unique_exptimes[0] if exptime is None else exptime
                 lc = result.download_all(quality_bitmask='default').stitch()
                 print("The lightcurves were not flattened/de-trended to avoid removing transits.")
+                assert lc.sector==int(unique_sectors[-1])
+            elif sector_flag=='multi_sector':
+                #case: sector int or list
+                idx = [str(i) in sector for i in sectors]
+                if sum(idx)==0:
+                    errmsg = f"{pipeline.upper()} lightcurves for sector={sector} is not available. Try sector={unique_sectors}."
+                    raise ValueError(errmsg)
+
+                filtered_result = result[idx]
+                unique_exptimes = filtered_result.table.to_pandas().exptime.unique()
+                msg = f"Using {len(sectors)} sectors: {sector} (exptime={unique_exptimes} sec).\n"
+                if sector_flag!='all_sector':
+                    msg += f"Otherwise use sector=({unique_sectors}, all))."
+                print(msg)
+
+                if len(sector)>len(filtered_result):
+                    errmsg = f"Not all sector={sector} have exptime={exptime} sec.\n"
+                    errmsg = f"Try to limit the sectors.\n"
+                    raise ValueError(errmsg)
+                elif len(sector)<len(filtered_result):
+                    errmsg = f"Multiple exposure times are available for the given sector:\n{filtered_result}.\n"
+                    errmsg += f"Try using -exp={unique_exptimes}"
+                    raise ValueError(errmsg)
+                assert len(sector)==len(filtered_result)
+                exptime = unique_exptimes[0] if exptime is None else exptime
+                lc = filtered_result.download_all(quality_bitmask='default').stitch()
+                print("The lightcurves were not flattened/de-trended to avoid removing transits.")
+                assert lc.sector==int(sector[-1])
             else:
                 if sector_flag=='first':
                     idx = 0
                     sector = sectors[idx]
                 elif sector_flag=='last' or sector_flag=='default':
                     idx = -1
-                    sector = sectors[idx]
-                elif sector_flag=='multi_sector':
-                    #case: sector int or list
-                    idx = [int(i)==sector for i in sectors]
-                    if sum(idx)==0:
-                        errmsg = f"{pipeline.upper()} lightcurves for sector={sector} is not available. Try sector={sectors}."
-                        raise ValueError(errmsg)
-                    msg = f"Using sector={sector}"
-                    if sector_flag!='all_sector':
-                        msg += f"; otherwise use -sector=({sectors}, all))"
-                    print(msg)
+                    sector = sectors[idx]                
+
                 lc = result[idx].download(quality_bitmask='default').normalize()
                 assert lc.sector==sector
             if sigma:
