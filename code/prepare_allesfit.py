@@ -9,7 +9,7 @@ creates a directory with the files needed to run allesfitter:
 5. tess.csv
 ======
 * for precise transit transit timing, some parameters can be fixed
-* limb darkening can be fixed to theoretical values derived using ldtk;
+* limb darkening can be fixed to theoretical values derived using ~ldtk~ limbdark;
   assumes feh=(0,0.1) dex if feh is not available 
 * uses tess-point to check if target was observed by TESS
 (useful to know even if `lightkurve.search_lightcurve` returned None)
@@ -18,8 +18,7 @@ https://exoplanetarchive.ipac.caltech.edu/docs/sysaliases.html
 ======
 TODO: 
 1. add priors as args
-2. specify a list of sectors
-3. make an arg to change tess.csv and variable name to user-defined
+2. make an arg to change tess.csv and variable name to user-defined
 """
 import sys
 # import logging
@@ -448,20 +447,19 @@ baseline_flux_tess,sample_GP_Matern32
 ###############################################################################,
 error_flux_tess,sample
 ###############################################################################,
-# Stellar grid per object and instrument,
-###############################################################################,
-host_grid_tess,very_sparse
-###############################################################################,
 # Flares,
 ###############################################################################,
 #N_flares,1
+###############################################################################,
+# Host density prior,
+###############################################################################,
 use_host_density_prior,True
 ###################################################,
 # Fit TTV,
 ###################################################,
 fit_ttvs,False
-###################################################,
-# Stellar grid per object and instrument	
+###############################################################################,
+# Stellar grid per object and instrument,
 ###############################################################################,
 host_grid_tess,very_sparse
 # b_grid_tess,very_sparse
