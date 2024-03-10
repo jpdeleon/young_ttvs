@@ -150,7 +150,8 @@ TESS sectors=[ 8 35 45 46 62 72]<br>
 
 ## TOI with hint of TTVs
 * [TOI-4495](https://github.com/jpdeleon/young_ttvs/tree/main/allesfitter/toi_in_resonance/toi4495/)
- 
+
+![img](allesfitter/toi_in_resonance/toi4495/ttv/ttv.png) 
 ![img](allesfitter/toi_in_resonance/toi4495/fit.png)
 
 * [TOI-5493](https://github.com/jpdeleon/young_ttvs/tree/main/allesfitter/toi_in_resonance/toi5493/)
