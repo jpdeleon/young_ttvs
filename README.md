@@ -12,7 +12,8 @@ TODO:
   - [ ] measure Prot in TESS lc
   - [ ] cross-match with catalogs e.g. LiEW
 - [ ] measure TTVs using [allesfitter](https://github.com/MNGuenther/allesfitter)
- 
+- [ ] further filter candidates with depth > 1ppt (if ground-based follow-up is needed)
+  
 ## TOIs near period commensurability
 * See [notebook](https://github.com/jpdeleon/young_ttvs/tree/main/notebooks/tois.ipynb)
  
@@ -101,6 +102,11 @@ TOI-6276 | [TIC-397362481](https://exofop.ipac.caltech.edu/tess/target.php?id=39
 Second Order: 7:5 | P=(4.47,6.21) (delta=0.70%)
 TESS sectors=[63 64]<br>
 
+TOI-0707 | [TIC-167342439](https://exofop.ipac.caltech.edu/tess/target.php?id=167342439) (nplanets=2):<br>
+Second Order: 3:1 | P=(17.48,52.80) (delta=0.71%)
+TESS sectors=[ 1  2  3  4  5  6  7  8  9 11 12 13 28 29 30 31 32 33 34 35 36 38 39 61
+ 62 64 65 66 67 69]<br>
+
 TOI-6054 | [TIC-392681545](https://exofop.ipac.caltech.edu/tess/target.php?id=392681545) (nplanets=2):<br>
 Second Order: 5:3 | P=(7.49,12.58) (delta=0.74%)
 TESS sectors=[19 59]<br>
@@ -147,48 +153,87 @@ TOI-6265 | [TIC-344927749](https://exofop.ipac.caltech.edu/tess/target.php?id=34
 Second Order: 7:5 | P=(4.18,5.79) (delta=0.98%)
 TESS sectors=[ 8 35 45 46 62 72]<br>
 
-
 ## TOI with hint of TTVs
-* [TOI-4495](https://github.com/jpdeleon/young_ttvs/tree/main/allesfitter/toi_in_resonance/toi4495/)
 
-![img](allesfitter/toi_in_resonance/toi4495/ttv/ttv.png) 
+### TOI-6109
+
+* Neptunes around a (young?) Sun-like star
+* Lots of SG1 follow-up but inconclusive detections as of March 2024; observable with LCO in 2nd sem (see below)
+* Can't check [Spacebook TESS](https://spacebook.mit.edu/display/TESS/Publications) but it's possible that many teams are already working on this system
+* First Order: 3:2 | P=(5.70,8.54) (delta=0.05%)
+* TESS sectors=[18 58]
+* Both planets have depth>1ppt! ([exofop](https://exofop.ipac.caltech.edu/tess/target.php?id=TOI-6109))
+* [results folder](https://github.com/jpdeleon/young_ttvs/tree/main/allesfitter/toi_in_resonance/toi6109/)
+
+![img](allesfitter/toi_in_resonance/toi6109/ttv/ttv.png)
+![img](allesfitter/toi_in_resonance/toi6109/ttv/b_ttv.png)
+![img](allesfitter/toi_in_resonance/toi6109/ttv/c_ttv.png)
+
+![img](allesfitter/toi_in_resonance/toi6109/toi6109_lco.png)
+
+### TOI-4495
+
+* First Order: 2:1 | P=(2.57,5.18) (delta=0.86%)
+* TESS sectors=[14 40 41 53 54 80 81]
+* Note: the transit depths (<1 ppt) are too shallow for follow-up ([exofop](https://exofop.ipac.caltech.edu/tess/target.php?id=TOI-4495))
+* [results folder](https://github.com/jpdeleon/young_ttvs/tree/main/allesfitter/toi_in_resonance/toi4495/)
+ 
+![img](allesfitter/toi_in_resonance/toi4495/ttv/ttv.png)
 ![img](allesfitter/toi_in_resonance/toi4495/fit.png)
 
-* [TOI-5493](https://github.com/jpdeleon/young_ttvs/tree/main/allesfitter/toi_in_resonance/toi5493/)
+### TOI-5493
+
+* Second Order: 5:3 | P=(14.56,24.44) (delta=0.67%)
+* TESS sectors=[ 7 34 44 45 46 61 72]
+* Note: Only planet b has depth>1ppt ([exofop](https://exofop.ipac.caltech.edu/tess/target.php?id=TOI-5493))
+* [results folder](https://github.com/jpdeleon/young_ttvs/tree/main/allesfitter/toi_in_resonance/toi5493/)
   
 ![img](allesfitter/toi_in_resonance/toi5493/ttv/ttv.png)
 ![img](allesfitter/toi_in_resonance/toi5493/ttv/b_ttv.png)
 ![img](allesfitter/toi_in_resonance/toi5493/ttv/c_ttv.png)
 ![img](allesfitter/toi_in_resonance/toi5493/ttv/d_ttv.png)
 
-* [TOI-6109](https://github.com/jpdeleon/young_ttvs/tree/main/allesfitter/toi_in_resonance/toi6109/)
+### TOI-6265
 
-![img](allesfitter/toi_in_resonance/toi6109/ttv/ttv.png)
-![img](allesfitter/toi_in_resonance/toi6109/ttv/b_ttv.png)
-![img](allesfitter/toi_in_resonance/toi6109/ttv/c_ttv.png)
-
-* [TOI-6265](https://github.com/jpdeleon/young_ttvs/tree/main/allesfitter/toi_in_resonance/toi6265/)
+* Second Order: 7:5 | P=(4.18,5.79) (delta=0.98%)
+* TESS sectors=[ 8 35 45 46 62 72]
+* Both planets have depth<1ppt! ([exofop](https://exofop.ipac.caltech.edu/tess/target.php?id=TOI-6265))
+* [results folder](https://github.com/jpdeleon/young_ttvs/tree/main/allesfitter/toi_in_resonance/toi6265/)
 
 ![img](allesfitter/toi_in_resonance/toi6265/ttv/ttv.png)
 ![img](allesfitter/toi_in_resonance/toi6265/ttv/b_ttv.png)
 ![img](allesfitter/toi_in_resonance/toi6265/ttv/c_ttv.png)
 
+### TOI-1670
+
+* Second Order: 3:1 | P=(40.75,123.06) (delta=0.66%)
+* TESS sectors=[14 15 16 18 19 20 21 22 23 24 25 26 40 41 47 48 49 50 51 52 53 55 56 57
+ 58 59 60 73 74 75 76 77 78 79 80 81 82 83]
+* Note: Only planet b has depth>1ppt ([exofop](https://exofop.ipac.caltech.edu/tess/target.php?id=TOI-1670))
+* [results folder](https://github.com/jpdeleon/young_ttvs/tree/main/allesfitter/toi_in_resonance/toi1670)
+
+![img](allesfitter/toi_in_resonance/toi1670/ttv/b_ttv.png)
 
 ## TOIs with sign of youth
+
 ### TOI-6109
+
 ![img](allesfitter/toi_in_resonance/toi6109/TOI6109_s58_pdcsap_sc.png)
 
 ### TOI-1097 
+
 * THYME IX: HD 109833 b,c in LCC (24±3 Myr)
 * [Wood+2023](https://ui.adsabs.harvard.edu/abs/2023AJ....165...85W/abstract)
 * No mention of resonance in paper; But actually in 3:2 (9.188525, 13.900142)
 ![img](./tql/TIC360630575_s38_pdcsap_sc.png)
 
 ### TOI-4323
+
 * large contamination
 ![img](./tql/TIC143022742_s04_pdcsap_sc.png)
 
 ## CTOI
+
 * See [notebook](https://github.com/jpdeleon/young_ttvs/tree/main/notebooks/ctois.ipynb)
 
 TIC 204497617 (nplanets=2): <br>
@@ -214,7 +259,24 @@ Second Order: 4:2 | P=(18.38,9.11) n=(1,2) (delta=0.94%)
 ![img](./tql/TIC347332255_s23_pdcsap_sc.png)
 
 ## Known systems from NExSci
+* See also [Jontof-Hutter+2022](https://ui.adsabs.harvard.edu/abs/2022AJ....164...42J/abstract)
 * See [notebook](https://github.com/jpdeleon/young_ttvs/tree/main/notebooks/nexsci.ipynb)
+* Note: A target is indicated as `known TTV` if it has a TTV flag in NExSci table 
+* Note: Kepler targets have very shallow depths so better focus on K2, TOI, or other targets
+
+### TOI 2076 b,c
+* [Hedges+2021](https://ui.adsabs.harvard.edu/abs/2021AJ....162...54H/abstract) noted that planets are close to 5:3 orbital resonance, but further data are needed for a firm detection and to constrain the period of TOI-2076c
+* only sectors 16 and 23 was used in publication; sector 50 now available, S77 in the future
+### K2-384
+* 5 planets around an M-dwarf 
+* [Christiansen+2022](https://exoplanetarchive.ipac.caltech.edu/overview/K2-384) noted resonance but did not do detailed TTV modeling because the predicted TTV amplitude (see below) is below the 30-min cadence of the K2 data
+* Assuming circular orbits, the TTVFaster package (Agol & Deck 2016) predicts transit timing variations with amplitudes of 0.28, 0.83, 3.33, 12.26, and 3.97 minutes for planets b-f respectively
+* S3, S30, S42, S43 according to the paper, and S70 according to tess-point
+
+### K2-219 bcd
+* [Mayo+2018](https://ui.adsabs.harvard.edu/abs/2018AJ....155..136M/abstract) did not mention any TTVs
+* S42, S43, S70
+
  
 Kepler-50 (nplanets=2, [Chaplin+2013](https://exoplanetarchive.ipac.caltech.edu/overview/Kepler-50), known TTV):<br>
 First Order: 6:5 | P=(7.81,9.38) (delta=0.02%)<br>
@@ -447,18 +509,6 @@ Kepler-223 (nplanets=4, [Mills+2016](https://exoplanetarchive.ipac.caltech.edu/o
 First Order: 4:3 | P=(7.38,9.85) (delta=0.00%) 3:2 | P=(9.85,14.79) (delta=0.14%) 4:3 | P=(14.79,19.73) (delta=0.04%)<br>
 TESS sectors=[14 15 41 54 56 74 75 81 82]<br>
 
-### TOI 2076 b,c
-* [Hedges+2021](https://ui.adsabs.harvard.edu/abs/2021AJ....162...54H/abstract) noted that planets are close to 5:3 orbital resonance, but further data are needed for a firm detection and to constrain the period of TOI-2076c
-* only sectors 16 and 23 was used in publication; sector 50 now available, S77 in the future
-### K2-384
-* 5 planets around an M-dwarf 
-* [Christiansen+2022](https://exoplanetarchive.ipac.caltech.edu/overview/K2-384) noted resonance but did not do detailed TTV modeling because the predicted TTV amplitude (see below) is below the 30-min cadence of the K2 data
-* Assuming circular orbits, the TTVFaster package (Agol & Deck 2016) predicts transit timing variations with amplitudes of 0.28, 0.83, 3.33, 12.26, and 3.97 minutes for planets b-f respectively
-* S3, S30, S42, S43 according to the paper, and S70 according to tess-point
-
-### K2-219 bcd
-* [Mayo+2018](https://ui.adsabs.harvard.edu/abs/2018AJ....155..136M/abstract) did not mention any TTVs
-* S42, S43, S70
 
 ### with Prot
 ['HD 23472']: Prot=[40.1] d <br>

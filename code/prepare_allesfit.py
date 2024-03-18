@@ -1,5 +1,8 @@
 #!/usr/bin/env python
 """
+Usage
+$python prepare_allesfit.py -toi 1097 -sec all -exp 120
+
 Uses parameter from TOI/CTIO/NExSci databse and
 creates a directory with the files needed to run allesfitter:
 1. params.csv
@@ -174,16 +177,16 @@ if __name__=='__main__':
     # group2.add_argument("-sector", help="-sector=-1 uses most recent TESS sector (default); try -sector=all to use all", default=None)
     # group2.add_argument("-campaign", help="-campaign=-1 uses most recent K2 campaign (default); try -campaign=all to use all", default=None)
     # group2.add_argument("-quarter", help="-quarter=-1 uses most recent Kepler quarter (default); try -quarter=all to use all", default=None)
-    ap.add_argument("-sector", nargs='+', help="-sector=-1 uses most recent TESS sector (default); try -sector=all to use all", default=None)
+    ap.add_argument("-sec", "--sector", nargs='+', help="-sector=-1 uses most recent TESS sector (default); try -sector=all to use all", default=None)
     ap.add_argument("-exp", help="exposure time (default=None)", type=float, default=None)
     # ap.add_argument("-dir", help="base directory", type=str, default=f"{home}/github/research/project/young_ttvs/allesfitter/")
     ap.add_argument("-dir", help="base directory", type=str, default=".")
-    ap.add_argument("-pipeline", help="TESS/Kepler data pipeline", type=str, default='spoc')
-    ap.add_argument("-sigma", help="sigma for removing outliers in (combined) TESS lc", type=float, default=None)
+    ap.add_argument("-pip", "--pipeline", help="TESS/Kepler data pipeline", type=str, default='spoc')
+    ap.add_argument("-sig", "--sigma", help="sigma for removing outliers in (combined) TESS lc", type=float, default=None)
     ap.add_argument("-mission", choices=['tess','k2','kepler'], type=str, default='tess')
     ap.add_argument("-debug", action="store_true", default=False)
-    ap.add_argument("-clobber", help="overwrite files", action="store_true", default=False)
     ap.add_argument("-results_dir", help="path to the results dir of a previous run to be used in params.csv", default=None)
+    ap.add_argument("--overwrite", help="overwrite files", action="store_true", default=False)
 
     args = ap.parse_args(None if sys.argv[1:] else ["-h"])
 
@@ -203,7 +206,7 @@ if __name__=='__main__':
     sector = args.sector
     # campaign = -1 if args.campaign is None else args.campaign
     # quarter = a-1 if args.quarter is None else args.quarter
-    clobber = args.clobber
+    overwrite = args.overwrite
            
     target_name, target_df = parse_target_name(toiid, ctoiid, name)
     ticid, outSec = get_tess_sectors(target_name, target_df, toiid, ctoiid, name)
@@ -299,9 +302,9 @@ if __name__=='__main__':
     else:
         outdir = Path(basedir, target_name)
         try:
-            outdir.mkdir(parents=True, exist_ok=clobber)
+            outdir.mkdir(parents=True, exist_ok=overwrite)
         except:
-            raise FileExistsError("Use -clobber to overwrite files.")
+            raise FileExistsError("Use --overwrite to overwrite files.")
         
         ###=====Create params.csv=====###
         text = """#name,value,fit,bounds,label,unit,truth\n"""
@@ -322,9 +325,15 @@ if __name__=='__main__':
             rprs = np.sqrt(row['Depth (ppm)']/1e6)
             rprserr = np.sqrt(row['Depth (ppm) err']/1e6)
             if str(rprs)=='nan':
-                rprs = row['pl_rade']*u.Rearth.to(u.Rsun)/row['st_rad']
-                Rperr = np.sqrt(row['pl_radeerr1']**2+row['pl_radeerr2']**2)
-                rprserr = Rperr*u.Rearth.to(u.Rsun)/radius_err
+                if hasattr(row, 'pl_rade'):
+                    rprs = row['pl_rade']*u.Rearth.to(u.Rsun)/row['st_rad']
+                    Rperr = np.sqrt(row['pl_radeerr1']**2+row['pl_radeerr2']**2)
+                    rprserr = Rperr*u.Rearth.to(u.Rsun)/radius_err
+                else:
+                    rprs = input(f"Planet {pl} Rp/Rs: ")
+                    rprs = float(rprs)
+                    rprserr = input(f"Planet {pl} Rp/Rs err: ")
+                    rprserr = float(rprserr)
             assert rprs>0
 
             rprs_s = np.random.normal(rprs, rprserr, size=Nsamples)

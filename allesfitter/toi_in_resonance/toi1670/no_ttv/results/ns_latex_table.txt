@@ -1,0 +1,27 @@
+parameter & value & unit & fit/fixed \\ 
+\hline 
+\multicolumn{4}{c}{\textit{Fitted parameters}} \\ 
+\hline 
+$R_b / R_\star$ & $0.07687_{-0.00045}^{+0.00068}$ & & fit \\ 
+$(R_\star + R_b) / a_b$ & $0.026451_{-0.000038}^{+0.000075}$ & & fit \\ 
+$\cos{i_b}$ & $0.019803_{-0.000074}^{+0.000096}$ & & fit \\ 
+$T_{0;b}$ & $2459565.88418\pm0.00021$ & BJD& fit \\ 
+$P_b$ & $40.750145\pm0.000018$ & d& fit \\ 
+$R_c / R_\star$ & $0.01693\pm0.00059$ & & fit \\ 
+$(R_\star + R_c) / a_c$ & $0.0661_{-0.0023}^{+0.0047}$ & & fit \\ 
+$\cos{i_c}$ & $0.0570_{-0.0026}^{+0.0052}$ & & fit \\ 
+$T_{0;c}$ & $2459534.7483_{-0.0012}^{+0.0012}$ & BJD& fit \\ 
+$P_b$ & $10.983726\pm0.000024$ & d& fit \\ 
+$R_d / R_\star$ & $0.0198_{-0.0017}^{+0.0015}$ & & fit \\ 
+$(R_\star + R_d) / a_d$ & $0.01331_{-0.00046}^{+0.0010}$ & & fit \\ 
+$\cos{i_d}$ & $0.00812_{-0.00091}^{+0.0016}$ & & fit \\ 
+$T_{0;d}$ & $2459684.3097\pm0.0058$ & BJD& fit \\ 
+$P_b$ & $123.05926\pm0.00091$ & d& fit \\ 
+$\sqrt{e_b} \cos{\omega_b}$ & $0.0$ & & fixed \\ 
+$\sqrt{e_b} \sin{\omega_b}$ & $0.0$ & & fixed \\ 
+$q_{1; \mathrm{tess}}$ & $0.151_{-0.030}^{+0.032}$ & & fit \\ 
+$q_{2; \mathrm{tess}}$ & $0.20_{-0.15}^{+0.27}$ & & fit \\ 
+$\log{\sigma_\mathrm{tess}}$ & $-7.0930\pm0.0042$ & rel. flux& fit \\ 
+$\mathrm{gp ln sigma (tess)}$ & $0.000115\pm0.000035$ & & fit \\ 
+$\mathrm{gp ln sigma (tess)}$ & $-8.005_{-0.069}^{+0.074}$ & & fit \\ 
+$\mathrm{gp ln rho (tess)}$ & $-0.70\pm0.14$ & & fit \\ 

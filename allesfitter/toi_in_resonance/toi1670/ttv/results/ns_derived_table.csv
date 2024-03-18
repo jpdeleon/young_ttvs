@@ -1,0 +1,19 @@
+#property,value,lower_error,upper_error,source
+Host radius over semi-major axis b; $R_\star/a_\mathrm{b}$,0.024684746736020606,1.7330079678884447e-05,1.1884573141749538e-05,derived
+Semi-major axis b over host radius; $a_\mathrm{b}/R_\star$,40.51084707062336,0.01949472861371504,0.028460872793196756,derived
+Companion radius b over semi-major axis b; $R_\mathrm{b}/a_\mathrm{b}$,0.0018985951457775477,8.243573465926881e-06,8.25038980137088e-06,derived
+Companion radius b; $R_\mathrm{b}$ ($\mathrm{R_{\oplus}}$),10.991715543751905,0.5031675348797524,0.5055939328798953,derived
+Companion radius b; $R_\mathrm{b}$ ($\mathrm{R_{jup}}$),0.9806168649583734,0.04488967792503429,0.04510614702765714,derived
+Semi-major axis b; $a_\mathrm{b}$ ($\mathrm{R_{\odot}}$),53.07901564047103,2.4270778550386822,2.4294991442681493,derived
+Semi-major axis b; $a_\mathrm{b}$ (AU),0.24684222448010884,0.011287046104663662,0.011298306230954569,derived
+Inclination b; $i_\mathrm{b}$ (deg),88.85400800161142,0.0,0.0,derived
+Impact parameter b; $b_\mathrm{tra;b}$,0.8102169414124673,0.00038989457227422974,0.0005692174558639129,derived
+Total transit duration b; $T_\mathrm{tot;b}$ (h),5.45399049093308,0.009803491113860474,0.005055074859616759,derived
+Full-transit duration b; $T_\mathrm{full;b}$ (h),3.398525318623018,0.012539468317634306,0.011229983992937509,derived
+Host density from orbit b; $\rho_\mathrm{\star;b}$ (cgs),0.7573687695092763,0.001092365988735855,0.0015984178619187217,derived
+Equilibrium temperature b; $T_\mathrm{eq;b}$ (K),644.7654769497772,12.380344880410576,12.220258069919623,derived
+Transit depth (undil.) b; $\delta_\mathrm{tr; undil; b; tess}$ (ppt),5.783662189480343,0.04301481683277597,0.04003221636472709,derived
+Transit depth (dil.) b; $\delta_\mathrm{tr; dil; b; tess}$ (ppt),5.783662189480343,0.04301481683277597,0.04003221636472709,derived
+Limb darkening; $u_\mathrm{1; tess}$,0.19398082103532832,0.04170434655754529,0.04363466789048684,derived
+Limb darkening; $u_\mathrm{2; tess}$,0.1537532937972023,0.0433862502475371,0.04462590452991269,derived
+Combined host density from all orbits; $rho_\mathrm{\star; combined}$ (cgs),0.7573687695092763,0.001092365988735855,0.0015984178619187217,derived
