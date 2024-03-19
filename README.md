@@ -155,6 +155,20 @@ TESS sectors=[ 8 35 45 46 62 72]<br>
 
 ## TOI with hint of TTVs
 
+### TOI-1097 
+
+* [Wood+2023](https://ui.adsabs.harvard.edu/abs/2023AJ....165...85W/abstract): HD 109833 b,c in LCC (24±3 Myr)
+* No mention of resonance in paper
+* First Order: 3:2 | P=(9.19,13.90) (delta=0.87%)<br>
+* TESS sectors=[11 12 38 39 65]
+* [results folder](https://github.com/jpdeleon/young_ttvs/tree/main/allesfitter/toi1097)
+ 
+![img](allesfitter/toi_in_resonance/toi1097/ttv/ttv.png)
+![img](allesfitter/toi_in_resonance/toi1097/ttv/b_ttv.png)
+![img](allesfitter/toi_in_resonance/toi1097/ttv/c_ttv.png)
+
+![img](./tql/TIC360630575_s38_pdcsap_sc.png)
+
 ### TOI-6109
 
 * Neptunes around a (young?) Sun-like star
@@ -168,7 +182,7 @@ TESS sectors=[ 8 35 45 46 62 72]<br>
 ![img](allesfitter/toi_in_resonance/toi6109/ttv/ttv.png)
 ![img](allesfitter/toi_in_resonance/toi6109/ttv/b_ttv.png)
 ![img](allesfitter/toi_in_resonance/toi6109/ttv/c_ttv.png)
-
+![img](allesfitter/toi_in_resonance/toi6109/TOI6109_s58_pdcsap_sc.png)
 ![img](allesfitter/toi_in_resonance/toi6109/toi6109_lco.png)
 
 ### TOI-4495
@@ -215,17 +229,6 @@ TESS sectors=[ 8 35 45 46 62 72]<br>
 ![img](allesfitter/toi_in_resonance/toi1670/ttv/b_ttv.png)
 
 ## TOIs with sign of youth
-
-### TOI-6109
-
-![img](allesfitter/toi_in_resonance/toi6109/TOI6109_s58_pdcsap_sc.png)
-
-### TOI-1097 
-
-* THYME IX: HD 109833 b,c in LCC (24±3 Myr)
-* [Wood+2023](https://ui.adsabs.harvard.edu/abs/2023AJ....165...85W/abstract)
-* No mention of resonance in paper; But actually in 3:2 (9.188525, 13.900142)
-![img](./tql/TIC360630575_s38_pdcsap_sc.png)
 
 ### TOI-4323
 

@@ -1,0 +1,39 @@
+Parameter & Value & Source \\ 
+\hline 
+\multicolumn{3}{c}{\textit{Derived parameters}} \\ 
+\hline 
+Host radius over semi-major axis b; $R_\star/a_\mathrm{b}$ & $0.0528_{-0.0029}^{+0.0037}$ & derived \\ 
+Semi-major axis b over host radius; $a_\mathrm{b}/R_\star$ & $19.0_{-1.2}^{+1.1}$ & derived \\ 
+Companion radius b over semi-major axis b; $R_\mathrm{b}/a_\mathrm{b}$ & $0.001367_{-0.000098}^{+0.00012}$ & derived \\ 
+Companion radius b; $R_\mathrm{b}$ ($\mathrm{R_{\oplus}}$) & $2.77\pm0.14$ & derived \\ 
+Companion radius b; $R_\mathrm{b}$ ($\mathrm{R_{jup}}$) & $0.247\pm0.013$ & derived \\ 
+Semi-major axis b; $a_\mathrm{b}$ ($\mathrm{R_{\odot}}$) & $18.5\pm1.4$ & derived \\ 
+Semi-major axis b; $a_\mathrm{b}$ (AU) & $0.0862\pm0.0065$ & derived \\ 
+Inclination b; $i_\mathrm{b}$ (deg) & $87.97_{-0.30}^{+0.26}$ & derived \\ 
+Impact parameter b; $b_\mathrm{tra;b}$ & $0.671\pm0.053$ & derived \\ 
+Total transit duration b; $T_\mathrm{tot;b}$ (h) & $2.875_{-0.046}^{+0.054}$ & derived \\ 
+Full-transit duration b; $T_\mathrm{full;b}$ (h) & $2.612_{-0.052}^{+0.055}$ & derived \\ 
+Host density from orbit b; $\rho_\mathrm{\star;b}$ (cgs) & $1.53\pm0.29$ & derived \\ 
+Equilibrium temperature b; $T_\mathrm{eq;b}$ (K) & $874_{-31}^{+34}$ & derived \\ 
+Transit depth (undil.) b; $\delta_\mathrm{tr; undil; b; tess}$ (ppt) & $0.704\pm0.040$ & derived \\ 
+Transit depth (dil.) b; $\delta_\mathrm{tr; dil; b; tess}$ (ppt) & $0.704\pm0.040$ & derived \\ 
+Period ratio; $P_\mathrm{b} / P_\mathrm{c}$ & $0.6610311_{-0.0000068}^{+0.0000058}$ & derived \\ 
+Host radius over semi-major axis c; $R_\star/a_\mathrm{c}$ & $0.0408_{-0.0026}^{+0.0033}$ & derived \\ 
+Semi-major axis c over host radius; $a_\mathrm{c}/R_\star$ & $24.5_{-1.8}^{+1.6}$ & derived \\ 
+Companion radius c over semi-major axis c; $R_\mathrm{c}/a_\mathrm{c}$ & $0.001026_{-0.000094}^{+0.00011}$ & derived \\ 
+Companion radius c; $R_\mathrm{c}$ ($\mathrm{R_{\oplus}}$) & $2.68\pm0.19$ & derived \\ 
+Companion radius c; $R_\mathrm{c}$ ($\mathrm{R_{jup}}$) & $0.239\pm0.017$ & derived \\ 
+Semi-major axis c; $a_\mathrm{c}$ ($\mathrm{R_{\odot}}$) & $24.0\pm2.0$ & derived \\ 
+Semi-major axis c; $a_\mathrm{c}$ (AU) & $0.1114\pm0.0093$ & derived \\ 
+Inclination c; $i_\mathrm{c}$ (deg) & $87.93_{-0.21}^{+0.17}$ & derived \\ 
+Impact parameter c; $b_\mathrm{tra;c}$ & $0.885_{-0.024}^{+0.022}$ & derived \\ 
+Total transit duration c; $T_\mathrm{tot;c}$ (h) & $2.26\pm0.12$ & derived \\ 
+Full-transit duration c; $T_\mathrm{full;c}$ (h) & $1.78_{-0.16}^{+0.14}$ & derived \\ 
+Host density from orbit c; $\rho_\mathrm{\star;c}$ (cgs) & $1.44\pm0.31$ & derived \\ 
+Equilibrium temperature c; $T_\mathrm{eq;c}$ (K) & $769_{-30.}^{+34}$ & derived \\ 
+Transit depth (undil.) c; $\delta_\mathrm{tr; undil; c; tess}$ (ppt) & $0.561_{-0.059}^{+0.066}$ & derived \\ 
+Transit depth (dil.) c; $\delta_\mathrm{tr; dil; c; tess}$ (ppt) & $0.561_{-0.059}^{+0.066}$ & derived \\ 
+Period ratio; $P_\mathrm{c} / P_\mathrm{b}$ & $1.512788_{-0.000013}^{+0.000016}$ & derived \\ 
+Limb darkening; $u_\mathrm{1; tess}$ & $0.318_{-0.016}^{+0.015}$ & derived \\ 
+Limb darkening; $u_\mathrm{2; tess}$ & $0.222_{-0.012}^{+0.013}$ & derived \\ 
+Combined host density from all orbits; $rho_\mathrm{\star; combined}$ (cgs) & $1.48\pm0.30$ & derived \\ 
