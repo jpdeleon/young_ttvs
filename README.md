@@ -155,20 +155,6 @@ TESS sectors=[ 8 35 45 46 62 72]<br>
 
 ## TOI with hint of TTVs
 
-### TOI-1097 
-
-* [Wood+2023](https://ui.adsabs.harvard.edu/abs/2023AJ....165...85W/abstract): HD 109833 b,c in LCC (24±3 Myr)
-* No mention of resonance in paper
-* First Order: 3:2 | P=(9.19,13.90) (delta=0.87%)<br>
-* TESS sectors=[11 12 38 39 65]
-* [results folder](https://github.com/jpdeleon/young_ttvs/tree/main/allesfitter/toi1097)
- 
-![img](allesfitter/toi_in_resonance/toi1097/ttv/ttv.png)
-![img](allesfitter/toi_in_resonance/toi1097/ttv/b_ttv.png)
-![img](allesfitter/toi_in_resonance/toi1097/ttv/c_ttv.png)
-
-![img](./tql/TIC360630575_s38_pdcsap_sc.png)
-
 ### TOI-6109
 
 * Neptunes around a (young?) Sun-like star
@@ -259,28 +245,56 @@ First Order: 2:1 | P=(18.38,9.11) n=(1,2) (delta=0.94%)
 Second Order: 4:2 | P=(18.38,9.11) n=(1,2) (delta=0.94%)
 
 ### TIC 347332255
+
 ![img](./tql/TIC347332255_s23_pdcsap_sc.png)
 
 ## Known systems from NExSci
-* See also [Jontof-Hutter+2022](https://ui.adsabs.harvard.edu/abs/2022AJ....164...42J/abstract)
-* See [notebook](https://github.com/jpdeleon/young_ttvs/tree/main/notebooks/nexsci.ipynb)
-* Note: A target is indicated as `known TTV` if it has a TTV flag in NExSci table 
-* Note: Kepler targets have very shallow depths so better focus on K2, TOI, or other targets
 
-### TOI 2076 b,c
+### TOI 2076 b,c,d
+* age < 500 Myr
 * [Hedges+2021](https://ui.adsabs.harvard.edu/abs/2021AJ....162...54H/abstract) noted that planets are close to 5:3 orbital resonance, but further data are needed for a firm detection and to constrain the period of TOI-2076c
-* only sectors 16 and 23 was used in publication; sector 50 now available, S77 in the future
+* [Osborn+2022](https://ui.adsabs.harvard.edu/abs/2022A%26A...664A.156O/abstract): clear anti-correlated TTV signal between planets b and c likely caused by their proximity to the 2:1 resonance, while planets c and d appear close to a 5:3 period
+* Only few transits observed by TESS; Needs follow-up with LCO this sem but I guess Osborn is already working on this
+* TESS sectors=[16 23 50 77]; sector 50 is still unpublished
+* Planets b,c transit depths > 1ppt and planet d depth ~ 1ppt ([exofop](https://exofop.ipac.caltech.edu/tess/target.php?id=TOI-2076))
+
+![img](allesfitter/known_ttvs/TOI-2076/ttv/ttv_preparation/ttv_preparation_b.jpg)
+![img](allesfitter/known_ttvs/TOI-2076/toi2076_lco.png)
+ 
+### TOI-1097 b,c
+
+* [Wood+2023](https://ui.adsabs.harvard.edu/abs/2023AJ....165...85W/abstract): HD 109833 b,c in LCC (age=24±3 Myr)
+* No mention of resonance or TTV in paper (purposely?)
+* First Order: 3:2 | P=(9.19,13.90) (delta=0.87%)
+* TESS sectors=[11 12 38 39 65]
+* Both planets have depth<1ppt ([exofop](https://exofop.ipac.caltech.edu/tess/target.php?id=TOI-1097))
+* [results folder](https://github.com/jpdeleon/young_ttvs/tree/main/allesfitter/toi_in_resonance/toi1097)
+ 
+![img](allesfitter/toi_in_resonance/toi1097/ttv/ttv.png)
+![img](allesfitter/toi_in_resonance/toi1097/ttv/b_ttv.png)
+![img](allesfitter/toi_in_resonance/toi1097/ttv/c_ttv.png)
+
+![img](./tql/TIC360630575_s38_pdcsap_sc.png)
+
 ### K2-384
+
 * 5 planets around an M-dwarf 
 * [Christiansen+2022](https://exoplanetarchive.ipac.caltech.edu/overview/K2-384) noted resonance but did not do detailed TTV modeling because the predicted TTV amplitude (see below) is below the 30-min cadence of the K2 data
 * Assuming circular orbits, the TTVFaster package (Agol & Deck 2016) predicts transit timing variations with amplitudes of 0.28, 0.83, 3.33, 12.26, and 3.97 minutes for planets b-f respectively
 * S3, S30, S42, S43 according to the paper, and S70 according to tess-point
 
 ### K2-219 bcd
+
 * [Mayo+2018](https://ui.adsabs.harvard.edu/abs/2018AJ....155..136M/abstract) did not mention any TTVs
 * S42, S43, S70
 
- 
+### Other known systems near resonance
+
+* See also [Jontof-Hutter+2022](https://ui.adsabs.harvard.edu/abs/2022AJ....164...42J/abstract)
+* See [notebook](https://github.com/jpdeleon/young_ttvs/tree/main/notebooks/nexsci.ipynb)
+* Note: A target is indicated as `known TTV` if it has a TTV flag in NExSci table 
+* Note: Kepler targets have very shallow depths so better focus on K2, TOI, or other targets
+  
 Kepler-50 (nplanets=2, [Chaplin+2013](https://exoplanetarchive.ipac.caltech.edu/overview/Kepler-50), known TTV):<br>
 First Order: 6:5 | P=(7.81,9.38) (delta=0.02%)<br>
 TESS sectors=[26 40 41 53 54 55 74 75 80 81 82]<br>
