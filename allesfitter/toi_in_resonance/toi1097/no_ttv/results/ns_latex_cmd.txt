@@ -1,0 +1,16 @@
+\newcommand{\brr}{$0.02590_{-0.00077}^{+0.00082}$} %$R_b / R_\star=0.02590_{-0.00077}^{+0.00082}$ 
+\newcommand{\brsuma}{$0.0541_{-0.0030}^{+0.0038}$} %$(R_\star + R_b) / a_b=0.0541_{-0.0030}^{+0.0038}$ 
+\newcommand{\bcosi}{$0.0354_{-0.0045}^{+0.0052}$} %$\cos{i_b}=0.0354_{-0.0045}^{+0.0052}$ 
+\newcommand{\bepoch}{$2458999.68204_{-0.0011}^{+0.00086}$} %$T_{0;b}=2458999.68204_{-0.0011}^{+0.00086}$ BJD
+\newcommand{\bperiod}{$9.188506_{-0.000020}^{+0.000022}$} %$P_b=9.188506_{-0.000020}^{+0.000022}$ d
+\newcommand{\crr}{$0.0251\pm0.0015$} %$R_c / R_\star=0.0251\pm0.0015$ 
+\newcommand{\crsuma}{$0.0419_{-0.0026}^{+0.0033}$} %$(R_\star + R_c) / a_c=0.0419_{-0.0026}^{+0.0033}$ 
+\newcommand{\ccosi}{$0.0361_{-0.0030}^{+0.0037}$} %$\cos{i_c}=0.0361_{-0.0030}^{+0.0037}$ 
+\newcommand{\cepoch}{$2458996.9606_{-0.0039}^{+0.0029}$} %$T_{0;c}=2458996.9606_{-0.0039}^{+0.0029}$ BJD
+\newcommand{\cperiod}{$13.90026_{-0.00011}^{+0.00015}$} %$P_b=13.90026_{-0.00011}^{+0.00015}$ d
+\newcommand{\hostldcqonetess}{$0.293\pm0.019$} %$q_{1; \mathrm{tess}}=0.293\pm0.019$ 
+\newcommand{\hostldcqtwotess}{$0.2947_{-0.010}^{+0.0087}$} %$q_{2; \mathrm{tess}}=0.2947_{-0.010}^{+0.0087}$ 
+\newcommand{\lnerrfluxtess}{$-7.411\pm0.014$} %$\log{\sigma_\mathrm{tess}}=-7.411\pm0.014$ rel. flux
+\newcommand{\baselinegpoffsetfluxtess}{$0.0002_{-0.0012}^{+0.0015}$} %$\mathrm{gp ln sigma (tess)}=0.0002_{-0.0012}^{+0.0015}$ 
+\newcommand{\baselinegpmaternthreetwolnsigmafluxtess}{$-5.26_{-0.19}^{+0.22}$} %$\mathrm{gp ln sigma (tess)}=-5.26_{-0.19}^{+0.22}$ 
+\newcommand{\baselinegpmaternthreetwolnrhofluxtess}{$0.49\pm0.17$} %$\mathrm{gp ln rho (tess)}=0.49\pm0.17$ 
