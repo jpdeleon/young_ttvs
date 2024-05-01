@@ -11,3 +11,6 @@ celerite
 ellc
 dynesty
 corner
+tess-point
+statsmodels
+allesfitter

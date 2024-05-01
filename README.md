@@ -14,13 +14,16 @@ TODO:
 - [ ] measure TTVs using [allesfitter](https://github.com/MNGuenther/allesfitter)
 - [ ] further filter candidates with depth > 1ppt (if ground-based follow-up is needed)
   
+Note:
+* `tess_orbit_times.csv` downloaded from https://tess.mit.edu/observations/ should be periodically updated in `allesfitter/_static/_tess/`
+
 ## TOIs near period commensurability
 * See [notebook](https://github.com/jpdeleon/young_ttvs/tree/main/notebooks/tois.ipynb)
  
 TOI-2269 | [TIC-441798995](https://exofop.ipac.caltech.edu/tess/target.php?id=441798995) (nplanets=3):<br>
 First Order: 2:1 | P=(1.42,2.84) (delta=0.00%)<br>
 TESS sectors=[14 15 16 17 18 19 20 21 22 23 24 25 26 40 41 47 48 49 50 51 52 53 54 55
- 56 57 58 59 60 73 74 75 76 77 78 79 80 81 82 83]<br>
+ 56 57 58 59 60 73 74 75 76 77 78 79 80 81 82 83 84 85 86]<br>
 
 TOI-1136 | [TIC-142276270](https://exofop.ipac.caltech.edu/tess/target.php?id=142276270) (nplanets=4):<br>
 First Order: 2:1 | P=(6.26,12.52) (delta=0.01%) 3:2 | P=(12.52,18.80) (delta=0.14%)<br>
@@ -28,7 +31,7 @@ TESS sectors=[14 15 21 22 41 48 75]<br>
 
 TOI-2267 | [TIC-459837008](https://exofop.ipac.caltech.edu/tess/target.php?id=459837008) (nplanets=3):<br>
 First Order: 9:8 | P=(2.03,2.29) (delta=0.02%)<br>
-TESS sectors=[19 20 25 26 40 52 53 59 60 73 79]<br>
+TESS sectors=[19 20 25 26 40 52 53 59 60 73 79 86]<br>
 
 TOI-0396 | [TIC-178155732](https://exofop.ipac.caltech.edu/tess/target.php?id=178155732) (nplanets=3):<br>
 Second Order: 5:3 | P=(3.59,5.97) (delta=0.03%)
@@ -36,7 +39,7 @@ TESS sectors=[ 3  4 30 31]<br>
 
 TOI-6109 | [TIC-384984325](https://exofop.ipac.caltech.edu/tess/target.php?id=384984325) (nplanets=2):<br>
 First Order: 3:2 | P=(5.70,8.54) (delta=0.05%)<br>
-TESS sectors=[18 58]<br>
+TESS sectors=[18 58 85]<br>
 
 TOI-1446 | [TIC-294471966](https://exofop.ipac.caltech.edu/tess/target.php?id=294471966) (nplanets=2):<br>
 Second Order: 7:5 | P=(4.51,6.32) (delta=0.14%)
@@ -44,7 +47,7 @@ TESS sectors=[14 15 16 41 54 55 56 75 76 81 82 83]<br>
 
 TOI-6022 | [TIC-455947620](https://exofop.ipac.caltech.edu/tess/target.php?id=455947620) (nplanets=2):<br>
 First Order: 5:4 | P=(1.55,1.93) (delta=0.19%)<br>
-TESS sectors=[16 17 24 57 78]<br>
+TESS sectors=[16 17 24 57 78 84 85]<br>
 
 TOI-4323 | [TIC-143022742](https://exofop.ipac.caltech.edu/tess/target.php?id=143022742) (nplanets=2):<br>
 First Order: 3:2 | P=(14.68,21.97) (delta=0.21%)<br>
@@ -52,7 +55,7 @@ TESS sectors=[ 4 31]<br>
 
 TOI-4647 | [TIC-303204165](https://exofop.ipac.caltech.edu/tess/target.php?id=303204165) (nplanets=2):<br>
 First Order: 5:4 | P=(8.83,11.07) (delta=0.24%)<br>
-TESS sectors=[42 43 57 70]<br>
+TESS sectors=[42 43 57 70 84]<br>
 
 TOI-2076 | [TIC-27491137](https://exofop.ipac.caltech.edu/tess/target.php?id=27491137) (nplanets=3):<br>
 Second Order: 5:3 | P=(21.02,35.13) (delta=0.29%)
@@ -61,7 +64,11 @@ TESS sectors=[16 23 50 77]<br>
 TOI-0282 | [TIC-29781292](https://exofop.ipac.caltech.edu/tess/target.php?id=29781292) (nplanets=4):<br>
 First Order: 3:2 | P=(56.00,84.26) (delta=0.30%)<br>
 TESS sectors=[ 1  2  3  4  5  6  7  8  9 10 11 12 13 27 28 29 30 31 33 34 35 36 37 38
- 39 61 62 63 64 65 66 67 68 69]<br>
+ 39 61 62 63 64 65 66 67 68 69 87 88 89 90 93 94 95 96]<br>
+
+TOI-6969 | [TIC-17129975](https://exofop.ipac.caltech.edu/tess/target.php?id=17129975) (nplanets=2):<br>
+Second Order: 3:1 | P=(1.51,4.56) (delta=0.31%)
+TESS sectors=[14 15 41 55 75]<br>
 
 TOI-0406 | [TIC-153065527](https://exofop.ipac.caltech.edu/tess/target.php?id=153065527) (nplanets=2):<br>
 First Order: 2:1 | P=(6.61,13.18) (delta=0.41%)<br>
@@ -73,52 +80,52 @@ TESS sectors=[ 3  4  5 30 32]<br>
 
 TOI-0174 | [TIC-425997655](https://exofop.ipac.caltech.edu/tess/target.php?id=425997655) (nplanets=5):<br>
 First Order: 2:1 | P=(3.98,7.91) (delta=0.58%)<br>
-TESS sectors=[ 1  2  3  4 11 29 30 31 34 64 68 69]<br>
+TESS sectors=[ 1  2  3  4 11 29 30 31 34 64 68 69 95 96]<br>
 
 TOI-5520 | [TIC-374180079](https://exofop.ipac.caltech.edu/tess/target.php?id=374180079) (nplanets=2):<br>
 First Order: 4:3 | P=(14.70,19.48) (delta=0.58%)<br>
-TESS sectors=[35 45 46 62 72]<br>
+TESS sectors=[35 45 46 62 72 89]<br>
 
 TOI-0216 | [TIC-55652896](https://exofop.ipac.caltech.edu/tess/target.php?id=55652896) (nplanets=2):<br>
 First Order: 2:1 | P=(17.39,34.55) (delta=0.64%)<br>
 TESS sectors=[ 1  2  3  4  5  6  7  8  9 11 12 13 27 28 29 30 31 32 33 34 35 36 37 38
- 39 61 62 63 64 65 66 67 68 69]<br>
+ 39 61 62 63 64 65 66 67 68 69 87 88 89 90 93 94 95 96]<br>
 
 TOI-1339 | [TIC-269701147](https://exofop.ipac.caltech.edu/tess/target.php?id=269701147) (nplanets=3):<br>
 First Order: 4:3 | P=(28.58,38.35) (delta=0.64%)<br>
 TESS sectors=[14 15 16 17 18 19 21 22 24 25 41 48 49 51 52 55 56 58 59 60 73 75 76 77
- 78 79 82 83]<br>
+ 78 79 82 83 85 86]<br>
 
 TOI-1670 | [TIC-441739020](https://exofop.ipac.caltech.edu/tess/target.php?id=441739020) (nplanets=3):<br>
 Second Order: 3:1 | P=(40.75,123.06) (delta=0.66%)
 TESS sectors=[14 15 16 18 19 20 21 22 23 24 25 26 40 41 47 48 49 50 51 52 53 55 56 57
- 58 59 60 73 74 75 76 77 78 79 80 81 82 83]<br>
+ 58 59 60 73 74 75 76 77 78 79 80 81 82 83 84 85 86]<br>
 
 TOI-5493 | [TIC-468979441](https://exofop.ipac.caltech.edu/tess/target.php?id=468979441) (nplanets=3):<br>
 Second Order: 5:3 | P=(14.56,24.44) (delta=0.67%)
-TESS sectors=[ 7 34 44 45 46 61 72]<br>
+TESS sectors=[ 7 34 44 45 46 61 72 88]<br>
 
 TOI-6276 | [TIC-397362481](https://exofop.ipac.caltech.edu/tess/target.php?id=397362481) (nplanets=3):<br>
 Second Order: 7:5 | P=(4.47,6.21) (delta=0.70%)
-TESS sectors=[63 64]<br>
+TESS sectors=[63 64 90]<br>
 
 TOI-0707 | [TIC-167342439](https://exofop.ipac.caltech.edu/tess/target.php?id=167342439) (nplanets=2):<br>
 Second Order: 3:1 | P=(17.48,52.80) (delta=0.71%)
 TESS sectors=[ 1  2  3  4  5  6  7  8  9 11 12 13 28 29 30 31 32 33 34 35 36 38 39 61
- 62 64 65 66 67 69]<br>
+ 62 64 65 66 67 69 87 88 89 93 94 96]<br>
 
 TOI-6054 | [TIC-392681545](https://exofop.ipac.caltech.edu/tess/target.php?id=392681545) (nplanets=2):<br>
 Second Order: 5:3 | P=(7.49,12.58) (delta=0.74%)
-TESS sectors=[19 59]<br>
+TESS sectors=[19 59 86]<br>
 
 TOI-1749 | [TIC-233602827](https://exofop.ipac.caltech.edu/tess/target.php?id=233602827) (nplanets=3):<br>
 First Order: 2:1 | P=(4.49,9.04) (delta=0.74%)<br>
 TESS sectors=[14 15 16 17 18 19 20 21 23 24 25 26 40 41 47 48 49 50 51 52 53 54 55 57
- 58 59 60 74 77 78 79 80 81 82]<br>
+ 58 59 60 74 77 78 79 80 81 82 84 85 86]<br>
 
 TOI-0663 | [TIC-54962195](https://exofop.ipac.caltech.edu/tess/target.php?id=54962195) (nplanets=3):<br>
 First Order: 3:2 | P=(4.70,7.10) (delta=0.76%)<br>
-TESS sectors=[ 9 35 62]<br>
+TESS sectors=[ 9 35 62 89]<br>
 
 TOI-0696 | [TIC-77156829](https://exofop.ipac.caltech.edu/tess/target.php?id=77156829) (nplanets=3):<br>
 First Order: 4:3 | P=(3.69,4.97) (delta=0.80%)<br>
@@ -139,11 +146,12 @@ TESS sectors=[11 12 38 39 65]<br>
 TOI-0700 | [TIC-150428135](https://exofop.ipac.caltech.edu/tess/target.php?id=150428135) (nplanets=4):<br>
 First Order: 4:3 | P=(27.81,37.42) (delta=0.93%)<br>
 TESS sectors=[ 1  3  4  5  6  7  8  9 10 11 13 27 28 30 31 33 34 35 36 37 38 61 62 63
- 64 65 66 68 69]<br>
+ 64 65 66 68 69 87 88 89 90 93 95 96]<br>
 
 TOI-0175 | [TIC-307210830](https://exofop.ipac.caltech.edu/tess/target.php?id=307210830) (nplanets=3):<br>
 First Order: 2:1 | P=(3.69,7.45) (delta=0.94%)<br>
-TESS sectors=[ 2  5  8  9 10 11 12 28 29 32 35 36 37 38 39 61 62 63 64 65 69]<br>
+TESS sectors=[ 2  5  8  9 10 11 12 28 29 32 35 36 37 38 39 61 62 63 64 65 69 87 88 89
+ 90 96]<br>
 
 TOI-1730 | [TIC-318022259](https://exofop.ipac.caltech.edu/tess/target.php?id=318022259) (nplanets=3):<br>
 First Order: 2:1 | P=(6.23,12.57) (delta=0.98%)<br>
@@ -151,7 +159,8 @@ TESS sectors=[20 47 60]<br>
 
 TOI-6265 | [TIC-344927749](https://exofop.ipac.caltech.edu/tess/target.php?id=344927749) (nplanets=2):<br>
 Second Order: 7:5 | P=(4.18,5.79) (delta=0.98%)
-TESS sectors=[ 8 35 45 46 62 72]<br>
+TESS sectors=[ 8 35 45 46 62 72 89]<br>
+
 
 ## TOI with hint of TTVs
 
@@ -168,7 +177,7 @@ TESS sectors=[ 8 35 45 46 62 72]<br>
 ![img](allesfitter/toi_in_resonance/toi6109/ttv/ttv.png)
 ![img](allesfitter/toi_in_resonance/toi6109/ttv/b_ttv.png)
 ![img](allesfitter/toi_in_resonance/toi6109/ttv/c_ttv.png)
-
+![img](allesfitter/toi_in_resonance/toi6109/TOI6109_s58_pdcsap_sc.png)
 ![img](allesfitter/toi_in_resonance/toi6109/toi6109_lco.png)
 
 ### TOI-4495
@@ -216,17 +225,6 @@ TESS sectors=[ 8 35 45 46 62 72]<br>
 
 ## TOIs with sign of youth
 
-### TOI-6109
-
-![img](allesfitter/toi_in_resonance/toi6109/TOI6109_s58_pdcsap_sc.png)
-
-### TOI-1097 
-
-* THYME IX: HD 109833 b,c in LCC (24±3 Myr)
-* [Wood+2023](https://ui.adsabs.harvard.edu/abs/2023AJ....165...85W/abstract)
-* No mention of resonance in paper; But actually in 3:2 (9.188525, 13.900142)
-![img](./tql/TIC360630575_s38_pdcsap_sc.png)
-
 ### TOI-4323
 
 * large contamination
@@ -256,28 +254,56 @@ First Order: 2:1 | P=(18.38,9.11) n=(1,2) (delta=0.94%)
 Second Order: 4:2 | P=(18.38,9.11) n=(1,2) (delta=0.94%)
 
 ### TIC 347332255
+
 ![img](./tql/TIC347332255_s23_pdcsap_sc.png)
 
 ## Known systems from NExSci
-* See also [Jontof-Hutter+2022](https://ui.adsabs.harvard.edu/abs/2022AJ....164...42J/abstract)
-* See [notebook](https://github.com/jpdeleon/young_ttvs/tree/main/notebooks/nexsci.ipynb)
-* Note: A target is indicated as `known TTV` if it has a TTV flag in NExSci table 
-* Note: Kepler targets have very shallow depths so better focus on K2, TOI, or other targets
 
-### TOI 2076 b,c
+### TOI 2076 b,c,d
+* age < 500 Myr
 * [Hedges+2021](https://ui.adsabs.harvard.edu/abs/2021AJ....162...54H/abstract) noted that planets are close to 5:3 orbital resonance, but further data are needed for a firm detection and to constrain the period of TOI-2076c
-* only sectors 16 and 23 was used in publication; sector 50 now available, S77 in the future
+* [Osborn+2022](https://ui.adsabs.harvard.edu/abs/2022A%26A...664A.156O/abstract): clear anti-correlated TTV signal between planets b and c likely caused by their proximity to the 2:1 resonance, while planets c and d appear close to a 5:3 period
+* Only few transits observed by TESS; Needs follow-up with LCO this sem but I guess Osborn is already working on this
+* TESS sectors=[16 23 50 77]; sector 50 is still unpublished
+* Planets b,c transit depths > 1ppt and planet d depth ~ 1ppt ([exofop](https://exofop.ipac.caltech.edu/tess/target.php?id=TOI-2076))
+
+![img](allesfitter/known_ttvs/TOI-2076/ttv/ttv_preparation/ttv_preparation_b.jpg)
+![img](allesfitter/known_ttvs/TOI-2076/toi2076_lco.png)
+ 
+### TOI-1097 b,c
+
+* [Wood+2023](https://ui.adsabs.harvard.edu/abs/2023AJ....165...85W/abstract): HD 109833 b,c in LCC (age=24±3 Myr)
+* No mention of resonance or TTV in paper (purposely?)
+* First Order: 3:2 | P=(9.19,13.90) (delta=0.87%)
+* TESS sectors=[11 12 38 39 65]
+* Both planets have depth<1ppt ([exofop](https://exofop.ipac.caltech.edu/tess/target.php?id=TOI-1097))
+* [results folder](https://github.com/jpdeleon/young_ttvs/tree/main/allesfitter/toi_in_resonance/toi1097)
+ 
+![img](allesfitter/toi_in_resonance/toi1097/ttv/ttv.png)
+![img](allesfitter/toi_in_resonance/toi1097/ttv/b_ttv.png)
+![img](allesfitter/toi_in_resonance/toi1097/ttv/c_ttv.png)
+
+![img](./tql/TIC360630575_s38_pdcsap_sc.png)
+
 ### K2-384
+
 * 5 planets around an M-dwarf 
 * [Christiansen+2022](https://exoplanetarchive.ipac.caltech.edu/overview/K2-384) noted resonance but did not do detailed TTV modeling because the predicted TTV amplitude (see below) is below the 30-min cadence of the K2 data
 * Assuming circular orbits, the TTVFaster package (Agol & Deck 2016) predicts transit timing variations with amplitudes of 0.28, 0.83, 3.33, 12.26, and 3.97 minutes for planets b-f respectively
 * S3, S30, S42, S43 according to the paper, and S70 according to tess-point
 
 ### K2-219 bcd
+
 * [Mayo+2018](https://ui.adsabs.harvard.edu/abs/2018AJ....155..136M/abstract) did not mention any TTVs
 * S42, S43, S70
 
- 
+### Other known systems near resonance
+
+* See also [Jontof-Hutter+2022](https://ui.adsabs.harvard.edu/abs/2022AJ....164...42J/abstract)
+* See [notebook](https://github.com/jpdeleon/young_ttvs/tree/main/notebooks/nexsci.ipynb)
+* Note: A target is indicated as `known TTV` if it has a TTV flag in NExSci table 
+* Note: Kepler targets have very shallow depths so better focus on K2, TOI, or other targets
+  
 Kepler-50 (nplanets=2, [Chaplin+2013](https://exoplanetarchive.ipac.caltech.edu/overview/Kepler-50), known TTV):<br>
 First Order: 6:5 | P=(7.81,9.38) (delta=0.02%)<br>
 TESS sectors=[26 40 41 53 54 55 74 75 80 81 82]<br>
