@@ -187,6 +187,7 @@ if __name__=='__main__':
     ap.add_argument("-debug", action="store_true", default=False)
     ap.add_argument("-results_dir", help="path to the results dir of a previous run to be used in params.csv", default=None)
     ap.add_argument("--overwrite", help="overwrite files", action="store_true", default=False)
+    ap.add_argument("-i", "--interactive", help="manually input missing values", action="store_true", default=False)
 
     args = ap.parse_args(None if sys.argv[1:] else ["-h"])
 
@@ -198,6 +199,7 @@ if __name__=='__main__':
     mission = args.mission
     sigma = args.sigma
     results_dir = args.results_dir
+    interactive = args.interactive
 
     if (mission.lower()=='k2') or (mission.lower()=='kepler'):
         raise NotImplementedError("The idea is to use new TESS data")
@@ -312,10 +314,16 @@ if __name__=='__main__':
             # tic = row['TIC ID']
             Porb = row['Period (days)']
             Porberr = row['Period (days) err']
-            Porb_s = np.random.normal(Porb, Porberr, size=Nsamples)
             epoch = row['Epoch (BJD)']
             epocherr = row['Epoch (BJD) err']
-            assert np.all([Porb>0, epoch>0]) 
+            if interactive and not np.all([Porb>0, epoch>0]):
+                Porb = float(input("Porb: "))
+                Porberr = float(input("Porb err: "))
+                epoch = float(input("Epoch: "))
+                epocherr = float(input("Epoch err: "))
+            else:
+                assert np.all([Porb>0, epoch>0])
+            Porb_s = np.random.normal(Porb, Porberr, size=Nsamples)
 
             pl = planets[i]
             if debug:
@@ -329,11 +337,13 @@ if __name__=='__main__':
                     rprs = row['pl_rade']*u.Rearth.to(u.Rsun)/row['st_rad']
                     Rperr = np.sqrt(row['pl_radeerr1']**2+row['pl_radeerr2']**2)
                     rprserr = Rperr*u.Rearth.to(u.Rsun)/radius_err
-                else:
+                elif interactive:
                     rprs = input(f"Planet {pl} Rp/Rs: ")
                     rprs = float(rprs)
                     rprserr = input(f"Planet {pl} Rp/Rs err: ")
                     rprserr = float(rprserr)
+                else:
+                    raise ValueError("Rp/Rs is nan. Try --interactive for manual input")
             assert rprs>0
 
             rprs_s = np.random.normal(rprs, rprserr, size=Nsamples)
