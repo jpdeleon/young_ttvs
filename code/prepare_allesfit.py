@@ -186,8 +186,8 @@ if __name__=='__main__':
     ap.add_argument("-mission", choices=['tess','k2','kepler'], type=str, default='tess')
     ap.add_argument("-debug", action="store_true", default=False)
     ap.add_argument("-results_dir", help="path to the results dir of a previous run to be used in params.csv", default=None)
-    ap.add_argument("--overwrite", help="overwrite files", action="store_true", default=False)
-    ap.add_argument("-i", "--interactive", help="manually input missing values", action="store_true", default=False)
+    ap.add_argument("--overwrite", help="overwrite files (default=False)", action="store_true", default=False)
+    ap.add_argument("-i", "--interactive", help="manually input missing values (default=False)", action="store_true", default=False)
 
     args = ap.parse_args(None if sys.argv[1:] else ["-h"])
 
@@ -333,17 +333,26 @@ if __name__=='__main__':
             rprs = np.sqrt(row['Depth (ppm)']/1e6)
             rprserr = np.sqrt(row['Depth (ppm) err']/1e6)
             if str(rprs)=='nan':
-                if hasattr(row, 'pl_rade'):
-                    rprs = row['pl_rade']*u.Rearth.to(u.Rsun)/row['st_rad']
-                    Rperr = np.sqrt(row['pl_radeerr1']**2+row['pl_radeerr2']**2)
-                    rprserr = Rperr*u.Rearth.to(u.Rsun)/radius_err
-                elif interactive:
-                    rprs = input(f"Planet {pl} Rp/Rs: ")
-                    rprs = float(rprs)
-                    rprserr = input(f"Planet {pl} Rp/Rs err: ")
-                    rprserr = float(rprserr)
+                if interactive:
+                    try:
+                        rprs = input(f"Planet {pl} Rp/Rs: ")
+                        rprs = float(rprs)
+                        rprserr = input(f"Planet {pl} Rp/Rs err: ")
+                        rprserr = float(rprserr)
+                    except Exception as e:
+                        msg = f"Error in inputs.\n{e}"
+                        raise ValueError(msg)
+                elif hasattr(row, 'pl_rade'):
+                    try:
+                        rprs = row['pl_rade']*u.Rearth.to(u.Rsun)/row['st_rad']
+                        Rperr = np.sqrt(row['pl_radeerr1']**2+row['pl_radeerr2']**2)
+                        rprserr = Rperr*u.Rearth.to(u.Rsun)/radius_err
+                    except Exception as e:
+                        msg = f"Error in parsing rp/rs\n{e}"
+                        raise ValueError(msg)
                 else:
-                    raise ValueError("Rp/Rs is nan. Try --interactive for manual input")
+                    msg = "Rp/Rs is nan. Try --interactive for manual input"
+                    raise ValueError(msg)
             assert rprs>0
 
             rprs_s = np.random.normal(rprs, rprserr, size=Nsamples)
