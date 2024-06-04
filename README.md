@@ -158,7 +158,7 @@ TESS sectors=[ 8 35 45 46 62 72 89]<br>
 
 * Neptunes around a (young?) Sun-like star
 * Lots of SG1 follow-up but inconclusive detections as of March 2024; observable with LCO in 2nd sem (see below)
-* Can't check [Spacebook TESS](https://spacebook.mit.edu/display/TESS/Publications) but it's possible that many teams are already working on this system
+* A. Datillo from THYME is working on this system according to [Spacebook TESS](https://spacebook.mit.edu/display/TESS/Publications)
 * First Order: 3:2 | P=(5.70,8.54) (delta=0.05%)
 * TESS sectors=[18 58]
 * Both planets have depth>1ppt! ([exofop](https://exofop.ipac.caltech.edu/tess/target.php?id=TOI-6109))
@@ -172,6 +172,7 @@ TESS sectors=[ 8 35 45 46 62 72 89]<br>
 
 ### TOI-4495
 
+* B. Hord's best in class paper validated the planet
 * First Order: 2:1 | P=(2.57,5.18) (delta=0.86%)
 * TESS sectors=[14 40 41 53 54 80 81]
 * Note: the transit depths (<1 ppt) are too shallow for follow-up ([exofop](https://exofop.ipac.caltech.edu/tess/target.php?id=TOI-4495))
@@ -194,6 +195,7 @@ TESS sectors=[ 8 35 45 46 62 72 89]<br>
 
 ### TOI-6265
 
+* S-type planet in a binary; Paper in prep by J. Zhang according to [Spacebook TESS](https://spacebook.mit.edu/display/TESS/Publications)
 * Second Order: 7:5 | P=(4.18,5.79) (delta=0.98%)
 * TESS sectors=[ 8 35 45 46 62 72]
 * Both planets have depth<1ppt! ([exofop](https://exofop.ipac.caltech.edu/tess/target.php?id=TOI-6265))
@@ -205,6 +207,7 @@ TESS sectors=[ 8 35 45 46 62 72 89]<br>
 
 ### TOI-1670
 
+* Paper in prep by I. Mireles according to [Spacebook TESS](https://spacebook.mit.edu/display/TESS/Publications)
 * Second Order: 3:1 | P=(40.75,123.06) (delta=0.66%)
 * TESS sectors=[14 15 16 18 19 20 21 22 23 24 25 26 40 41 47 48 49 50 51 52 53 55 56 57
  58 59 60 73 74 75 76 77 78 79 80 81 82 83]
