@@ -76,9 +76,9 @@ def catalog_info_name(df) -> Tuple:
     mass, mass_err = df['st_mass'].astype(float), np.sqrt(df['st_masserr1']**2+df['st_masserr2']**2)
     return Teff, Teff_err, logg, logg_err, feh, feh_err, radius, radius_err, mass, mass_err
 
-def parse_target_name(toiid=None, ctoiid=None, name=None) -> Tuple:
+def parse_target_name(toiid=None, ctoiid=None, name=None, update_toi_data=False) -> Tuple:
     if toiid:
-        df = get_tois()
+        df = get_tois(clobber=update_toi_data)
         print("Using parameters from TOI database.")
         print(f"To use published parameters in NExSci, use -name=TOI-{toiid}")
         key = 'TOI'
@@ -188,6 +188,7 @@ if __name__=='__main__':
     ap.add_argument("-results_dir", help="path to the results dir of a previous run to be used in params.csv", default=None)
     ap.add_argument("--overwrite", help="overwrite files (default=False)", action="store_true", default=False)
     ap.add_argument("-i", "--interactive", help="manually input missing values (default=False)", action="store_true", default=False)
+    ap.add_argument("-u", "--update_toi", help="update TOI database (default=False)", action="store_true", default=False)
 
     args = ap.parse_args(None if sys.argv[1:] else ["-h"])
 
@@ -209,8 +210,9 @@ if __name__=='__main__':
     # campaign = -1 if args.campaign is None else args.campaign
     # quarter = a-1 if args.quarter is None else args.quarter
     overwrite = args.overwrite
-           
-    target_name, target_df = parse_target_name(toiid, ctoiid, name)
+    update_toi_data = args.update_toi
+
+    target_name, target_df = parse_target_name(toiid, ctoiid, name, update_toi_data)
     ticid, outSec = get_tess_sectors(target_name, target_df, toiid, ctoiid, name)
     sector_flag = check_if_sector_is_available(target_name, given_sector=sector, all_sectors=outSec)
 
