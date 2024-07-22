@@ -79,7 +79,7 @@ def catalog_info_name(df) -> Tuple:
 def parse_target_name(toiid=None, ctoiid=None, name=None, update_toi_data=False) -> Tuple:
     if toiid:
         df = get_tois(clobber=update_toi_data)
-        print("Using parameters from TOI database.")
+        print("Using parameters from TOI database (use --update_toi to update).")
         print(f"To use published parameters in NExSci, use -name=TOI-{toiid}")
         key = 'TOI'
         id = str(toiid)
@@ -181,9 +181,11 @@ if __name__=='__main__':
     ap.add_argument("-exp", help="exposure time (default=None)", type=float, default=None)
     # ap.add_argument("-dir", help="base directory", type=str, default=f"{home}/github/research/project/young_ttvs/allesfitter/")
     ap.add_argument("-dir", help="base directory", type=str, default=".")
-    ap.add_argument("-pip", "--pipeline", help="TESS/Kepler data pipeline", type=str, default='spoc')
+    ap.add_argument("-p", "--pipeline", help="TESS/Kepler data pipeline", type=str, default='spoc')
     ap.add_argument("-sig", "--sigma", help="sigma for removing outliers in (combined) TESS lc", type=float, default=None)
-    ap.add_argument("-mission", choices=['tess','k2','kepler'], type=str, default='tess')
+    ap.add_argument("-m", "--mission", choices=['tess','k2','kepler'], type=str, default='tess')
+    ap.add_argument("-qb", "--quality", choices=['none','default','hard','hardest'], type=str, default='default')
+    ap.add_argument("-ft", "--flux_type", choices=['pdcsap','sap'], type=str, default='pdcsap')
     ap.add_argument("-debug", action="store_true", default=False)
     ap.add_argument("-results_dir", help="path to the results dir of a previous run to be used in params.csv", default=None)
     ap.add_argument("--overwrite", help="overwrite files (default=False)", action="store_true", default=False)
@@ -198,6 +200,8 @@ if __name__=='__main__':
     exptime = args.exp
     basedir = args.dir
     mission = args.mission
+    quality_bitmask = args.quality
+    flux_type = args.flux_type+'_flux'
     sigma = args.sigma
     results_dir = args.results_dir
     interactive = args.interactive
@@ -570,7 +574,7 @@ allesfitter.prepare_ttv_fit('.', style='tessplot')
                     errmsg += f"Try using -exp={unique_exptimes}"
                     raise ValueError(errmsg)
                 exptime = unique_exptimes[0] if exptime is None else exptime
-                lc = result.download_all(quality_bitmask='default').stitch()
+                lc = result.download_all(flux_column=flux_type,quality_bitmask=quality_bitmask).stitch()
                 print("The lightcurves were not flattened/de-trended to avoid removing transits.")
                 assert lc.sector==int(unique_sectors[-1])
             elif sector_flag=='multi_sector':
@@ -597,7 +601,7 @@ allesfitter.prepare_ttv_fit('.', style='tessplot')
                     raise ValueError(errmsg)
                 assert len(sector)==len(filtered_result)
                 exptime = unique_exptimes[0] if exptime is None else exptime
-                lc = filtered_result.download_all(quality_bitmask='default').stitch()
+                lc = filtered_result.download_all(quality_bitmask=quality_bitmask,flux_column=flux_type).stitch()
                 print("The lightcurves were not flattened/de-trended to avoid removing transits.")
                 assert lc.sector==int(sector[-1])
             else:
@@ -608,7 +612,7 @@ allesfitter.prepare_ttv_fit('.', style='tessplot')
                     idx = -1
                     sector = sectors[idx]                
 
-                lc = result[idx].download(quality_bitmask='default').normalize()
+                lc = result[idx].download(quality_bitmask=quality_bitmask,flux_column=flux_type).normalize()
                 assert lc.sector==sector
             if sigma:
                 lc = lc.remove_outliers(sigma=sigma)
