@@ -10,6 +10,8 @@ from tqdm import tqdm
 from astropy.time import Time
 import astropy.units as u
 from astroquery.ipac.nexsci.nasa_exoplanet_archive import NasaExoplanetArchive
+from pathlib import Path
+home = Path.home()
 
 G = 6.67e-11
 D_H = 24.
@@ -269,7 +271,7 @@ def convert_date(x, format1="%m/%d/%y", format2="%Y-%m-%d"):
 
 def get_tess_obs_dates(clobber=False):
     "Returns all years of TESS observations"
-    fp = Path('/home/jp/github/research/project/young_ttvs/data/tess_obs.csv')
+    fp = Path(f'{home}/github/research/project/young_ttvs/data/tess_obs.csv')
     if not fp.exists() or clobber:
         tabs = []
         print("Downloading data...")
