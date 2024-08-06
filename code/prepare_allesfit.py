@@ -201,7 +201,6 @@ if __name__=='__main__':
     basedir = args.dir
     mission = args.mission
     quality_bitmask = args.quality
-    flux_type = args.flux_type+'_flux'
     sigma = args.sigma
     results_dir = args.results_dir
     interactive = args.interactive
@@ -209,6 +208,7 @@ if __name__=='__main__':
     if (mission.lower()=='k2') or (mission.lower()=='kepler'):
         raise NotImplementedError("The idea is to use new TESS data")
     pipeline = args.pipeline
+    flux_type = 'sap_flux' if pipeline=='qlp' else args.flux_type+'_flux'
     debug = args.debug
     sector = args.sector
     # campaign = -1 if args.campaign is None else args.campaign
