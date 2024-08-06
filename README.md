@@ -168,10 +168,11 @@ TESS sectors=[ 8 35 45 46 62 72 89]<br>
 ![img](allesfitter/toi_in_resonance/toi6109/ttv/b_ttv.png)
 ![img](allesfitter/toi_in_resonance/toi6109/ttv/c_ttv.png)
 ![img](allesfitter/toi_in_resonance/toi6109/TOI6109_s58_pdcsap_sc.png)
-![img](allesfitter/toi_in_resonance/toi6109/toi6109_lco.png)
+![img](allesfitter/toi_in_resonance/toi6109/toi6109_lco24b.png)
 
 ### TOI-4495
 
+* [gdoc](https://docs.google.com/document/d/19l5jU4fl27R49VLlFScOgNs6GYOzoG3Ir6pZNWvpnWQ/edit#heading=h.qyhwhgwsjqv3)
 * B. Hord's best in class paper validated the planet
 * First Order: 2:1 | P=(2.57,5.18) (delta=0.86%)
 * TESS sectors=[14 40 41 53 54 80 81]
@@ -180,6 +181,8 @@ TESS sectors=[ 8 35 45 46 62 72 89]<br>
  
 ![img](allesfitter/toi_in_resonance/toi4495/ttv/ttv.png)
 ![img](allesfitter/toi_in_resonance/toi4495/fit.png)
+![img](allesfitter/toi_in_resonance/toi4495/TOI4495_s40_pdcsap_sc.png)
+![img](allesfitter/toi_in_resonance/toi4495/toi4495_lco24b.png)
 
 ### TOI-5493
 
