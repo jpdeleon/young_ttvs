@@ -185,7 +185,7 @@ if __name__=='__main__':
     ap.add_argument("-sig", "--sigma", help="sigma for removing outliers in (combined) TESS lc", type=float, default=None)
     ap.add_argument("-m", "--mission", choices=['tess','k2','kepler'], type=str, default='tess')
     ap.add_argument("-qb", "--quality", choices=['none','default','hard','hardest'], type=str, default='default')
-    ap.add_argument("-ft", "--flux_type", choices=['pdcsap','sap'], type=str, default='pdcsap')
+    ap.add_argument("-lc", "--lc_type", choices=['pdcsap','sap'], type=str, default='sap')
     ap.add_argument("-debug", action="store_true", default=False)
     ap.add_argument("-results_dir", help="path to the results dir of a previous run to be used in params.csv", default=None)
     ap.add_argument("--overwrite", help="overwrite files (default=False)", action="store_true", default=False)
@@ -208,7 +208,7 @@ if __name__=='__main__':
     if (mission.lower()=='k2') or (mission.lower()=='kepler'):
         raise NotImplementedError("The idea is to use new TESS data")
     pipeline = args.pipeline
-    flux_type = 'sap_flux' if pipeline=='qlp' else args.flux_type+'_flux'
+    lc_type = 'sap_flux' if pipeline=='qlp' else args.lc_type+'_flux'
     debug = args.debug
     sector = args.sector
     # campaign = -1 if args.campaign is None else args.campaign
@@ -574,7 +574,7 @@ allesfitter.prepare_ttv_fit('.', style='tessplot')
                     errmsg += f"Try using -exp={unique_exptimes}"
                     raise ValueError(errmsg)
                 exptime = unique_exptimes[0] if exptime is None else exptime
-                lc = result.download_all(flux_column=flux_type,quality_bitmask=quality_bitmask).stitch()
+                lc = result.download_all(flux_column=lc_type,quality_bitmask=quality_bitmask).stitch()
                 print("The lightcurves were not flattened/de-trended to avoid removing transits.")
                 assert lc.sector==int(unique_sectors[-1])
             elif sector_flag=='multi_sector':
@@ -601,7 +601,7 @@ allesfitter.prepare_ttv_fit('.', style='tessplot')
                     raise ValueError(errmsg)
                 assert len(sector)==len(filtered_result)
                 exptime = unique_exptimes[0] if exptime is None else exptime
-                lc = filtered_result.download_all(quality_bitmask=quality_bitmask,flux_column=flux_type).stitch()
+                lc = filtered_result.download_all(quality_bitmask=quality_bitmask,flux_column=lc_type).stitch()
                 print("The lightcurves were not flattened/de-trended to avoid removing transits.")
                 assert lc.sector==int(sector[-1])
             else:
@@ -612,7 +612,7 @@ allesfitter.prepare_ttv_fit('.', style='tessplot')
                     idx = -1
                     sector = sectors[idx]                
 
-                lc = result[idx].download(quality_bitmask=quality_bitmask,flux_column=flux_type).normalize()
+                lc = result[idx].download(quality_bitmask=quality_bitmask,flux_column=lc_type).normalize()
                 assert lc.sector==sector
             if sigma:
                 lc = lc.remove_outliers(sigma=sigma)
