@@ -212,7 +212,7 @@ if __name__=='__main__':
     debug = args.debug
     sector = args.sector
     # campaign = -1 if args.campaign is None else args.campaign
-    # quarter = a-1 if args.quarter is None else args.quarter
+    # quarter = -1 if args.quarter is None else args.quarter
     overwrite = args.overwrite
     update_toi_data = args.update_toi
 
