@@ -232,7 +232,7 @@ Kepler-33 (nplanets=5, [Lissauer+2012](https://exoplanetarchive.ipac.caltech.edu
 Second Order: 5:3 | P=(13.18,21.78) (delta=0.84%) 9:7 | P=(31.78,41.03) (delta=0.40%)<br>
 TESS sectors=[14 15 40 41 53 54 55 74 75 80 81 82]<br>
 
-HD 108236 (nplanets=5, [Bonfanti+2021](https://exoplanetarchive.ipac.caltech.edu/overview/HD 108236), known TTV):<br>
+HD 108236 (nplanets=5, [Bonfanti+2021](https://exoplanetarchive.ipac.caltech.edu/overview/HD108236), known TTV):<br>
 First Order: 3:2 | P=(19.59,29.54) (delta=0.53%)<br>
 TESS sectors=[10 11 37]<br>
 
@@ -252,7 +252,7 @@ KOI-7892 (nplanets=3, [Wang+2015](https://exoplanetarchive.ipac.caltech.edu/over
 Second Order: 3:1 | P=(10.69,31.81) (delta=0.82%)<br>
 TESS sectors=[14 26 40 41 53 54 74 75]<br>
 
-HR 858 (nplanets=3, [Vanderburg+2019](https://exoplanetarchive.ipac.caltech.edu/overview/HR 858)):<br>
+HR 858 (nplanets=3, [Vanderburg+2019](https://exoplanetarchive.ipac.caltech.edu/overview/HR858)):<br>
 Second Order: 5:3 | P=(3.59,5.97) (delta=0.06%)<br>
 TESS sectors=[ 3  4 30 31]<br>
 
@@ -264,7 +264,7 @@ Kepler-1669 (nplanets=3, [Armstrong+2021](https://exoplanetarchive.ipac.caltech.
 First Order: 2:1 | P=(4.73,9.51) (delta=0.56%)<br>
 TESS sectors=[14 54 55 75 81 82]<br>
 
-HD 28109 (nplanets=3, [Dransfield+2022](https://exoplanetarchive.ipac.caltech.edu/overview/HD 28109), known TTV):<br>
+HD 28109 (nplanets=3, [Dransfield+2022](https://exoplanetarchive.ipac.caltech.edu/overview/HD28109), known TTV):<br>
 First Order: 3:2 | P=(56.01,84.26) (delta=0.29%)<br>
 TESS sectors=[ 1  2  3  4  5  6  7  8  9 10 11 12 13 27 28 29 30 31 33 34 35 36 37 38 39 61 62 63 64 65 66 67 68 69]<br>
 
@@ -284,13 +284,9 @@ Kepler-29 (nplanets=2, [Vissapragada+2020](https://exoplanetarchive.ipac.caltech
 Second Order: 9:7 | P=(10.34,13.29) (delta=0.06%)<br>
 TESS sectors=[14 15 41 54 56 74 75 76 81 82]<br>
 
-KIC 5437945 (nplanets=2, [Wang+2015](https://exoplanetarchive.ipac.caltech.edu/overview/KIC 5437945)):<br>
+KIC 5437945 (nplanets=2, [Wang+2015](https://exoplanetarchive.ipac.caltech.edu/overview/KIC5437945)):<br>
 First Order: 2:1 | P=(220.13,440.78) (delta=0.12%)<br>
 TESS sectors=[14 40 41 54 55 74 75 80 81]<br>
-
-Kepler-50 (nplanets=2, [Chaplin+2013](https://exoplanetarchive.ipac.caltech.edu/overview/Kepler-50), known TTV):<br>
-First Order: 6:5 | P=(7.81,9.38) (delta=0.02%)<br>
-TESS sectors=[26 40 41 53 54 55 74 75 80 81 82]<br>
 
 ## Single systems with reported TTVs
 
