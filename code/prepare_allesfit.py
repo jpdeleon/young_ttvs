@@ -37,7 +37,7 @@ from astropy.coordinates import SkyCoord
 from allesfitter import allesclass#, config, nested_sampling_output, general_output
 # from ldtk import LDPSetCreator, BoxcarFilter
 from tess_stars2px import tess_stars2px_function_entry
-from utils import catalog_info_TIC, get_tfop_info, get_tois, get_ctois, rho_from_mr, as_from_rhop, a_from_rhoprs, get_nexsci_data, get_name_aliases
+from utils import catalog_info_TIC, get_tfop_info, get_tois, get_ctois, rho_from_mr, as_from_rhop, a_from_rhoprs, get_nexsci, get_name_aliases
 try:
     import limbdark as ld
 except Exception:
@@ -76,39 +76,44 @@ def catalog_info_name(df) -> Tuple:
     mass, mass_err = df['st_mass'].astype(float), np.sqrt(df['st_masserr1']**2+df['st_masserr2']**2)
     return Teff, Teff_err, logg, logg_err, feh, feh_err, radius, radius_err, mass, mass_err
 
-def parse_target_name(toiid=None, ctoiid=None, name=None, update_toi_data=False) -> Tuple:
+def parse_target_name(toiid=None, ctoiid=None, name=None, update_db=False) -> Tuple:
     if toiid:
-        df = get_tois(clobber=update_toi_data)
-        print("Using parameters from TOI database (use --update_toi to update).")
+        df = get_tois(clobber=update_db)
+        print("Using parameters from TOI database (use --update_db to update).")
         print(f"To use published parameters in NExSci, use -name=TOI-{toiid}")
         key = 'TOI'
         id = str(toiid)
         idx = df[key].apply(lambda x: str(x).split('.')[0]==id)
+        source = 'tfop'
         target_name = f'TOI-{id.zfill(4)}'
     if ctoiid:
-        df = get_ctois()
+        print("Using parameters from CTOI database (use --update_db to update).")
+        df = get_ctois(clobber=update_db)
         key = 'CTOI'
         id = ctoiid
         idx = df['TIC ID']==int(ctoiid)
         target_name = f'CTOI-{ctoiid}'
+        source = 'ctoi'
     if name:
-        df = get_nexsci_data()
+        print("Using parameters from NExSci database (use --update_db to update).")
+        df = get_nexsci(clobber=update_db)
         df = df[df['default_flag']==1]
         df['Period (days)'] = df['pl_orbper'].astype(float)
         df['Period (days) err'] = np.sqrt(df['pl_orbpererr1']**2+df['pl_orbpererr2']**2)
         df['Epoch (BJD)'] = df['pl_tranmid'].astype(float)
         df['Epoch (BJD) err'] = 0.1
-        df['Depth (ppm)'] = df['pl_trandep'].astype(float)
+        df['Depth (ppm)'] = df['pl_trandep'].astype(float)/100*1e6 #% to ppm
         df['Depth (ppm) err'] = 1_000
-        # df['Duration (hours)'] = df['pl_trandur'].astype(float)
-        # df['Duration (hours) err'] = 1
+        df['Duration (hours)'] = df['pl_trandur'].astype(float)
+        df['Duration (hours) err'] = np.sqrt(df['pl_trandurerr1'].astype(float)**2+df['pl_trandurerr2'].astype(float)**2)
         key = 'hostname'
         id = name
         target_name = name.strip().replace(' ','')
         idx = df[key]==id
+        source = 'nexsci'
     errmsg = f"Coulnd't find {key} {id} in {key} database."
     assert sum(idx)>0, errmsg
-    return target_name, df[idx].reset_index(drop=True)
+    return target_name, df[idx].reset_index(drop=True), source
 
 def get_tess_sectors(target_name: str, df: pd.DataFrame, toiid=None, ctoiid=None, name=None) -> Tuple:
     if toiid or ctoiid:
@@ -155,6 +160,14 @@ def check_if_sector_is_available(target_name: str, given_sector, all_sectors: li
         assert np.all(idx), errmsg
         return 'multi_sector'
 
+def get_tdur(per, rsuma, inc, k, b):
+    # transit duration in days
+    return per/np.pi*np.arcsin(rsuma/np.sin(inc)*np.sqrt(1+k**2-b**2))
+
+def get_rsuma(tdur, per, inc, k, b):
+    # Rstar/a 
+    return np.sin(inc) * (np.sin(tdur * np.pi / per) / np.sqrt(1 + k**2 - b**2))
+
 if __name__=='__main__':
     ap = ArgumentParser()
     group1 = ap.add_mutually_exclusive_group(required=True)
@@ -190,7 +203,7 @@ if __name__=='__main__':
     ap.add_argument("-results_dir", help="path to the results dir of a previous run to be used in params.csv", default=None)
     ap.add_argument("--overwrite", help="overwrite files (default=False)", action="store_true", default=False)
     ap.add_argument("-i", "--interactive", help="manually input missing values (default=False)", action="store_true", default=False)
-    ap.add_argument("-u", "--update_toi", help="update TOI database (default=False)", action="store_true", default=False)
+    ap.add_argument("-u", "--update_db", help="update TOI or NExSci database (default=False)", action="store_true", default=False)
 
     args = ap.parse_args(None if sys.argv[1:] else ["-h"])
 
@@ -214,9 +227,9 @@ if __name__=='__main__':
     # campaign = -1 if args.campaign is None else args.campaign
     # quarter = -1 if args.quarter is None else args.quarter
     overwrite = args.overwrite
-    update_toi_data = args.update_toi
+    update_db = args.update_db
 
-    target_name, target_df = parse_target_name(toiid, ctoiid, name, update_toi_data)
+    target_name, target_df, source = parse_target_name(toiid, ctoiid, name, update_db)
     ticid, outSec = get_tess_sectors(target_name, target_df, toiid, ctoiid, name)
     sector_flag = check_if_sector_is_available(target_name, given_sector=sector, all_sectors=outSec)
 
@@ -233,20 +246,52 @@ if __name__=='__main__':
             print(Teff, Teff_err, logg, logg_err, feh, feh_err, radius, radius_err, mass, mass_err)
     except Exception as e:
         print("Error", e)
+    rhostar_prior = True
+    if str(radius)=='nan':
+        if interactive:
+            radius = float(input("Rstar [Rsun]:"))
+            rhostar_prior = False
+        else:
+            raise ValueError("use --interactive to input value")
+    if str(mass)=='nan':
+        if interactive:
+            mass = float(input("Mstar [Msun]:"))
+            rhostar_prior = False
+        else:
+            raise ValueError("use --interactive to input value")
     if str(radius_err)=='nan':
         radius_err = 0.1
-        print(f'radius_err is nan; setting to 0.1')
+        print(f'Rstar err is nan; setting to 0.1')
     if str(mass_err)=='nan':
         mass_err = 0.1
-        print(f'mass_err is nan; setting to 0.1')
+        print(f'Mstar err is nan; setting to 0.1')
     if debug:
-        print(f"Teff={Teff:.0f}+/-{Teff_err:.0f}, logg={logg:.2f}+/-{logg_err:.2f}, feh={feh:.2f}+/-{feh_err:.2f}")
+        #print(f"Teff={Teff:.0f}+/-{Teff_err:.0f}, logg={logg:.2f}+/-{logg_err:.2f}, feh={feh:.2f}+/-{feh_err:.2f}")
         print(f"Rs={radius:.2f}+/-{radius_err:.2f}, Ms={mass:.2f}+/-{mass_err:.2f}")
 
     # band = mission.lower()
-    if np.isnan(feh) or np.isnan(feh_err):
-        feh, feh_err = 0, 0.1
-        print("Assuming [Fe/H]=(0,0.1) dex")
+    if np.isnan(feh):
+        feh = float(input("[Fe/H]: ")) if interactive else 0 #solar metallicity
+    if np.isnan(feh_err):
+        feh_err = float(input("[Fe/H] err: ")) if interactive else 0.1
+    print(f"Using [Fe/H]=({feh},{feh_err}) dex")
+    if np.isnan(logg):
+        if interactive:
+            logg = float(input("logg: "))
+        else:
+            raise ValueError("use --interactive to input value") #no assumption
+    if np.isnan(logg_err):
+        logg_err = float(input("logg err: ")) if interactive else 0.1
+    print(f"Using logg=({logg},{logg_err}) cm/s^2")
+    if np.isnan(Teff):
+        if interactive:
+            Teff = float(input("Teff: "))
+        else:
+            raise ValueError("use --interactive to input value") #no assumption
+    if np.isnan(Teff_err):
+        Teff_err = float(input("Teff err: ")) if interactive else 500
+    print(f"Using Teff=({Teff},{Teff_err}) K")
+
     q1, q1_err, q2, q2_err = ld.claret(
                                     band='T',
                                     teff=Teff, uteff=Teff_err,
@@ -292,8 +337,10 @@ if __name__=='__main__':
         text += "#b_f_c,0,0,uniform 0.0 0.0,$\sqrt{e_b} \cos{\omega_b}$,,\n"
         text += "#b_f_s,0,0,uniform 0.0 0.0,$\sqrt{e_b} \sin{\omega_b}$,,\n"
         text += "#limb darkening coefficients per instrument,,,,,,\n"
-        text += f"host_ldc_q1_tess,{q1:.2f},1,normal {q1:.2f} {q1_err:.2f},"+"$q_{1; \mathrm{tess}}$,,\n"
-        text += f"host_ldc_q2_tess,{q2:.2f},1,normal {q2:.2f} {q2_err:.2f},"+"$q_{2; \mathrm{tess}}$,,\n"
+        q1_min, q1, q1_max = np.percentile(alles.posterior_params[f'host_ldc_q1_tess'], q=quartiles_1sig)
+        q2_min, q2, q2_max = np.percentile(alles.posterior_params[f'host_ldc_q2_tess'], q=quartiles_1sig)
+        text += f"host_ldc_q1_tess,{q1:.2f},1,uniform {q1_min:.2f} {q1_max:.2f},"+"$q_{1; \mathrm{tess}}$,,\n"
+        text += f"host_ldc_q2_tess,{q2:.2f},1,uniform {q2_min:.2f} {q2_max:.2f},"+"$q_{2; \mathrm{tess}}$,,\n"
         text += "#errors per instrument,,,,,,\n"
         text += "ln_err_flux_tess,-6,1,uniform -10 -1,$\log{\sigma_\mathrm{tess}}$,rel. flux,\n"
         text += "#baseline per instrument,,,,,,\n"
@@ -317,11 +364,18 @@ if __name__=='__main__':
         ###=====Create params.csv=====###
         text = """#name,value,fit,bounds,label,unit,truth\n"""
         for i,row in target_df.iterrows():
+            pl = planets[i]
+            if debug:
+                print(f"=====Planet {pl}=====")
+
             # tic = row['TIC ID']
             Porb = row['Period (days)']
             Porberr = row['Period (days) err']
             epoch = row['Epoch (BJD)']
             epocherr = row['Epoch (BJD) err']
+            tdur = row['Duration (hours)']
+            tdurerr = row['Duration (hours) err']
+
             if interactive and not np.all([Porb>0, epoch>0]):
                 Porb = float(input("Porb: "))
                 Porberr = float(input("Porb err: "))
@@ -331,9 +385,7 @@ if __name__=='__main__':
                 assert np.all([Porb>0, epoch>0])
             Porb_s = np.random.normal(Porb, Porberr, size=Nsamples)
 
-            pl = planets[i]
             if debug:
-                print(pl)
                 print(f"P={Porb:.4f}+/-{Porberr:.4f}, T0={epoch:.4f}+/-{epocherr:.4f}")
 
             rprs = np.sqrt(row['Depth (ppm)']/1e6)
@@ -367,6 +419,7 @@ if __name__=='__main__':
             mass_s = np.random.normal(mass, mass_err, size=Nsamples)
             radius_s = np.random.normal(radius, radius_err, size=Nsamples)
 
+            # compute a/Rs from stellar density
             rho_s = rho_from_mr(mass_s, radius_s)
             as_s = as_from_rhop(rho_s, Porb_s)
             if debug:
@@ -382,10 +435,33 @@ if __name__=='__main__':
 
             theta = np.arcsin(radius_s/as_s)
             inc_s = np.pi/2 - theta
-            inc_max, inc, inc_min = np.percentile(inc_s, q=quartiles_3sig)
+            #if all(inc_s>np.pi/2):
+            #    inc_s = np.random.uniform(np.deg2rad(80), np.deg2rad(90), size=Nsamples)
+            inc_min, inc, inc_max = np.percentile(inc_s, q=quartiles_3sig)
+            b_s = as_s * np.cos(inc_s)
+            b_min, b, b_max = np.percentile(b_s, q=quartiles_3sig)
+            if all(b_s>1):
+                b_s = np.random.uniform(0, 1, size=Nsamples)
+                b = 0
+
+            if str(tdur)!='nan':
+                #check if tdur derived from rhostar is consistent with tdur from tfop
+                tdur_rhostar= get_tdur(Porb, rsuma, inc, rprs, b)*24
+                print(f"tdur={tdur:.1f}h ({source}) {tdur_rhostar:.1f}h (derived from rhostar)")
+                #check if tdur derived from orbit is consistent with tdur from tfop
+                try:
+                    tdurerr = 1 if str(tdurerr)=='nan' else tdurerr
+                    tdur_s = np.random.normal(tdur, tdurerr, size=Nsamples)/24
+                    rsuma_s = get_rsuma(tdur_s, Porb, inc_s, rprs_s, b_s)
+                    tdur_orbit = get_tdur(Porb, np.median(rsuma_s), inc, rprs, b)*24
+                    print(f"tdur={tdur:.1f}h ({source}) {tdur_orbit:.1f}h (derived from orbit)")
+                    if np.argmin(np.abs(np.array([tdur_rhostar, tdur_orbit]) - tdur))==1:
+                        print("Using Rstar/a derived from transit duration.")
+                        rsuma_min, rsuma, rsuma_max = np.percentile(rsuma_s, q=quartiles_3sig)
+                except Exception as e:
+                    print(e)
+
             if debug:
-                b_s = as_s * np.cos(inc_s)
-                b_min, b, b_max = np.percentile(b_s, q=quartiles_3sig)
                 print(f"rprs={rprs:.4f}")
                 print(f"rho={rho:.4f}")
                 print(f"a_s={a:.4f}")
@@ -486,8 +562,11 @@ error_flux_tess,sample
 #N_flares,1
 ###############################################################################,
 # Host density prior,
-###############################################################################,
-use_host_density_prior,True
+###############################################################################,\n"""
+
+        text2+=f"use_host_density_prior,{rhostar_prior}"
+
+        text2+="""
 ###################################################,
 # Fit TTV,
 ###################################################,
@@ -577,6 +656,9 @@ allesfitter.prepare_ttv_fit('.', style='tessplot')
                 lc = result.download_all(flux_column=lc_type,quality_bitmask=quality_bitmask).stitch()
                 print("The lightcurves were not flattened/de-trended to avoid removing transits.")
                 assert lc.sector==int(unique_sectors[-1])
+                if pipeline=='spoc':
+                    lc1 = result.download_all(quality_bitmask=quality_bitmask,flux_column='pdcsap_flux').stitch()
+                    lc2 = result.download_all(quality_bitmask=quality_bitmask,flux_column='sap_flux').stitch()
             elif sector_flag=='multi_sector':
                 #case: sector int or list
                 idx = [str(i) in sector for i in sectors]
@@ -604,22 +686,42 @@ allesfitter.prepare_ttv_fit('.', style='tessplot')
                 lc = filtered_result.download_all(quality_bitmask=quality_bitmask,flux_column=lc_type).stitch()
                 print("The lightcurves were not flattened/de-trended to avoid removing transits.")
                 assert lc.sector==int(sector[-1])
+                if pipeline=='spoc':
+                    lc1 = filtered_result.download_all(quality_bitmask=quality_bitmask,flux_column='pdcsap_flux').stitch()
+                    lc2 = filtered_result.download_all(quality_bitmask=quality_bitmask,flux_column='sap_flux').stitch()
             else:
                 if sector_flag=='first':
                     idx = 0
                     sector = sectors[idx]
                 elif sector_flag=='last' or sector_flag=='default':
                     idx = -1
-                    sector = sectors[idx]                
+                    sector = sectors[idx]
 
                 lc = result[idx].download(quality_bitmask=quality_bitmask,flux_column=lc_type).normalize()
                 assert lc.sector==sector
+                if pipeline=='spoc':
+                    lc1 = result[idx].download(quality_bitmask=quality_bitmask,flux_column='pdcsap_flux').normalize()
+                    lc2 = result[idx].download(quality_bitmask=quality_bitmask,flux_column='sap_flux').normalize()
             if sigma:
                 lc = lc.remove_outliers(sigma=sigma)
-            ax = lc.scatter()
-            fp = outdir.joinpath(f"{target_name}_tess.png")
+                if pipeline=='spoc':
+                    lc1 = lc1.remove_outliers(sigma=sigma)
+                    lc2 = lc2.remove_outliers(sigma=sigma)
+            if pipeline=='spoc':
+                ax = lc1.scatter(label='PDCSAP')
+                _  = lc2.scatter(ax=ax, label='SAP')
+                ax.set_title(f"Sectors: {unique_sectors} exptime={int(exptime)}s")
+            else:
+                ax = lc.scatter(label=pipeline)
+                ax.set_title(f"Sectors: {unique_sectors} exptime={int(exptime)}s")
+            secs = 's'.join(map(str, unique_sectors))
+            fp = outdir.joinpath(f"{target_name}_tess_{pipeline}_s{secs}_exp{int(exptime)}s.png")
             ax.figure.savefig(fp)
-            fp = outdir.joinpath("tess.csv")
+            #fp = outdir.joinpath("tess.csv")
+            if pipeline=='spoc':
+                fp = outdir.joinpath(f"tess_{pipeline}_{lc_type.split('_')[0]}_s{secs}_exp{int(exptime)}s.csv")
+            else:
+                fp = outdir.joinpath(f"tess_{pipeline}_s{secs}_exp{int(exptime)}s.csv")
             df = lc.to_pandas()
             df['time'] = df.index + 2457000
             df = df.reset_index(drop=True).sort_values(by='time')
@@ -629,3 +731,4 @@ allesfitter.prepare_ttv_fit('.', style='tessplot')
             print("Saved: ", fp)
             if debug:
                 print(df.head())
+

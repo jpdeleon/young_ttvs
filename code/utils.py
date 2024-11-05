@@ -196,7 +196,7 @@ def get_tois(
     return d.sort_values("TOI")
 
 
-def get_ctois(clobber=True, outdir="../data", verbose=False, remove_FP=True):
+def get_ctois(clobber=False, outdir="../data", verbose=False, remove_FP=True):
     """Download Community TOI list from exofop/TESS.
 
     Parameters
@@ -242,7 +242,7 @@ def get_ctois(clobber=True, outdir="../data", verbose=False, remove_FP=True):
     d.columns = [c.replace('hrs', '(hours)') for c in d.columns]
     return d.sort_values("CTOI")
 
-def get_nexsci_data(table_name="ps", clobber=False):
+def get_nexsci(table_name="ps", clobber=False):
     """
     ps: self-consistent set of parameters
     pscomppars: a more complete, though not necessarily self-consistent set of parameters
