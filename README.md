@@ -15,7 +15,7 @@ TODO:
   - [ ] measure Prot in TESS lc
   - [ ] cross-match with catalogs e.g. LiEW
 - [ ] measure TTVs using [allesfitter](https://github.com/MNGuenther/allesfitter)
-- [x] filter candidates with depth > 1ppt (see full list in [data](https://github.com/jpdeleon/young_ttvs/tree/main/data))
+- [x] filter candidates with depth > 1ppt when available (see full list in [data](https://github.com/jpdeleon/young_ttvs/tree/main/data))
 
 Note:
 * `tess_orbit_times.csv` downloaded from https://tess.mit.edu/observations/ should be periodically updated in `allesfitter/_static/_tess/`
@@ -228,6 +228,10 @@ Kepler-11 (nplanets=6, [Lissauer+2013](https://exoplanetarchive.ipac.caltech.edu
 Second Order: 7:5 | P=(22.68,32.00) (delta=0.76%)<br>
 TESS sectors=[14 15 41 54 55 74 75 81 82]<br>
 
+Kepler-33 (nplanets=5, [Lissauer+2012](https://exoplanetarchive.ipac.caltech.edu/overview/Kepler-33), known TTV):<br>
+Second Order: 5:3 | P=(13.18,21.78) (delta=0.84%) 9:7 | P=(31.78,41.03) (delta=0.40%)<br>
+TESS sectors=[14 15 40 41 53 54 55 74 75 80 81 82]<br>
+
 HD 108236 (nplanets=5, [Bonfanti+2021](https://exoplanetarchive.ipac.caltech.edu/overview/HD 108236), known TTV):<br>
 First Order: 3:2 | P=(19.59,29.54) (delta=0.53%)<br>
 TESS sectors=[10 11 37]<br>
@@ -240,9 +244,33 @@ K2-266 (nplanets=4, [Rodriguez+2018](https://exoplanetarchive.ipac.caltech.edu/o
 First Order: 4:3 | P=(14.70,19.48) (delta=0.58%)<br>
 TESS sectors=[35 45 46 62 72]<br>
 
+Kepler-65 (nplanets=3, [Chaplin+2013](https://exoplanetarchive.ipac.caltech.edu/overview/Kepler-65), known TTV):<br>
+Second Order: 7:5 | P=(5.86,8.13) (delta=0.89%)<br>
+TESS sectors=[14 40 41 54 55 74 75 80 81 82]<br>
+
+KOI-7892 (nplanets=3, [Wang+2015](https://exoplanetarchive.ipac.caltech.edu/overview/KOI-7892)):<br>
+Second Order: 3:1 | P=(10.69,31.81) (delta=0.82%)<br>
+TESS sectors=[14 26 40 41 53 54 74 75]<br>
+
+HR 858 (nplanets=3, [Vanderburg+2019](https://exoplanetarchive.ipac.caltech.edu/overview/HR 858)):<br>
+Second Order: 5:3 | P=(3.59,5.97) (delta=0.06%)<br>
+TESS sectors=[ 3  4 30 31]<br>
+
 Kepler-297 (nplanets=3, [Q1_Q17_Dr25_Koi_Table](https://exoplanetarchive.ipac.caltech.edu/overview/Kepler-297), known TTV):<br>
 First Order: 2:1 | P=(74.92,150.02) (delta=0.12%)<br>
 TESS sectors=[14 15 40 41 53 54 55 74 75 80 81 82]<br>
+
+Kepler-1669 (nplanets=3, [Armstrong+2021](https://exoplanetarchive.ipac.caltech.edu/overview/Kepler-1669)):<br>
+First Order: 2:1 | P=(4.73,9.51) (delta=0.56%)<br>
+TESS sectors=[14 54 55 75 81 82]<br>
+
+HD 28109 (nplanets=3, [Dransfield+2022](https://exoplanetarchive.ipac.caltech.edu/overview/HD 28109), known TTV):<br>
+First Order: 3:2 | P=(56.01,84.26) (delta=0.29%)<br>
+TESS sectors=[ 1  2  3  4  5  6  7  8  9 10 11 12 13 27 28 29 30 31 33 34 35 36 37 38 39 61 62 63 64 65 66 67 68 69]<br>
+
+Kepler-36 (nplanets=2, [Vissapragada+2020](https://exoplanetarchive.ipac.caltech.edu/overview/Kepler-36), known TTV):<br>
+First Order: 7:6 | P=(13.87,16.22) (delta=0.24%)<br>
+TESS sectors=[14 15 40 41 54 55 74 75 80 81 82]<br>
 
 TOI-216 (nplanets=2, [Dawson+2021](https://exoplanetarchive.ipac.caltech.edu/overview/TOI-216), known TTV):<br>
 First Order: 2:1 | P=(17.16,34.53) (delta=0.59%)<br>
@@ -260,16 +288,124 @@ KIC 5437945 (nplanets=2, [Wang+2015](https://exoplanetarchive.ipac.caltech.edu/o
 First Order: 2:1 | P=(220.13,440.78) (delta=0.12%)<br>
 TESS sectors=[14 40 41 54 55 74 75 80 81]<br>
 
+Kepler-50 (nplanets=2, [Chaplin+2013](https://exoplanetarchive.ipac.caltech.edu/overview/Kepler-50), known TTV):<br>
+First Order: 6:5 | P=(7.81,9.38) (delta=0.02%)<br>
+TESS sectors=[26 40 41 53 54 55 74 75 80 81 82]<br>
+
 ## Single systems with reported TTVs
 
 * Science: Discovery of new transiting planets; ephemeris recovery
 * See full list @ [./data/nexsci_ttv_single.csv](https://github.com/jpdeleon/young_ttvs/blob/main/data/nexsci_ttv_single.csv)
 
+TOI-199 (nplanets=1, [Hobson+2023](https://exoplanetarchive.ipac.caltech.edu/overview/TOI-199), known TTV):<br>
+TESS sectors=[ 1  2  3  4  5  6  7  8  9 10 11 12 13 27 29 30 31 32 33 34 35 36 37 39 61 62 63 64 66 67 68 69]<br>
+
 WASP-43 (nplanets=1, [Hellier+2011](https://exoplanetarchive.ipac.caltech.edu/overview/WASP-43), known TTV):<br>
 TESS sectors=[ 9 35 62]<br>
 
+Kepler-1624 (nplanets=1, [Morton+2016](https://exoplanetarchive.ipac.caltech.edu/overview/Kepler-1624), known TTV):<br>
+TESS sectors=[14 40 41 54 55 74 75 81]<br>
+
+Kepler-852 (nplanets=1, [Morton+2016](https://exoplanetarchive.ipac.caltech.edu/overview/Kepler-852), known TTV):<br>
+TESS sectors=[14 15 41 54 55 56 74 75 76 81 83]<br>
+
+Kepler-540 (nplanets=1, [Morton+2016](https://exoplanetarchive.ipac.caltech.edu/overview/Kepler-540), known TTV):<br>
+TESS sectors=[14 15 40 41 55 74 75 80 81]<br>
+
+Kepler-1513 (nplanets=1, [Yahalomi+2023](https://exoplanetarchive.ipac.caltech.edu/overview/Kepler-1513), known TTV):<br>
+TESS sectors=[14 40 41 54 55 75 80 81]<br>
+
+Kepler-952 (nplanets=1, [Morton+2016](https://exoplanetarchive.ipac.caltech.edu/overview/Kepler-952), known TTV):<br>
+TESS sectors=[14 26 40 41 53 54 75 80 81]<br>
+
+Kepler-539 (nplanets=1, [Mancini+2016](https://exoplanetarchive.ipac.caltech.edu/overview/Kepler-539), known TTV):<br>
+Prot=11.77 d
+TESS sectors=[14 15 41 54 55 74 81 82]<br>
+
+Kepler-1527 (nplanets=1, [Morton+2016](https://exoplanetarchive.ipac.caltech.edu/overview/Kepler-1527), known TTV):<br>
+TESS sectors=[14 15 41 55 74 75 81 82]<br>
+
+Kepler-1040 (nplanets=1, [Morton+2016](https://exoplanetarchive.ipac.caltech.edu/overview/Kepler-1040), known TTV):<br>
+TESS sectors=[14 15 26 40 41 53 54 55 75 80 81 82]<br>
+
+Kepler-672 (nplanets=1, [Morton+2016](https://exoplanetarchive.ipac.caltech.edu/overview/Kepler-672), known TTV):<br>
+TESS sectors=[14 15 40 54 55 56 74 75 81 82]<br>
+
+Kepler-1638 (nplanets=1, [Morton+2016](https://exoplanetarchive.ipac.caltech.edu/overview/Kepler-1638), known TTV):<br>
+TESS sectors=[14 15 40 41 54 55 56 74 75 81 82]<br>
+
+Kepler-1593 (nplanets=1, [Morton+2016](https://exoplanetarchive.ipac.caltech.edu/overview/Kepler-1593), known TTV):<br>
+TESS sectors=[14 15 41 54 55 74 75 81 82]<br>
+
+Kepler-410 A (nplanets=1, [Van_Eylen+2014](https://exoplanetarchive.ipac.caltech.edu/overview/Kepler-410A), known TTV):<br>
+TESS sectors=[14 26 40 41 53 54 55 74 75 80 82]<br>
+
+Kepler-1036 (nplanets=1, [Morton+2016](https://exoplanetarchive.ipac.caltech.edu/overview/Kepler-1036), known TTV):<br>
+TESS sectors=[14 15 40 41 54 55 56 74 75 76 81 82 83]<br>
+
+Kepler-412 (nplanets=1, [Esteves+2015](https://exoplanetarchive.ipac.caltech.edu/overview/Kepler-412), known TTV):<br>
+TESS sectors=[14 26 40 41 53 55 74 75 80 81 82]<br>
+
+Kepler-827 (nplanets=1, [Morton+2016](https://exoplanetarchive.ipac.caltech.edu/overview/Kepler-827), known TTV):<br>
+TESS sectors=[14 15 40 41 54 55 74 75 81 82]<br>
+
+TOI-4562 (nplanets=1, [Fermiano+2024](https://exoplanetarchive.ipac.caltech.edu/overview/TOI-4562), known TTV):<br>
+Prot=3.86 d
+TESS sectors=[ 1  2  3  4  5  6  7  8 10 11 12 13 27 28 29 30 31 32 33 34 35 36 37 38 39 61 62 63 64 65 66 67 68 69]<br>
+
+Kepler-19 (nplanets=1, [Bonomo+2023](https://exoplanetarchive.ipac.caltech.edu/overview/Kepler-19), known TTV):<br>
+TESS sectors=[14 40 41 54 55 74 81]<br>
+
+Kepler-509 (nplanets=1, [Morton+2016](https://exoplanetarchive.ipac.caltech.edu/overview/Kepler-509), known TTV):<br>
+TESS sectors=[14 15 40 41 54 55 74 75 80 81 82]<br>
+
+KOI-142 (nplanets=1, [Weiss+2020](https://exoplanetarchive.ipac.caltech.edu/overview/KOI-142), known TTV):<br>
+TESS sectors=[14 40 41 54 55 74 75 81 82]<br>
+
 KOI-984 (nplanets=1, [Sun+2022](https://exoplanetarchive.ipac.caltech.edu/overview/KOI-984), known TTV):<br>
 TESS sectors=[14 40 41 54 74 75 81]<br>
+
+Kepler-1184 (nplanets=1, [Morton+2016](https://exoplanetarchive.ipac.caltech.edu/overview/Kepler-1184), known TTV):<br>
+TESS sectors=[14 15 40 41 54 55 74 75 80 82]<br>
+
+Kepler-795 (nplanets=1, [Morton+2016](https://exoplanetarchive.ipac.caltech.edu/overview/Kepler-795), known TTV):<br>
+TESS sectors=[14 40 41 54 55 74 75]<br>
+
+Kepler-1453 (nplanets=1, [Morton+2016](https://exoplanetarchive.ipac.caltech.edu/overview/Kepler-1453), known TTV):<br>
+TESS sectors=[14 15 26 40 41 53 54 55 74 75 80 82]<br>
+
+Kepler-419 (nplanets=1, [Dawson+2014](https://exoplanetarchive.ipac.caltech.edu/overview/Kepler-419), known TTV):<br>
+TESS sectors=[14 15 40 41 54 55 56 74 75 81 82 83]<br>
+
+Kepler-1185 (nplanets=1, [Morton+2016](https://exoplanetarchive.ipac.caltech.edu/overview/Kepler-1185), known TTV):<br>
+TESS sectors=[14 40 41 53 54 74 75 80 81]<br>
+
+WASP-126 (nplanets=1, [Pearson_2019](https://exoplanetarchive.ipac.caltech.edu/overview/WASP-126), known TTV):<br>
+TESS sectors=[ 1  2  3  4  5  6  7  8  9 10 11 12 13 27 28 29 30 31 32 33 34 36 37 38 39 61 63 64 65 66 67 68 69]<br>
+
+HAT-P-13 (nplanets=1, [Winn+2010](https://exoplanetarchive.ipac.caltech.edu/overview/HAT-P-13), known TTV):<br>
+TESS sectors=[47]<br>
+
+Kepler-1552 (nplanets=1, [Morton+2016](https://exoplanetarchive.ipac.caltech.edu/overview/Kepler-1552), known TTV):<br>
+TESS sectors=[14 40 41 54 55 74 75 81 82]<br>
+
+Kepler-39 (nplanets=1, [Bonomo+2015](https://exoplanetarchive.ipac.caltech.edu/overview/Kepler-39), known TTV):<br>
+TESS sectors=[14 15 41 55 74 75 81 82]<br>
+
+Kepler-1524 (nplanets=1, [Morton+2016](https://exoplanetarchive.ipac.caltech.edu/overview/Kepler-1524), known TTV):<br>
+TESS sectors=[40 41 54 55 81 82]<br>
+
+Kepler-1097 (nplanets=1, [Morton+2016](https://exoplanetarchive.ipac.caltech.edu/overview/Kepler-1097), known TTV):<br>
+TESS sectors=[14 26 40 41 53 54 74 80 81]<br>
+
+Kepler-34 (nplanets=1, [Welsh+2012](https://exoplanetarchive.ipac.caltech.edu/overview/Kepler-34), known TTV):<br>
+TESS sectors=[14 15 41 54 55 74 75 81 82]<br>
+
+Kepler-16 (nplanets=1, [Doyle+2011](https://exoplanetarchive.ipac.caltech.edu/overview/Kepler-16), known TTV):<br>
+TESS sectors=[14 15 26 40 41 53 54 55 56 73 74 75 76 80 81 82 83]<br>
+
+Kepler-797 (nplanets=1, [Morton+2016](https://exoplanetarchive.ipac.caltech.edu/overview/Kepler-797), known TTV):<br>
+TESS sectors=[14 15 41 54 55 74 75 81 82]<br>
 
 Qatar-1 (nplanets=1, [Collins+2017](https://exoplanetarchive.ipac.caltech.edu/overview/Qatar-1), known TTV):<br>
 TESS sectors=[15 16 17 18 21 24 25 41 48 51 55 56 57 58 59 75 76 77 78 82 83]<br>
@@ -277,20 +413,80 @@ TESS sectors=[15 16 17 18 21 24 25 41 48 51 55 56 57 58 59 75 76 77 78 82 83]<br
 WASP-18 (nplanets=1, [Cort_Eacute_S_Zuleta+2020](https://exoplanetarchive.ipac.caltech.edu/overview/WASP-18), known TTV):<br>
 TESS sectors=[ 2  3 29 30 69]<br>
 
-KELT-19 A (nplanets=1, [Siverd+2018](https://exoplanetarchive.ipac.caltech.edu/overview/KELT-19 A), known TTV):<br>
+K2-184 (nplanets=1, [Castro_Gonz_Aacute_Lez+2022](https://exoplanetarchive.ipac.caltech.edu/overview/K2-184), known TTV):<br>
+TESS sectors=[44 45 46 72]<br>
+
+Kepler-765 (nplanets=1, [Morton+2016](https://exoplanetarchive.ipac.caltech.edu/overview/Kepler-765), known TTV):<br>
+TESS sectors=[14 26 40 41 53 54 55 75 80 81 82]<br>
+
+Kepler-35 (nplanets=1, [Welsh+2012](https://exoplanetarchive.ipac.caltech.edu/overview/Kepler-35), known TTV):<br>
+TESS sectors=[14 15 40 41 54 55 74 75 81 82]<br>
+
+KELT-19 A (nplanets=1, [Siverd+2018](https://exoplanetarchive.ipac.caltech.edu/overview/KELT-19A), known TTV):<br>
 TESS sectors=[ 7 33]<br>
+
+Kepler-1515 (nplanets=1, [Morton+2016](https://exoplanetarchive.ipac.caltech.edu/overview/Kepler-1515), known TTV):<br>
+TESS sectors=[14 15 40 41 54 55 74 75 80 81 82]<br>
+
+K2-342 (nplanets=1, [De_Leon+2021](https://exoplanetarchive.ipac.caltech.edu/overview/K2-342), known TTV):<br>
+TESS sectors=[44 45 46 72]<br>
+
+KOI-13 (nplanets=1, [Esteves+2015](https://exoplanetarchive.ipac.caltech.edu/overview/KOI-13), known TTV):<br>
+TESS sectors=[14 15 26 40 41 53 54 55 74 75 80 82]<br>
+
+KOI-12 (nplanets=1, [Masuda_2017](https://exoplanetarchive.ipac.caltech.edu/overview/KOI-12), known TTV):<br>
+TESS sectors=[14 15 54 55 74 81 82]<br>
 
 KOI-217 (nplanets=1, [Howell+2010](https://exoplanetarchive.ipac.caltech.edu/overview/KOI-217), known TTV):<br>
 TESS sectors=[14 15 40 41 54 74 75 81 82]<br>
 
+Kepler-725 (nplanets=1, [Morton+2016](https://exoplanetarchive.ipac.caltech.edu/overview/Kepler-725), known TTV):<br>
+TESS sectors=[14 26 40 41 53 54 55 75 82]<br>
+
+Kepler-17 (nplanets=1, [Desert+2011](https://exoplanetarchive.ipac.caltech.edu/overview/Kepler-17), known TTV):<br>
+TESS sectors=[14 15 41 54 56 74 75 76 81 82 83]<br>
+
+Kepler-1389 (nplanets=1, [Morton+2016](https://exoplanetarchive.ipac.caltech.edu/overview/Kepler-1389), known TTV):<br>
+TESS sectors=[14 26 40 41 53 55 74 75 81 82]<br>
+
+Kepler-591 (nplanets=1, [Morton+2016](https://exoplanetarchive.ipac.caltech.edu/overview/Kepler-591), known TTV):<br>
+TESS sectors=[14 40 41 53 54 55 74 75 80 82]<br>
+
+Kepler-966 (nplanets=1, [Morton+2016](https://exoplanetarchive.ipac.caltech.edu/overview/Kepler-966), known TTV):<br>
+TESS sectors=[14 15 41 54 55 56 74 76 81 82 83]<br>
+
+TOI-2202 (nplanets=1, [Trifonov+2021](https://exoplanetarchive.ipac.caltech.edu/overview/TOI-2202), known TTV):<br>
+TESS sectors=[ 1  2  6  9 13 27 28 29 36 39 62 63 66 67 68 69]<br>
+
+TOI-1338 A (nplanets=1, [Wang&Liu_2024](https://exoplanetarchive.ipac.caltech.edu/overview/TOI-1338A), known TTV):<br>
+TESS sectors=[ 1  2  3  4  5  6  7  8  9 10 11 12 27 28 29 30 31 32 34 35 36 37 38 39 61 62 63 64 65 66 67 68 69]<br>
+
 CoRoT-2 (nplanets=1, [Gillon+2010](https://exoplanetarchive.ipac.caltech.edu/overview/CoRoT-2), known TTV):<br>
 TESS sectors=[54 81]<br>
+
+WASP-148 (nplanets=1, [Almenara+2022](https://exoplanetarchive.ipac.caltech.edu/overview/WASP-148), known TTV):<br>
+TESS sectors=[24 25 26 51 52 78 79]<br>
+
+TOI-2447 (nplanets=1, [Gill+2024](https://exoplanetarchive.ipac.caltech.edu/overview/TOI-2447), known TTV):<br>
+Prot=13.00 d
+TESS sectors=[ 5 31 32]<br>
+
+TOI-1408 (nplanets=1, [Korth+2024](https://exoplanetarchive.ipac.caltech.edu/overview/TOI-1408), known TTV):<br>
+Prot=7.91 d
+TESS sectors=[16 17 18 19 24 25 52 57 58 59 73 76 77 78 79]<br>
 
 TrES-3 (nplanets=1, [Sozzetti+2009](https://exoplanetarchive.ipac.caltech.edu/overview/TrES-3), known TTV):<br>
 TESS sectors=[25 26 26 40 52 53 79 80]<br>
 
 CoRoT-35 (nplanets=1, [Sebastian+2022](https://exoplanetarchive.ipac.caltech.edu/overview/CoRoT-35), known TTV):<br>
 TESS sectors=[54]<br>
+
+TOI-2180 (nplanets=1, [Dalba+2022](https://exoplanetarchive.ipac.caltech.edu/overview/TOI-2180), known TTV):<br>
+TESS sectors=[14 15 16 17 18 19 20 21 22 23 24 25 26 40 41 48 49 50 51 52 53 54 55 56
+ 57 58 59 60 73 74 75 77 78 79 80 81 82 83]<br>
+
+TOI-1221 (nplanets=1, [Mann+2023](https://exoplanetarchive.ipac.caltech.edu/overview/TOI-1221), known TTV):<br>
+TESS sectors=[ 1  2  3  4  5  6  7  8  9 10 11 12 13 27 28 29 30 31 32 33 34 35 37 38 39 61 62 63 64 65 66 67 68 69]<br>
 
 ## Multis with reported TTVs
 
@@ -301,96 +497,78 @@ TESS sectors=[54]<br>
 * Note: Kepler targets have very shallow depths so better focus on K2, TOI, or other targets
 * See also [Jontof-Hutter+2022](https://ui.adsabs.harvard.edu/abs/2022AJ....164...42J/abstract)
   
-Kepler-30 (nplanets=1, [Sanchis_Ojeda+2012](https://exoplanetarchive.ipac.caltech.edu/overview/Kepler-30), known TTV):<br>
+Kepler-30 (nplanets=3, [Sanchis_Ojeda+2012](https://exoplanetarchive.ipac.caltech.edu/overview/Kepler-30), known TTV):<br>
 TESS sectors=[14 26 40 41 53 54 74 80 81]<br>
 
-Kepler-18 (nplanets=1, [Cochran+2011](https://exoplanetarchive.ipac.caltech.edu/overview/Kepler-18), known TTV):<br>
-TESS sectors=[14 15 41 54 55 74 75 81 82]<br>
-
-Kepler-111 (nplanets=1, [Dalba+2024](https://exoplanetarchive.ipac.caltech.edu/overview/Kepler-111), known TTV):<br>
-TESS sectors=[15 40 41 54 74 75 81 82]<br>
-
-Kepler-29 (nplanets=1, [Vissapragada+2020](https://exoplanetarchive.ipac.caltech.edu/overview/Kepler-29), known TTV):<br>
-TESS sectors=[14 15 41 54 56 74 75 76 81 82]<br>
-
-KOI-1783 (nplanets=1, [Vissapragada+2020](https://exoplanetarchive.ipac.caltech.edu/overview/KOI-1783), known TTV):<br>
+Kepler-33 (nplanets=5, [Lissauer+2012](https://exoplanetarchive.ipac.caltech.edu/overview/Kepler-33), known TTV):<br>
 TESS sectors=[14 15 40 41 53 54 55 74 75 80 81 82]<br>
 
-Kepler-31 (nplanets=1, [Fabrycky+2012](https://exoplanetarchive.ipac.caltech.edu/overview/Kepler-31), known TTV):<br>
-TESS sectors=[14 15 40 74 75 81 82]<br>
-
-Kepler-30 (nplanets=1, [Sanchis_Ojeda+2012](https://exoplanetarchive.ipac.caltech.edu/overview/Kepler-30), known TTV):<br>
-TESS sectors=[14 26 40 41 53 54 74 80 81]<br>
-
-Kepler-79 (nplanets=1, [Jontof_Hutter+2014](https://exoplanetarchive.ipac.caltech.edu/overview/Kepler-79), known TTV):<br>
+Kepler-18 (nplanets=3, [Cochran+2011](https://exoplanetarchive.ipac.caltech.edu/overview/Kepler-18), known TTV):<br>
 TESS sectors=[14 15 41 54 55 74 75 81 82]<br>
 
-Kepler-31 (nplanets=1, [Fabrycky+2012](https://exoplanetarchive.ipac.caltech.edu/overview/Kepler-31), known TTV):<br>
-TESS sectors=[14 15 40 74 75 81 82]<br>
+Kepler-111 (nplanets=2, [Dalba+2024](https://exoplanetarchive.ipac.caltech.edu/overview/Kepler-111), known TTV):<br>
+TESS sectors=[15 40 41 54 74 75 81 82]<br>
 
-Kepler-32 (nplanets=1, [Fabrycky+2012](https://exoplanetarchive.ipac.caltech.edu/overview/Kepler-32), known TTV):<br>
+Kepler-11 (nplanets=6, [Lissauer+2013](https://exoplanetarchive.ipac.caltech.edu/overview/Kepler-11), known TTV):<br>
 TESS sectors=[14 15 41 54 55 74 75 81 82]<br>
 
-Kepler-177 (nplanets=1, [Vissapragada+2020](https://exoplanetarchive.ipac.caltech.edu/overview/Kepler-177), known TTV):<br>
+Kepler-177 (nplanets=2, [Vissapragada+2020](https://exoplanetarchive.ipac.caltech.edu/overview/Kepler-177), known TTV):<br>
+First Order: 4:3 | P=(36.86,49.41) (delta=0.53%)<br>
 TESS sectors=[14 26 40 41 53 55 74 75 80 81 82]<br>
 
-TOI-216 (nplanets=1, [Dawson+2021](https://exoplanetarchive.ipac.caltech.edu/overview/TOI-216), known TTV):<br>
-TESS sectors=[ 1  2  3  4  5  6  7  8  9 11 12 13 27 28 29 30 31 32 33 34 35 36 37 38
- 39 61 62 63 64 65 66 67 68 69]<br>
+Kepler-130 (nplanets=2, [Wang+2014](https://exoplanetarchive.ipac.caltech.edu/overview/Kepler-130), known TTV):<br>
+TESS sectors=[14 40 41 54 55 74 75 80 81]<br>
 
-TOI-216 (nplanets=1, [Dawson+2021](https://exoplanetarchive.ipac.caltech.edu/overview/TOI-216), known TTV):<br>
-TESS sectors=[ 1  2  3  4  5  6  7  8  9 11 12 13 27 28 29 30 31 32 33 34 35 36 37 38
- 39 61 62 63 64 65 66 67 68 69]<br>
+Kepler-29 (nplanets=2, [Vissapragada+2020](https://exoplanetarchive.ipac.caltech.edu/overview/Kepler-29), known TTV):<br>
+TESS sectors=[14 15 41 54 56 74 75 76 81 82]<br>
 
-AU Mic (nplanets=1, [Wittrock+2023](https://exoplanetarchive.ipac.caltech.edu/overview/AU Mic), known TTV):<br>
+KOI-1783 (nplanets=2, [Vissapragada+2020](https://exoplanetarchive.ipac.caltech.edu/overview/KOI-1783), known TTV):<br>
+TESS sectors=[14 15 40 41 53 54 55 74 75 80 81 82]<br>
+
+Kepler-31 (nplanets=2, [Fabrycky+2012](https://exoplanetarchive.ipac.caltech.edu/overview/Kepler-31), known TTV):<br>
+TESS sectors=[14 15 40 74 75 81 82]<br>
+
+Kepler-65 (nplanets=2, [Chaplin+2013](https://exoplanetarchive.ipac.caltech.edu/overview/Kepler-65), known TTV):<br>
+TESS sectors=[14 40 41 54 55 74 75 80 81 82]<br>
+
+Kepler-79 (nplanets=4, [Jontof_Hutter+2014](https://exoplanetarchive.ipac.caltech.edu/overview/Kepler-79), known TTV):<br>
+TESS sectors=[14 15 41 54 55 74 75 81 82]<br>
+
+Kepler-36 (nplanets=2, [Vissapragada+2020](https://exoplanetarchive.ipac.caltech.edu/overview/Kepler-36), known TTV):<br>
+First Order: 7:6 | P=(13.87,16.22) (delta=0.24%)<br>
+TESS sectors=[14 15 40 41 54 55 74 75 80 81 82]<br>
+
+Kepler-32 (nplanets=2, [Fabrycky+2012](https://exoplanetarchive.ipac.caltech.edu/overview/Kepler-32), known TTV):<br>
+TESS sectors=[14 15 41 54 55 74 75 81 82]<br>
+
+TOI-216 (nplanets=2, [Dawson+2021](https://exoplanetarchive.ipac.caltech.edu/overview/TOI-216), known TTV):<br>
+First Order: 2:1 | P=(17.16,34.53) (delta=0.59%)<br>
+TESS sectors=[ 1  2  3  4  5  6  7  8  9 11 12 13 27 28 29 30 31 32 33 34 35 36 37 38 39 61 62 63 64 65 66 67 68 69]<br>
+
+AU Mic (nplanets=1, [Wittrock+2023](https://exoplanetarchive.ipac.caltech.edu/overview/AUMic), known TTV):<br>
 TESS sectors=[ 1 27]<br>
 
-Kepler-11 (nplanets=1, [Lissauer+2013](https://exoplanetarchive.ipac.caltech.edu/overview/Kepler-11), known TTV):<br>
-TESS sectors=[14 15 41 54 55 74 75 81 82]<br>
+HD 108236 (nplanets=1, [Bonfanti+2021](https://exoplanetarchive.ipac.caltech.edu/overview/HD108236), known TTV):<br>
+TESS sectors=[10 11 37]<br>
 
-TRAPPIST-1 (nplanets=1, [Agol+2021](https://exoplanetarchive.ipac.caltech.edu/overview/TRAPPIST-1), known TTV):<br>
+Kepler-50 (nplanets=2, [Chaplin+2013](https://exoplanetarchive.ipac.caltech.edu/overview/Kepler-50), known TTV):<br>
+First Order: 6:5 | P=(7.81,9.38) (delta=0.02%)<br>
+TESS sectors=[26 40 41 53 54 55 74 75 80 81 82]<br>
+
+TRAPPIST-1 (nplanets=7, [Agol+2021](https://exoplanetarchive.ipac.caltech.edu/overview/TRAPPIST-1), known TTV):<br>
+First Order: 3:2 | P=(4.05,6.10) (delta=0.45%) 3:2 | P=(6.10,9.21) (delta=0.61%) 4:3 | P=(9.21,12.35) (delta=0.62%)<br>
 TESS sectors=[70]<br>
 
-TRAPPIST-1 (nplanets=1, [Agol+2021](https://exoplanetarchive.ipac.caltech.edu/overview/TRAPPIST-1), known TTV):<br>
-TESS sectors=[70]<br>
+HD 28109 (nplanets=2, [Dransfield+2022](https://exoplanetarchive.ipac.caltech.edu/overview/HD28109), known TTV):<br>
+First Order: 3:2 | P=(56.01,84.26) (delta=0.29%)<br>
+TESS sectors=[ 1  2  3  4  5  6  7  8  9 10 11 12 13 27 28 29 30 31 33 34 35 36 37 38 39 61 62 63 64 65 66 67 68 69]<br>
 
-Kepler-32 (nplanets=1, [Fabrycky+2012](https://exoplanetarchive.ipac.caltech.edu/overview/Kepler-32), known TTV):<br>
-TESS sectors=[14 15 41 54 55 74 75 81 82]<br>
-
-Kepler-11 (nplanets=1, [Lissauer+2013](https://exoplanetarchive.ipac.caltech.edu/overview/Kepler-11), known TTV):<br>
-TESS sectors=[14 15 41 54 55 74 75 81 82]<br>
-
-Kepler-18 (nplanets=1, [Cochran+2011](https://exoplanetarchive.ipac.caltech.edu/overview/Kepler-18), known TTV):<br>
-TESS sectors=[14 15 41 54 55 74 75 81 82]<br>
-
-Kepler-30 (nplanets=1, [Sanchis_Ojeda+2012](https://exoplanetarchive.ipac.caltech.edu/overview/Kepler-30), known TTV):<br>
-TESS sectors=[14 26 40 41 53 54 74 80 81]<br>
-
-TOI-1266 (nplanets=1, [Cloutier+2024](https://exoplanetarchive.ipac.caltech.edu/overview/TOI-1266), known TTV):<br>
+TOI-1266 (nplanets=2, [Cloutier+2024](https://exoplanetarchive.ipac.caltech.edu/overview/TOI-1266), known TTV):<br>
+Prot=44.60 d
 TESS sectors=[14 15 21 22 41 48 49 75 76]<br>
 
-TOI-1266 (nplanets=1, [Cloutier+2024](https://exoplanetarchive.ipac.caltech.edu/overview/TOI-1266), known TTV):<br>
-TESS sectors=[14 15 21 22 41 48 49 75 76]<br>
-
-TRAPPIST-1 (nplanets=1, [Agol+2021](https://exoplanetarchive.ipac.caltech.edu/overview/TRAPPIST-1), known TTV):<br>
-TESS sectors=[70]<br>
-
-TRAPPIST-1 (nplanets=1, [Agol+2021](https://exoplanetarchive.ipac.caltech.edu/overview/TRAPPIST-1), known TTV):<br>
-TESS sectors=[70]<br>
-
-K2-266 (nplanets=1, [Rodriguez+2018](https://exoplanetarchive.ipac.caltech.edu/overview/K2-266), known TTV):<br>
-TESS sectors=[35 45 46 62 72]<br>
-
-TRAPPIST-1 (nplanets=1, [Agol+2021](https://exoplanetarchive.ipac.caltech.edu/overview/TRAPPIST-1), known TTV):<br>
-TESS sectors=[70]<br>
-
-TRAPPIST-1 (nplanets=1, [Agol+2021](https://exoplanetarchive.ipac.caltech.edu/overview/TRAPPIST-1), known TTV):<br>
-TESS sectors=[70]<br>
-
-TRAPPIST-1 (nplanets=1, [Agol+2021](https://exoplanetarchive.ipac.caltech.edu/overview/TRAPPIST-1), known TTV):<br>
-TESS sectors=[70]<br>
-
-K2-266 (nplanets=1, [Rodriguez+2018](https://exoplanetarchive.ipac.caltech.edu/overview/K2-266), known TTV):<br>
+K2-266 (nplanets=2, [Rodriguez+2018](https://exoplanetarchive.ipac.caltech.edu/overview/K2-266), known TTV):<br>
+First Order: 4:3 | P=(14.70,19.48) (delta=0.58%)<br>
 TESS sectors=[35 45 46 62 72]<br>
 
 
