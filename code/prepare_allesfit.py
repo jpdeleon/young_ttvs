@@ -9,7 +9,7 @@ creates a directory with the files needed to run allesfitter:
 2. settings.csv
 3. run.py
 4. params_star.csv
-5. tess.csv
+5. mission.csv e.g. tess.csv, k2.csv, kepler.csv
 ======
 * for precise transit transit timing, some parameters can be fixed
 * limb darkening can be fixed to theoretical values derived using ~ldtk~ limbdark;
@@ -21,7 +21,6 @@ https://exoplanetarchive.ipac.caltech.edu/docs/sysaliases.html
 ======
 TODO: 
 1. add priors as args
-2. make an arg to change tess.csv and variable name to user-defined
 """
 import sys
 # import logging
@@ -186,46 +185,50 @@ if __name__=='__main__':
         help="Name",
         type=str
     )
-    # group2 = ap.add_mutually_exclusive_group(required=True)
-    # group2.add_argument("-sector", help="-sector=-1 uses most recent TESS sector (default); try -sector=all to use all", default=None)
-    # group2.add_argument("-campaign", help="-campaign=-1 uses most recent K2 campaign (default); try -campaign=all to use all", default=None)
-    # group2.add_argument("-quarter", help="-quarter=-1 uses most recent Kepler quarter (default); try -quarter=all to use all", default=None)
-    ap.add_argument("-sec", "--sector", nargs='+', help="-sector=-1 uses most recent TESS sector (default); try -sector=all to use all", default=None)
-    ap.add_argument("-exp", help="exposure time (default=None)", type=float, default=None)
-    # ap.add_argument("-dir", help="base directory", type=str, default=f"{home}/github/research/project/young_ttvs/allesfitter/")
-    ap.add_argument("-dir", help="base directory", type=str, default=".")
+    group2 = ap.add_mutually_exclusive_group(required=True)
+    group2.add_argument("-s", "--sector", nargs='+', help="sector=-1 uses most recent TESS sector (default); try -sector=all to use all", default=None)
+    group2.add_argument("-c", "--campaign", help="campaign=-1 uses most recent K2 campaign (default); try -campaign=all to use all", default=None)
+    group2.add_argument("-q", "--quarter", help="quarter=-1 uses most recent Kepler quarter (default); try -quarter=all to use all", default=None)
+    # ap.add_argument("-s", "--sector", "--sector", nargs='+', help="-sector=-1 uses most recent TESS sector (default); try -sector=all to use all", default=None)
+    ap.add_argument("-e", "--exptime", help="exposure time (default=None)", type=float, default=None)
     ap.add_argument("-p", "--pipeline", help="TESS/Kepler data pipeline", type=str, default='spoc')
-    ap.add_argument("-sig", "--sigma", help="sigma for removing outliers in (combined) TESS lc", type=float, default=None)
     ap.add_argument("-m", "--mission", choices=['tess','k2','kepler'], type=str, default='tess')
+    ap.add_argument("-lc", "--lc_type", help="type of light curve (default=pdcsap)", choices=['pdcsap','sap'], type=str, default='pdcsap')
+    ap.add_argument("-sig", "--sigma", help="sigma for removing outliers in (combined) TESS lc", type=float, default=None)
     ap.add_argument("-qb", "--quality", choices=['none','default','hard','hardest'], type=str, default='default')
-    ap.add_argument("-lc", "--lc_type", choices=['pdcsap','sap'], type=str, default='sap')
-    ap.add_argument("-debug", action="store_true", default=False)
-    ap.add_argument("-results_dir", help="path to the results dir of a previous run to be used in params.csv", default=None)
-    ap.add_argument("--overwrite", help="overwrite files (default=False)", action="store_true", default=False)
+    ap.add_argument("-dir", help="base directory", type=str, default=".")
     ap.add_argument("-i", "--interactive", help="manually input missing values (default=False)", action="store_true", default=False)
     ap.add_argument("-u", "--update_db", help="update TOI or NExSci database (default=False)", action="store_true", default=False)
+    ap.add_argument("-r", "--results_dir", help="path to the results dir of a previous run to be used in params.csv", default=None)
+    ap.add_argument("-o", "--overwrite", help="overwrite files (default=False)", action="store_true", default=False)
+    ap.add_argument("--debug", action="store_true", default=False)
 
     args = ap.parse_args(None if sys.argv[1:] else ["-h"])
 
     toiid = args.toi
     ctoiid = args.ctoi
     name = args.name
-    exptime = args.exp
+    exptime = args.exptime
     basedir = args.dir
-    mission = args.mission
+    mission = args.mission.lower()
     quality_bitmask = args.quality
     sigma = args.sigma
     results_dir = args.results_dir
     interactive = args.interactive
 
-    if (mission.lower()=='k2') or (mission.lower()=='kepler'):
-        raise NotImplementedError("The idea is to use new TESS data")
+    if mission=='tess':
+        sector = args.sector
+    elif mission=='k2':
+        campaign = -1 if args.campaign is None else args.campaign
+        raise NotImplementedError("TODO")
+    elif mission=='kepler':
+        quarter = -1 if args.quarter is None else args.quarter
+        raise NotImplementedError("TODO")
+    
     pipeline = args.pipeline
     lc_type = 'sap_flux' if pipeline=='qlp' else args.lc_type+'_flux'
     debug = args.debug
-    sector = args.sector
-    # campaign = -1 if args.campaign is None else args.campaign
-    # quarter = -1 if args.quarter is None else args.quarter
+    
     overwrite = args.overwrite
     update_db = args.update_db
 
@@ -282,7 +285,7 @@ if __name__=='__main__':
             raise ValueError("use --interactive to input value") #no assumption
     if np.isnan(logg_err):
         logg_err = float(input("logg err: ")) if interactive else 0.1
-    print(f"Using logg=({logg},{logg_err}) cm/s^2")
+    print(f"Using logg=({logg:.2f},{logg_err:.2f}) cm/s^2")
     if np.isnan(Teff):
         if interactive:
             Teff = float(input("Teff: "))
@@ -290,7 +293,7 @@ if __name__=='__main__':
             raise ValueError("use --interactive to input value") #no assumption
     if np.isnan(Teff_err):
         Teff_err = float(input("Teff err: ")) if interactive else 500
-    print(f"Using Teff=({Teff},{Teff_err}) K")
+    print(f"Using Teff=({Teff:.0f},{Teff_err:.0f}) K")
 
     q1, q1_err, q2, q2_err = ld.claret(
                                     band='T',
@@ -337,16 +340,16 @@ if __name__=='__main__':
         text += "#b_f_c,0,0,uniform 0.0 0.0,$\sqrt{e_b} \cos{\omega_b}$,,\n"
         text += "#b_f_s,0,0,uniform 0.0 0.0,$\sqrt{e_b} \sin{\omega_b}$,,\n"
         text += "#limb darkening coefficients per instrument,,,,,,\n"
-        q1_min, q1, q1_max = np.percentile(alles.posterior_params[f'host_ldc_q1_tess'], q=quartiles_1sig)
-        q2_min, q2, q2_max = np.percentile(alles.posterior_params[f'host_ldc_q2_tess'], q=quartiles_1sig)
-        text += f"host_ldc_q1_tess,{q1:.2f},1,uniform {q1_min:.2f} {q1_max:.2f},"+"$q_{1; \mathrm{tess}}$,,\n"
-        text += f"host_ldc_q2_tess,{q2:.2f},1,uniform {q2_min:.2f} {q2_max:.2f},"+"$q_{2; \mathrm{tess}}$,,\n"
+        q1_min, q1, q1_max = np.percentile(alles.posterior_params[f'host_ldc_q1_{mission}'], q=quartiles_1sig)
+        q2_min, q2, q2_max = np.percentile(alles.posterior_params[f'host_ldc_q2_{mission}'], q=quartiles_1sig)
+        text += f"host_ldc_q1_{mission},{q1:.2f},1,normal {q1:.2f} {q1_err:.2f},"+f"$q_{{1; \\mathrm{{{mission}}}}}$"+",,\n"
+        text += f"host_ldc_q2_{mission},{q2:.2f},1,normal {q2:.2f} {q2_err:.2f},"+f"$q_{{2; \\mathrm{{{mission}}}}}$"+",,\n"
         text += "#errors per instrument,,,,,,\n"
-        text += "ln_err_flux_tess,-6,1,uniform -10 -1,$\log{\sigma_\mathrm{tess}}$,rel. flux,\n"
+        text += f"ln_err_flux_{mission},-6,1,uniform -10 -1,\\log{{\\sigma_\\mathrm{{{mission}}}}},rel. flux,\n"
         text += "#baseline per instrument,,,,,,\n"
-        text += "baseline_gp_offset_flux_tess,0,1,uniform -0.1 0.1,$\mathrm{gp ln sigma (tess)}$,,\n"
-        text += "baseline_gp_matern32_lnsigma_flux_tess,-5,1,uniform -15 0,$\mathrm{gp ln sigma (tess)}$,,\n"
-        text += "baseline_gp_matern32_lnrho_flux_tess,0,1,uniform -1 15,$\mathrm{gp ln rho (tess)}$,,\n"
+        text += f"baseline_gp_offset_flux_{mission},0,1,uniform -0.1 0.1,\\mathrm{{gp\\ ln\\ sigma\\ ({mission})}},,\n"
+        text += f"baseline_gp_matern32_lnsigma_flux_{mission},-5,1,uniform -15 0,$\mathrm{{gp ln sigma ({mission})}}$,,\n"
+        text += f"baseline_gp_matern32_lnrho_flux_{mission},0,1,uniform -1 15,$\mathrm{{gp ln rho ({mission})}}$,,\n"
         text += "#TTV companion b,,,,,\n"
         text += "#b_ttv_transit_1,0,1,uniform -0.1 0.1,TTV$_\mathrm{b;1}$,d,\n"
         text += "#TTV companion c,,,,,\n"
@@ -478,14 +481,14 @@ if __name__=='__main__':
         text += "#b_f_c,0,0,uniform 0.0 0.0,$\sqrt{e_b} \cos{\omega_b}$,,\n"
         text += "#b_f_s,0,0,uniform 0.0 0.0,$\sqrt{e_b} \sin{\omega_b}$,,\n"
         text += "#limb darkening coefficients per instrument,,,,,,\n"
-        text += f"host_ldc_q1_tess,{q1:.2f},1,normal {q1:.2f} {q1_err:.2f},"+"$q_{1; \mathrm{tess}}$,,\n"
-        text += f"host_ldc_q2_tess,{q2:.2f},1,normal {q2:.2f} {q2_err:.2f},"+"$q_{2; \mathrm{tess}}$,,\n"
+        text += f"host_ldc_q1_{mission},{q1:.2f},1,normal {q1:.2f} {q1_err:.2f},"+f"$q_{{1; \\mathrm{{{mission}}}}}$"+",,\n"
+        text += f"host_ldc_q2_{mission},{q2:.2f},1,normal {q2:.2f} {q2_err:.2f},"+f"$q_{{2; \\mathrm{{{mission}}}}}$"+",,\n"
         text += "#errors per instrument,,,,,,\n"
-        text += "ln_err_flux_tess,-6,1,uniform -10 -1,$\log{\sigma_\mathrm{tess}}$,rel. flux,\n"
+        text += f"ln_err_flux_{mission},-6,1,uniform -10 -1,\\log{{\\sigma_\\mathrm{{{mission}}}}},rel. flux,\n"
         text += "#baseline per instrument,,,,,,\n"
-        text += "baseline_gp_offset_flux_tess,0,1,uniform -0.1 0.1,$\mathrm{gp ln sigma (tess)}$,,\n"
-        text += "baseline_gp_matern32_lnsigma_flux_tess,-5,1,uniform -15 0,$\mathrm{gp ln sigma (tess)}$,,\n"
-        text += "baseline_gp_matern32_lnrho_flux_tess,0,1,uniform -1 15,$\mathrm{gp ln rho (tess)}$,,\n"
+        text += f"baseline_gp_offset_flux_{mission},0,1,uniform -0.1 0.1,\\mathrm{{gp\\ ln\\ sigma\\ ({mission})}},,\n"
+        text += f"baseline_gp_matern32_lnsigma_flux_{mission},-5,1,uniform -15 0,$\mathrm{{gp ln sigma ({mission})}}$,,\n"
+        text += f"baseline_gp_matern32_lnrho_flux_{mission},0,1,uniform -1 15,$\mathrm{{gp ln rho ({mission})}}$,,\n"
         text += "#TTV companion b,,,,,\n"
         text += "#b_ttv_transit_1,0,1,uniform -0.1 0.1,TTV$_\mathrm{b;1}$,d,\n"
         text += "#TTV companion c,,,,,\n"
@@ -504,9 +507,9 @@ if __name__=='__main__':
 
         text2+=f"companions_phot,{' '.join(planets[:len(target_df)])}"
 
-        text2+="""
+        text2+=f"""
 companions_rv,
-inst_phot,tess
+inst_phot,{mission}
 inst_rv,
 ###############################################################################,
 # Fit performance settings,
@@ -538,24 +541,24 @@ ns_tol,0.01
 ###############################################################################,
 # Limb darkening law per object and instrument,
 ###############################################################################,
-host_ld_law_tess,quad
+host_ld_law_{mission},quad
 #####################################,
 # Exposure interpolation settings,
 #####################################,
 ### crucial only for long exposure times,
-# t_exp_tess,0.0208333
-# t_exp_n_int_tess,10
+# t_exp_{mission},0.0208333
+# t_exp_n_int_{mission},10
 ###############################################################################,
 # Baseline settings per instrument,
 ###############################################################################,
-#baseline_flux_tess,sample_offset
-#baseline_flux_tess,hybrid_spline
-#baseline_flux_tess,hybrid_poly_2
-baseline_flux_tess,sample_GP_Matern32
+#baseline_flux_{mission},sample_offset
+#baseline_flux_{mission},hybrid_spline
+#baseline_flux_{mission},hybrid_poly_2
+baseline_flux_{mission},sample_GP_Matern32
 ###############################################################################,
 # Error settings per instrument,
 ###############################################################################,
-error_flux_tess,sample
+error_flux_{mission},sample
 ###############################################################################,
 # Flares,
 ###############################################################################,
@@ -566,7 +569,7 @@ error_flux_tess,sample
 
         text2+=f"use_host_density_prior,{rhostar_prior}"
 
-        text2+="""
+        text2+=f"""
 ###################################################,
 # Fit TTV,
 ###################################################,
@@ -574,9 +577,9 @@ fit_ttvs,False
 ###############################################################################,
 # Stellar grid per object and instrument,
 ###############################################################################,
-host_grid_tess,very_sparse
-# b_grid_tess,very_sparse
-# c_grid_tess,very_sparse"""
+host_grid_{mission},very_sparse
+# b_grid_{mission},very_sparse
+# c_grid_{mission},very_sparse"""
 
         if debug:
             print(text2)
@@ -697,11 +700,14 @@ allesfitter.prepare_ttv_fit('.', style='tessplot')
                     idx = -1
                     sector = sectors[idx]
 
-                lc = result[idx].download(quality_bitmask=quality_bitmask,flux_column=lc_type).normalize()
+                filtered_result = result[idx]
+                lc = filtered_result.download(quality_bitmask=quality_bitmask,flux_column=lc_type).normalize()
+                unique_exptimes = filtered_result.table.to_pandas().exptime.unique()
+                exptime = unique_exptimes[0] if exptime is None else exptime
                 assert lc.sector==sector
                 if pipeline=='spoc':
-                    lc1 = result[idx].download(quality_bitmask=quality_bitmask,flux_column='pdcsap_flux').normalize()
-                    lc2 = result[idx].download(quality_bitmask=quality_bitmask,flux_column='sap_flux').normalize()
+                    lc1 = filtered_result.download(quality_bitmask=quality_bitmask,flux_column='pdcsap_flux').normalize()
+                    lc2 = filtered_result.download(quality_bitmask=quality_bitmask,flux_column='sap_flux').normalize()
             if sigma:
                 lc = lc.remove_outliers(sigma=sigma)
                 if pipeline=='spoc':
@@ -715,19 +721,18 @@ allesfitter.prepare_ttv_fit('.', style='tessplot')
                 ax = lc.scatter(label=pipeline)
                 ax.set_title(f"Sectors: {unique_sectors} exptime={int(exptime)}s")
             secs = 's'.join(map(str, unique_sectors))
-            fp = outdir.joinpath(f"{target_name}_tess_{pipeline}_s{secs}_exp{int(exptime)}s.png")
+            fp = outdir.joinpath(f"{target_name}_{mission}_{pipeline}_s{secs}_exp{int(exptime)}s.png")
             ax.figure.savefig(fp)
-            #fp = outdir.joinpath("tess.csv")
             if pipeline=='spoc':
-                fp = outdir.joinpath(f"tess_{pipeline}_{lc_type.split('_')[0]}_s{secs}_exp{int(exptime)}s.csv")
+                fp = outdir.joinpath(f"{mission}_{pipeline}_{lc_type.split('_')[0]}_s{secs}_exp{int(exptime)}s.csv")
             else:
-                fp = outdir.joinpath(f"tess_{pipeline}_s{secs}_exp{int(exptime)}s.csv")
+                fp = outdir.joinpath(f"{mission}_{pipeline}_s{secs}_exp{int(exptime)}s.csv")
             df = lc.to_pandas()
             df['time'] = df.index + 2457000
             df = df.reset_index(drop=True).sort_values(by='time')
             df = df[cols].dropna()
             df.to_csv(fp, sep=',', header=False, index=False)
-            print("TESS Ndata: ", len(df))
+            print("Ndata: ", len(df))
             print("Saved: ", fp)
             if debug:
                 print(df.head())
