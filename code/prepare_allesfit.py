@@ -354,7 +354,7 @@ if __name__=='__main__':
         text += "#b_ttv_transit_1,0,1,uniform -0.1 0.1,TTV$_\mathrm{b;1}$,d,\n"
         text += "#TTV companion c,,,,,\n"
         text += "#c_ttv_transit_1,0,1,uniform -0.1 0.1,TTV$_\mathrm{c;1}$,d,\n"
-        fp = outdir.joinpath("params2.csv")
+        fp = Path(results_dir, "params2.csv")
         np.savetxt(fp, [text], fmt="%s")
         print("Saved: ", fp)
     else:
@@ -458,18 +458,20 @@ if __name__=='__main__':
                     rsuma_s = get_rsuma(tdur_s, Porb, inc_s, rprs_s, b_s)
                     tdur_orbit = get_tdur(Porb, np.median(rsuma_s), inc, rprs, b)*24
                     print(f"tdur={tdur:.1f}h ({source}) {tdur_orbit:.1f}h (derived from orbit)")
-                    if np.argmin(np.abs(np.array([tdur_rhostar, tdur_orbit]) - tdur))==1:
-                        print("Using Rstar/a derived from transit duration.")
+                    if np.nanargmin(np.abs(np.array([tdur_rhostar, tdur_orbit]) - tdur))==1:
+                        print("Using Rstar/a derived from orbit.")
                         rsuma_min, rsuma, rsuma_max = np.percentile(rsuma_s, q=quartiles_3sig)
+                    else:
+                        print("Using Rstar/a derived from rhostar.")
                 except Exception as e:
                     print(e)
 
             if debug:
+                print(f"rsuma={rsuma:.4f} from rhostar")
                 print(f"rprs={rprs:.4f}")
                 print(f"rho={rho:.4f}")
                 print(f"a_s={a:.4f}")
                 print(f"a_au={a_au:.4f}")
-                print(f"rsuma={rsuma:.4f}")
                 print(f"inc={np.rad2deg(inc):.2f}")
                 print(f"b={b:.2f}")
             text += f"#companion {pl} astrophysical params,,,,,,\n"
