@@ -1,0 +1,18 @@
+prog=/ut3/jerome/github/research/project/young_ttvs/code/prepare_allesfit.py
+outfp=tois_yuanzhe
+# read file; skip 1st row; add log
+## for spoc
+exp=120
+pipe=spoc
+lc=pdcsap
+awk -F '.' '{print $1}' ../../tois_yuanzhe/tois_yuanzhe.txt | tail -n +2 | while read name; do printf "$prog -toi %04d -sec all -exp $exp  --overwrite -dir $outfp -p $pipe -lc $lc | tee $outfp/TOI-%04d/TOI-%04d.log\n" $name $name $name; done > $outfp'_'$pipe.batch
+## for qlp
+#exp=1800
+#exp=200
+#pipe=qlp
+#awk -F '.' '{print $1}' ../../tois_yuanzhe/tois_yuanzhe.txt | tail -n +2 | while read name; do printf "$prog -toi %04d -sec all -exp $exp --overwrite -dir $outfp -p $pipe -sig 10 | tee $outfp/TOI-%04d/TOI-%04d.log\n" $name $name $name; done > $outfp'_'$pipe.batch
+## tess-spoc no exp
+#exp=120
+#pipe=tess-spoc
+#awk -F '.' '{print $1}' ../../tois_yuanzhe/tois_yuanzhe.txt | tail -n +2 | while read name; do printf "$prog -toi %04d -sec all -exp $exp --overwrite -dir $outfp -p $pipe -sig 10 | tee $outfp/TOI-%04d/TOI-%04d.log\n" $name $name $name; done > $outfp'_'$pipe.batch
+echo 'Saved: '$outfp'_'$pipe.batch

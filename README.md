@@ -99,7 +99,7 @@ TESS sectors=[ 1  2  3  4  5  6  7  8  9 11 12 13 27 28 29 30 31 32 33 34 35 36 
  
 ![img](allesfitter/toi_in_resonance/toi4495/ttv/ttv.png)
 ![img](allesfitter/toi_in_resonance/toi4495/fit.png)
-![img](allesfitter/toi_in_resonance/toi4495/TOI4495_s40_pdcsap_sc.png)
+![img](allesfitter/toi_in_resonance/toi4495/TOI4495_s81_pdcsap_sc.png)
 ![img](allesfitter/toi_in_resonance/toi4495/toi4495_lco24b.png)
 
 ### TOI-5493
@@ -125,6 +125,7 @@ TESS sectors=[ 1  2  3  4  5  6  7  8  9 11 12 13 27 28 29 30 31 32 33 34 35 36 
 ![img](allesfitter/toi_in_resonance/toi6265/ttv/ttv.png)
 ![img](allesfitter/toi_in_resonance/toi6265/ttv/b_ttv.png)
 ![img](allesfitter/toi_in_resonance/toi6265/ttv/c_ttv.png)
+![img](allesfitter/toi_in_resonance/toi6265/TOI6265_s61_pdcsap_sc.png)
 
 ### TOI-1670
 

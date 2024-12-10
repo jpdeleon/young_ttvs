@@ -192,7 +192,8 @@ if __name__=='__main__':
     # ap.add_argument("-s", "--sector", "--sector", nargs='+', help="-sector=-1 uses most recent TESS sector (default); try -sector=all to use all", default=None)
     ap.add_argument("-e", "--exptime", help="exposure time (default=None)", type=float, default=None)
     ap.add_argument("-p", "--pipeline", help="TESS/Kepler data pipeline", type=str, default='spoc')
-    ap.add_argument("-m", "--mission", choices=['tess','k2','kepler'], type=str, default='tess')
+    ap.add_argument("-f", "--filename", help="filename of lightcurve", type=str, default='tess')
+    ap.add_argument("-m", "--mission", type=str, default='tess', choices=['tess','k2','kepler'])
     ap.add_argument("-lc", "--lc_type", help="type of light curve (default=pdcsap)", choices=['pdcsap','sap'], type=str, default='pdcsap')
     ap.add_argument("-sig", "--sigma", help="sigma for removing outliers in (combined) TESS lc", type=float, default=None)
     ap.add_argument("-qb", "--quality", choices=['none','default','hard','hardest'], type=str, default='default')
@@ -211,6 +212,7 @@ if __name__=='__main__':
     exptime = args.exptime
     basedir = args.dir
     mission = args.mission.lower()
+    fn = args.filename
     quality_bitmask = args.quality
     sigma = args.sigma
     results_dir = args.results_dir
@@ -340,16 +342,16 @@ if __name__=='__main__':
         text += "#b_f_c,0,0,uniform 0.0 0.0,$\sqrt{e_b} \cos{\omega_b}$,,\n"
         text += "#b_f_s,0,0,uniform 0.0 0.0,$\sqrt{e_b} \sin{\omega_b}$,,\n"
         text += "#limb darkening coefficients per instrument,,,,,,\n"
-        q1_min, q1, q1_max = np.percentile(alles.posterior_params[f'host_ldc_q1_{mission}'], q=quartiles_1sig)
-        q2_min, q2, q2_max = np.percentile(alles.posterior_params[f'host_ldc_q2_{mission}'], q=quartiles_1sig)
-        text += f"host_ldc_q1_{mission},{q1:.2f},1,normal {q1:.2f} {q1_err:.2f},"+f"$q_{{1; \\mathrm{{{mission}}}}}$"+",,\n"
-        text += f"host_ldc_q2_{mission},{q2:.2f},1,normal {q2:.2f} {q2_err:.2f},"+f"$q_{{2; \\mathrm{{{mission}}}}}$"+",,\n"
+        q1_min, q1, q1_max = np.percentile(alles.posterior_params[f'host_ldc_q1_{fn}'], q=quartiles_1sig)
+        q2_min, q2, q2_max = np.percentile(alles.posterior_params[f'host_ldc_q2_{fn}'], q=quartiles_1sig)
+        text += f"host_ldc_q1_{fn},{q1:.2f},1,normal {q1:.2f} {q1_err:.2f},"+f"$q_{{1; \\mathrm{{{fn}}}}}$"+",,\n"
+        text += f"host_ldc_q2_{fn},{q2:.2f},1,normal {q2:.2f} {q2_err:.2f},"+f"$q_{{2; \\mathrm{{{fn}}}}}$"+",,\n"
         text += "#errors per instrument,,,,,,\n"
-        text += f"ln_err_flux_{mission},-6,1,uniform -10 -1,\\log{{\\sigma_\\mathrm{{{mission}}}}},rel. flux,\n"
+        text += f"ln_err_flux_{fn},-6,1,uniform -10 -1,$\log{{\sigma ({fn})}}$,rel. flux,\n"
         text += "#baseline per instrument,,,,,,\n"
-        text += f"baseline_gp_offset_flux_{mission},0,1,uniform -0.1 0.1,\\mathrm{{gp\\ ln\\ sigma\\ ({mission})}},,\n"
-        text += f"baseline_gp_matern32_lnsigma_flux_{mission},-5,1,uniform -15 0,$\mathrm{{gp ln sigma ({mission})}}$,,\n"
-        text += f"baseline_gp_matern32_lnrho_flux_{mission},0,1,uniform -1 15,$\mathrm{{gp ln rho ({mission})}}$,,\n"
+        text += f"baseline_gp_offset_flux_{fn},0,1,uniform -0.1 0.1,$\mathrm{{gp ln \sigma ({fn})}}$,,\n"
+        text += f"baseline_gp_matern32_lnsigma_flux_{fn},-5,1,uniform -15 0,$\mathrm{{gp ln \sigma ({fn})}}$,,\n"
+        text += f"baseline_gp_matern32_lnrho_flux_{fn},0,1,uniform -1 15,$\mathrm{{gp ln \\rho ({fn})}}$,,\n"
         text += "#TTV companion b,,,,,\n"
         text += "#b_ttv_transit_1,0,1,uniform -0.1 0.1,TTV$_\mathrm{b;1}$,d,\n"
         text += "#TTV companion c,,,,,\n"
@@ -357,13 +359,15 @@ if __name__=='__main__':
         fp = Path(results_dir, "params2.csv")
         np.savetxt(fp, [text], fmt="%s")
         print("Saved: ", fp)
+
     else:
+        ### Write files ###
         outdir = Path(basedir, target_name)
         try:
             outdir.mkdir(parents=True, exist_ok=overwrite)
         except:
             raise FileExistsError("Use --overwrite to overwrite files.")
-        
+
         ###=====Create params.csv=====###
         text = """#name,value,fit,bounds,label,unit,truth\n"""
         for i,row in target_df.iterrows():
@@ -467,7 +471,7 @@ if __name__=='__main__':
                     print(e)
 
             if debug:
-                print(f"rsuma={rsuma:.4f} from rhostar")
+                print(f"rsuma={rsuma:.4f}")
                 print(f"rprs={rprs:.4f}")
                 print(f"rho={rho:.4f}")
                 print(f"a_s={a:.4f}")
@@ -483,14 +487,14 @@ if __name__=='__main__':
         text += "#b_f_c,0,0,uniform 0.0 0.0,$\sqrt{e_b} \cos{\omega_b}$,,\n"
         text += "#b_f_s,0,0,uniform 0.0 0.0,$\sqrt{e_b} \sin{\omega_b}$,,\n"
         text += "#limb darkening coefficients per instrument,,,,,,\n"
-        text += f"host_ldc_q1_{mission},{q1:.2f},1,normal {q1:.2f} {q1_err:.2f},"+f"$q_{{1; \\mathrm{{{mission}}}}}$"+",,\n"
-        text += f"host_ldc_q2_{mission},{q2:.2f},1,normal {q2:.2f} {q2_err:.2f},"+f"$q_{{2; \\mathrm{{{mission}}}}}$"+",,\n"
+        text += f"host_ldc_q1_{fn},{q1:.2f},1,normal {q1:.2f} {q1_err:.2f},"+f"$q_{{1; \\mathrm{{{fn}}}}}$"+",,\n"
+        text += f"host_ldc_q2_{fn},{q2:.2f},1,normal {q2:.2f} {q2_err:.2f},"+f"$q_{{2; \\mathrm{{{fn}}}}}$"+",,\n"
         text += "#errors per instrument,,,,,,\n"
-        text += f"ln_err_flux_{mission},-6,1,uniform -10 -1,\\log{{\\sigma_\\mathrm{{{mission}}}}},rel. flux,\n"
+        text += f"ln_err_flux_{fn},-6,1,uniform -10 -1,$\log{{\sigma ({fn})}}$,rel. flux,\n"
         text += "#baseline per instrument,,,,,,\n"
-        text += f"baseline_gp_offset_flux_{mission},0,1,uniform -0.1 0.1,\\mathrm{{gp\\ ln\\ sigma\\ ({mission})}},,\n"
-        text += f"baseline_gp_matern32_lnsigma_flux_{mission},-5,1,uniform -15 0,$\mathrm{{gp ln sigma ({mission})}}$,,\n"
-        text += f"baseline_gp_matern32_lnrho_flux_{mission},0,1,uniform -1 15,$\mathrm{{gp ln rho ({mission})}}$,,\n"
+        text += f"baseline_gp_offset_flux_{fn},0,1,uniform -0.1 0.1,$\mathrm{{gp ln \sigma ({fn})}}$,,\n"
+        text += f"baseline_gp_matern32_lnsigma_flux_{fn},-5,1,uniform -15 0,$\mathrm{{gp ln \sigma ({fn})}}$,,\n"
+        text += f"baseline_gp_matern32_lnrho_flux_{fn},0,1,uniform -1 15,$\mathrm{{gp ln \\rho ({fn})}}$,,\n"
         text += "#TTV companion b,,,,,\n"
         text += "#b_ttv_transit_1,0,1,uniform -0.1 0.1,TTV$_\mathrm{b;1}$,d,\n"
         text += "#TTV companion c,,,,,\n"
@@ -511,7 +515,7 @@ if __name__=='__main__':
 
         text2+=f"""
 companions_rv,
-inst_phot,{mission}
+inst_phot,{fn}
 inst_rv,
 ###############################################################################,
 # Fit performance settings,
@@ -543,24 +547,24 @@ ns_tol,0.01
 ###############################################################################,
 # Limb darkening law per object and instrument,
 ###############################################################################,
-host_ld_law_{mission},quad
+host_ld_law_{fn},quad
 #####################################,
 # Exposure interpolation settings,
 #####################################,
 ### crucial only for long exposure times,
-# t_exp_{mission},0.0208333
-# t_exp_n_int_{mission},10
+# t_exp_{fn},0.0208333
+# t_exp_n_int_{fn},10
 ###############################################################################,
 # Baseline settings per instrument,
 ###############################################################################,
-#baseline_flux_{mission},sample_offset
-#baseline_flux_{mission},hybrid_spline
-#baseline_flux_{mission},hybrid_poly_2
-baseline_flux_{mission},sample_GP_Matern32
+#baseline_flux_{fn},sample_offset
+#baseline_flux_{fn},hybrid_spline
+#baseline_flux_{fn},hybrid_poly_2
+baseline_flux_{fn},sample_GP_Matern32
 ###############################################################################,
 # Error settings per instrument,
 ###############################################################################,
-error_flux_{mission},sample
+error_flux_{fn},sample
 ###############################################################################,
 # Flares,
 ###############################################################################,
@@ -579,9 +583,9 @@ fit_ttvs,False
 ###############################################################################,
 # Stellar grid per object and instrument,
 ###############################################################################,
-host_grid_{mission},very_sparse
-# b_grid_{mission},very_sparse
-# c_grid_{mission},very_sparse"""
+host_grid_{fn},very_sparse
+# b_grid_{fn},very_sparse
+# c_grid_{fn},very_sparse"""
 
         if debug:
             print(text2)

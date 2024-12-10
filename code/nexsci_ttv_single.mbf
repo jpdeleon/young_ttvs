@@ -1,0 +1,5 @@
+prog=/ut3/jerome/github/research/project/young_ttvs/code/prepare_allesfit.py
+outfp=nexsci_ttv_single
+#read hostname column, skip first row, write command with args, save batch file
+awk -F ',' '{print $3}' ../data/nexsci_ttv_single.csv | tail -n +2 | while read name; do echo $prog -name \"$name\" -sec all -exp 120 -dir $outfp --overwrite; done > $outfp.batch
+echo 'Saved: ' $outfp
