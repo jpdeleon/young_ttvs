@@ -304,7 +304,7 @@ def get_sector(bjd):
 def get_orbit_pairs(N=10, order=1):
     cs = list(combinations(np.arange(1, N), 2))
     # cs = [(i,j) for i,j in cs if abs(i-j)==order]
-    cs = [(i,j) for i,j in cs if (abs(i-j)==order)&(i%j)]
+    cs = [(i,j) for i,j in cs if (abs(i-j)==order) & (i%j)]
     return cs
 
 def get_resonant_pairs(periods, order=1, tol=0.01):
