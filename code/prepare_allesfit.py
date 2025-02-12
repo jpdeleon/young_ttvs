@@ -1,7 +1,9 @@
 #!/usr/bin/env python
 """
 Usage
-$python prepare_allesfit.py -toi 1097 -sec all -exp 120
+$python prepare_allesfit.py -toi 1097 -s all -e 120
+$python prepare_allesfit.py -tic 273586149 -s -1 -p qlp
+$python prepare_allesfit.py -name 'HIP 67522' -o -i --debug
 
 Uses parameter from TOI/CTIO/NExSci databse and
 creates a directory with the files needed to run allesfitter:
@@ -19,8 +21,6 @@ creates a directory with the files needed to run allesfitter:
 * uses aliases (K2 name --> EPIC)
 https://exoplanetarchive.ipac.caltech.edu/docs/sysaliases.html
 ======
-TODO: 
-1. add priors as args
 """
 import sys
 # import logging
@@ -75,7 +75,7 @@ def catalog_info_name(df) -> Tuple:
     mass, mass_err = df['st_mass'].astype(float), np.sqrt(df['st_masserr1']**2+df['st_masserr2']**2)
     return Teff, Teff_err, logg, logg_err, feh, feh_err, radius, radius_err, mass, mass_err
 
-def parse_target_name(toiid=None, ctoiid=None, name=None, update_db=False) -> Tuple:
+def parse_target_name(toiid=None, ticid=None, ctoiid=None, name=None, update_db=False) -> Tuple:
     if toiid:
         df = get_tois(clobber=update_db)
         print("Using parameters from TOI database (use --update_db to update).")
@@ -85,6 +85,23 @@ def parse_target_name(toiid=None, ctoiid=None, name=None, update_db=False) -> Tu
         idx = df[key].apply(lambda x: str(x).split('.')[0]==id)
         source = 'tfop'
         target_name = f'TOI-{id.zfill(4)}'
+    if ticid:
+        print("Using parameters from TIC catalog (use --update_db to update).")
+        key = 'TIC'
+        id = str(ticid)
+        target_name = f'TIC-{ticid}'
+        source = 'custom'
+        Porb = float(input("Porb (d): "))
+        Porberr = float(input("Porb err (d): "))
+        epoch = float(input("Epoch (BJD): "))
+        epocherr = float(input("Epoch err (BJD): "))
+        tdur = float(input("Tdur (h): "))
+        tdurerr = float(input("Tdur err (h): "))
+        depth = float(input("Depth (ppm): "))
+        deptherr = float(input("Depth err (ppm): "))
+        cols = ['Period (days)','Period (days) err','Epoch (BJD)','Epoch (BJD) err','Duration (hours)','Duration (hours) err', 'Depth (ppm)', 'Depth (ppm) err']
+        df = pd.DataFrame([[Porb, Porberr, epoch, epocherr, tdur, tdurerr, depth, deptherr]], columns=cols)
+        idx = [True]
     if ctoiid:
         print("Using parameters from CTOI database (use --update_db to update).")
         df = get_ctois(clobber=update_db)
@@ -181,6 +198,11 @@ if __name__=='__main__':
         type=int
     )
     group1.add_argument(
+        "-tic",
+        help="TIC ID",
+        type=int
+    )
+    group1.add_argument(
         "-name",
         help="Name",
         type=str
@@ -207,6 +229,7 @@ if __name__=='__main__':
     args = ap.parse_args(None if sys.argv[1:] else ["-h"])
 
     toiid = args.toi
+    ticid = args.tic
     ctoiid = args.ctoi
     name = args.name
     exptime = args.exptime
@@ -234,8 +257,10 @@ if __name__=='__main__':
     overwrite = args.overwrite
     update_db = args.update_db
 
-    target_name, target_df, source = parse_target_name(toiid, ctoiid, name, update_db)
-    ticid, outSec = get_tess_sectors(target_name, target_df, toiid, ctoiid, name)
+    target_name, target_df, source = parse_target_name(toiid, ticid, ctoiid, name, update_db)
+    if ticid:
+        name = target_name.replace('-','')
+    tic_id, outSec = get_tess_sectors(target_name, target_df, toiid, ctoiid, name)
     sector_flag = check_if_sector_is_available(target_name, given_sector=sector, all_sectors=outSec)
 
     outdir = Path(basedir)
@@ -243,14 +268,15 @@ if __name__=='__main__':
         print(target_df)
 
     try:
-        if toiid or ctoiid:
-            Teff, Teff_err, logg, logg_err, feh, feh_err, radius, radius_err, mass, mass_err = catalog_info_TIC(int(ticid))
+        if toiid or ctoiid or ticid:
+            Teff, Teff_err, logg, logg_err, feh, feh_err, radius, radius_err, mass, mass_err = catalog_info_TIC(int(tic_id))
         elif name:
             Teff, Teff_err, logg, logg_err, feh, feh_err, radius, radius_err, mass, mass_err = catalog_info_name(target_df.iloc[0])
         if debug:
             print(Teff, Teff_err, logg, logg_err, feh, feh_err, radius, radius_err, mass, mass_err)
     except Exception as e:
         print("Error", e)
+    ticid = tic_id if ticid is None else ticid
     rhostar_prior = True
     if str(radius)=='nan':
         if interactive:
@@ -383,13 +409,15 @@ if __name__=='__main__':
             tdur = row['Duration (hours)']
             tdurerr = row['Duration (hours) err']
 
-            if interactive and not np.all([Porb>0, epoch>0]):
+            if interactive and not np.all([Porb>0, epoch>0, tdur>0]):
                 Porb = float(input("Porb: "))
                 Porberr = float(input("Porb err: "))
                 epoch = float(input("Epoch: "))
                 epocherr = float(input("Epoch err: "))
+               # tdur = float(input("Tdur: "))
+               # tdurerr = float(input("Tdur err: "))
             else:
-                assert np.all([Porb>0, epoch>0])
+                assert np.all([Porb>0, epoch>0, tdur>0])
             Porb_s = np.random.normal(Porb, Porberr, size=Nsamples)
 
             if debug:
@@ -632,30 +660,29 @@ allesfitter.prepare_ttv_fit('.', style='tessplot')
                 query_name = get_name_aliases(name, key='epic')
             except Exception as e:
                 print(e)
-        
+
         all = lk.search_lightcurve(query_name, mission=mission)
         if len(all)>0:
             pipelines = set([i.lower() for i in all.author])
         else:
             raise ValueError("No light curves found.")
 
+        print(all)
         if debug:
-            print(all)
-            print(pipelines)
-        
+            print(f"Pipelines: {pipelines}")
+
         idx = [i==pipeline.lower() for i in pipelines]
         if sum(idx)==0:
             errmsg = f"pipeline={pipeline} not in {pipelines}"
             print(all)
             raise ValueError(errmsg)
-        print(f"Using {pipeline.upper()} pipeline.")
         result = lk.search_lightcurve(query_name, author=pipeline, exptime=exptime, mission=mission)
         if result:
             sectors = list(map(int, [s.split()[-1] for s in result.mission]))
             unique_sectors = sorted(set(sectors))
             if sector_flag=='all_sector':
                 #case: sector='all'
-                print(f"Using {len(sectors)} sectors: {sectors}")
+                print(f"Using {pipeline.upper()} pipeline in {len(sectors)} sectors: {sectors}")
                 unique_exptimes = result.table.to_pandas().exptime.unique()
                 if len(unique_exptimes)>1:
                     errmsg = f"Multiple exposure times are available for `all` sectors:\n{result}.\n"
@@ -677,7 +704,7 @@ allesfitter.prepare_ttv_fit('.', style='tessplot')
 
                 filtered_result = result[idx]
                 unique_exptimes = filtered_result.table.to_pandas().exptime.unique()
-                msg = f"Using {len(sectors)} sectors: {sector} (exptime={unique_exptimes} sec).\n"
+                msg = f"Using {pipeline.upper()} pipeline in {len(sectors)} sectors: {sector} (exptime={unique_exptimes} sec).\n"
                 if sector_flag!='all_sector':
                     msg += f"Otherwise use sector=({unique_sectors}, all))."
                 print(msg)
@@ -711,6 +738,7 @@ allesfitter.prepare_ttv_fit('.', style='tessplot')
                 unique_exptimes = filtered_result.table.to_pandas().exptime.unique()
                 exptime = unique_exptimes[0] if exptime is None else exptime
                 assert lc.sector==sector
+                print(f"Using {pipeline.upper()} pipeline in sector {sector}.")
                 if pipeline=='spoc':
                     lc1 = filtered_result.download(quality_bitmask=quality_bitmask,flux_column='pdcsap_flux').normalize()
                     lc2 = filtered_result.download(quality_bitmask=quality_bitmask,flux_column='sap_flux').normalize()
@@ -742,4 +770,7 @@ allesfitter.prepare_ttv_fit('.', style='tessplot')
             print("Saved: ", fp)
             if debug:
                 print(df.head())
+        else:
+            errmsg = "No lightcurve downloaded. Check inputs."
+            raise ValueError(errmsg)
 

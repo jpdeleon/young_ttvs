@@ -239,7 +239,7 @@ def get_ctois(clobber=False, outdir="../data", verbose=False, remove_FP=True):
     d.columns = [c.replace('Error', 'err') for c in d.columns]
     d.columns = [c.replace(' ppm', ' (ppm)') for c in d.columns]
     d.columns = [c.replace('Transit Epoch', 'Epoch') for c in d.columns]
-    d.columns = [c.replace('hrs', '(hours)') for c in d.columns]
+    d.columns = [c.replace('hrs', 'hours') for c in d.columns]
     return d.sort_values("CTOI")
 
 def get_nexsci(table_name="ps", clobber=False):
